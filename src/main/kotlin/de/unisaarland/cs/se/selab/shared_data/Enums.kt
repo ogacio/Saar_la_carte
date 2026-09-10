@@ -33,16 +33,6 @@ enum class UnitType {
 }
 
 /**
- * The kind of a restaurant, which determines its basic dishes (specification, Section 2.2).
- */
-enum class RestaurantType {
-    EUROPEAN,
-    ASIAN,
-    AFRICAN,
-    AMERICAN,
-}
-
-/**
  * Where a table stands inside the front of the house (specification, Figure 3).
  */
 enum class TableType {
@@ -58,39 +48,4 @@ enum class GroupType {
     REGULAR,
     EVENT,
     CASUAL,
-}
-
-/**
- * The kind of staff a staff change incident affects (specification, Figure 8).
- */
-enum class StaffType {
-    COOK,
-    WAITSTAFF,
-    DRIVER,
-}
-
-/**
- * How a customer group perceived its visit (specification, Section 2.2, "Rating").
- */
-enum class Experience {
-    NEGATIVE,
-    NEUTRAL,
-    POSITIVE,
-}
-
-/**
- * The rating a customer group leaves with the rating service.
- */
-enum class Rating {
-    POSITIVE,
-    NEGATIVE,
-}
-
-/**
- * How likely a CASUAL customer group is to rate its experience (specification, Figure 6).
- */
-enum class RatingLikelihood {
-    NEVER,
-    SOME,
-    ALWAYS,
 }
