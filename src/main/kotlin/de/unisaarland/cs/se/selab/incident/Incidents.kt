@@ -21,7 +21,7 @@ class StaffChange(
 ) : Incident(id, evening) {
     override val type: IncidentType = IncidentType.STAFF
 
-    override fun apply(sim: SimulationContext) {
+    override fun apply(sim: Simulator) {
         sim.restaurantById(restaurantId)?.changeStaff(staffType, cookType, number)
     }
 }
@@ -41,7 +41,7 @@ class RecipeChange(
 ) : Incident(id, evening) {
     override val type: IncidentType = IncidentType.RECIPE
 
-    override fun apply(sim: SimulationContext) {
+    override fun apply(sim: Simulator) {
         for (recipe in sim.allRecipes()) {
             recipe.ingredients
                 .filter { it.ingredient.name == ingredient.name }
@@ -64,7 +64,10 @@ class PackagingChange(
 ) : Incident(id, evening) {
     override val type: IncidentType = IncidentType.PACKAGING
 
-    override fun apply(sim: SimulationContext) {
+    override fun apply(sim: Simulator) {
+        if (packagingVolume <= 0) {
+            return
+        }
         ingredient.changePackaging(packagingVolume)
     }
 }
@@ -84,7 +87,7 @@ class IngredientUnavailability(
 ) : Incident(id, evening) {
     override val type: IncidentType = IncidentType.UNAVAILABLE
 
-    override fun apply(sim: SimulationContext) {
-        sim.supplier.markUnavailable(ingredient, evening, duration)
+    override fun apply(sim: Simulator) {
+        Supplier.markUnavailable(ingredient, evening, duration)
     }
 }

@@ -26,5 +26,5 @@ abstract class Incident(
     /**
      * Applies the effect of this incident to [sim].
      */
-    abstract fun apply(sim: SimulationContext)
+    abstract fun apply(sim: Simulator)
 }
