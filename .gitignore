@@ -44,3 +44,6 @@ bin/
 
 .kotlin/
 .idea/
+
+### Local scratch (not tracked) ###
+misc/
