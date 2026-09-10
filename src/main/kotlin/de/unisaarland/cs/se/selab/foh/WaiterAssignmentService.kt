@@ -20,17 +20,8 @@ class WaiterAssignmentService(
      * that the others keep the capacity to seat larger groups; once everybody is busy the least
      * loaded waiter balances the load. The chosen waiter receives its id if it does not have one.
      */
-    fun assignPermanent(groupSize: Int): Waiter? {
-        val candidates = waitstaff
-            .filter { it.remaining(ActionType.SEATING) >= groupSize }
-            .sortedBy { it.id ?: Int.MAX_VALUE }
-        if (candidates.isEmpty()) {
-            return null
-        }
-        val notBusy = candidates.filter { it.currentLoad < Waiter.ACTION_LIMIT }
-        val chosen = notBusy.maxByOrNull { it.currentLoad } ?: candidates.minByOrNull { it.currentLoad }
-        return chosen?.also { grantId(it) }
-    }
+
+
 
     /**
      * Spreads [groupSize] customers of an EVENT group over the waiters for [action].
@@ -39,31 +30,8 @@ class WaiterAssignmentService(
      * whole group in this tick. The allocation is only planned here, the caller books it with
      * [Waiter.consume] once it decided to carry it out.
      */
-    fun assignEvent(groupSize: Int, action: ActionType): Map<Waiter, Int>? {
-        val eligible = waitstaff
-            .filter { it.remaining(action) > 0 }
-            .sortedBy { it.id ?: Int.MAX_VALUE }
-        val ordered = if (action == ActionType.ESCORTING) {
-            eligible.sortedBy { it.currentLoad }
-        } else {
-            eligible.sortedByDescending { it.currentLoad }
-        }
-        val allocation = LinkedHashMap<Waiter, Int>()
-        var left = groupSize
-        for (waiter in ordered) {
-            if (left == 0) {
-                break
-            }
-            val taken = minOf(waiter.remaining(action), left)
-            allocation[waiter] = taken
-            left -= taken
-        }
-        if (left > 0) {
-            return null
-        }
-        allocation.keys.forEach { grantId(it) }
-        return allocation
-    }
+
+
 
     /**
      * Starts a new tick for every waiter.
