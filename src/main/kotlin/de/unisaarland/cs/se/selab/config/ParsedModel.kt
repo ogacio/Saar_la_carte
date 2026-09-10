@@ -1,10 +1,5 @@
 package de.unisaarland.cs.se.selab.config
 
-import de.unisaarland.cs.se.selab.data.CustomerGroup
-import de.unisaarland.cs.se.selab.data.Ingredient
-import de.unisaarland.cs.se.selab.data.Recipe
-import de.unisaarland.cs.se.selab.data.RestaurantType
-import de.unisaarland.cs.se.selab.incidents.Incident
 import de.unisaarland.cs.se.selab.shared_data.CustomerGroup
 import de.unisaarland.cs.se.selab.shared_data.Ingredient
 import de.unisaarland.cs.se.selab.shared_data.Recipe
