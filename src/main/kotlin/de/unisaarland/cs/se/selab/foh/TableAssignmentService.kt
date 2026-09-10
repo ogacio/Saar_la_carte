@@ -1,6 +1,6 @@
 package de.unisaarland.cs.se.selab.foh
 
-import de.unisaarland.cs.se.selab.shared.TableType
+import de.unisaarland.cs.se.selab.shared_data.TableType
 
 /**
  * Assigns tables to customer groups and keeps track of which ones are taken.

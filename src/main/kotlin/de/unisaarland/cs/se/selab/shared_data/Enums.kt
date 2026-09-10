@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared
+package de.unisaarland.cs.se.selab.shared_data
 
 /**
  * The unit an [Ingredient] is measured in (specification, Figure 4).
@@ -40,20 +40,6 @@ enum class RestaurantType {
     ASIAN,
     AFRICAN,
     AMERICAN,
-}
-
-/**
- * The kind of cook that is able to follow a [Recipe] (specification, Figure 5).
- */
-enum class CookType {
-    EXEC,
-    SOUS,
-    TOURNANT,
-    SAUCE,
-    FISH,
-    ROAST,
-    VEGETABLE,
-    PASTRY,
 }
 
 /**

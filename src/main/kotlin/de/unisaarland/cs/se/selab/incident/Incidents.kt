@@ -1,8 +1,8 @@
 package de.unisaarland.cs.se.selab.incident
 
-import de.unisaarland.cs.se.selab.shared.CookType
-import de.unisaarland.cs.se.selab.shared.Ingredient
-import de.unisaarland.cs.se.selab.shared.StaffType
+import de.unisaarland.cs.se.selab.shared_data.CookType
+import de.unisaarland.cs.se.selab.shared_data.Ingredient
+import de.unisaarland.cs.se.selab.shared_data.StaffType
 
 /**
  * Staff joins or leaves one restaurant (specification, Section 2.2, "Staff Change").

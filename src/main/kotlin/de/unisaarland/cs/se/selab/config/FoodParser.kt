@@ -1,11 +1,11 @@
 package de.unisaarland.cs.se.selab.config
 
-import de.unisaarland.cs.se.selab.shared.CookType
-import de.unisaarland.cs.se.selab.shared.Ingredient
-import de.unisaarland.cs.se.selab.shared.Recipe
-import de.unisaarland.cs.se.selab.shared.RecipeIngredient
-import de.unisaarland.cs.se.selab.shared.RestaurantType
-import de.unisaarland.cs.se.selab.shared.UnitType
+import de.unisaarland.cs.se.selab.kicthen.CookType
+import de.unisaarland.cs.se.selab.shared_data.Ingredient
+import de.unisaarland.cs.se.selab.shared_data.Recipe
+import de.unisaarland.cs.se.selab.shared_data.RecipeIngredient
+import de.unisaarland.cs.se.selab.shared_data.RestaurantType
+import de.unisaarland.cs.se.selab.shared_data.UnitType
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.File

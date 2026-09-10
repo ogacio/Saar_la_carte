@@ -1,11 +1,11 @@
 package de.unisaarland.cs.se.selab.customer
 
-import de.unisaarland.cs.se.selab.shared.Experience
-import de.unisaarland.cs.se.selab.shared.GroupType
-import de.unisaarland.cs.se.selab.shared.Rating
-import de.unisaarland.cs.se.selab.shared.Recipe
-import de.unisaarland.cs.se.selab.shared.RestaurantType
-import de.unisaarland.cs.se.selab.shared.TableType
+import de.unisaarland.cs.se.selab.shared_data.Experience
+import de.unisaarland.cs.se.selab.shared_data.GroupType
+import de.unisaarland.cs.se.selab.shared_data.Rating
+import de.unisaarland.cs.se.selab.shared_data.Recipe
+import de.unisaarland.cs.se.selab.shared_data.RestaurantType
+import de.unisaarland.cs.se.selab.shared_data.TableType
 
 /**
  * A group that books a restaurant for one event evening (specification, Section 2.2, "EVENTS").

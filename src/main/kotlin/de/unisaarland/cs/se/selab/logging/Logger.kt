@@ -1,9 +1,9 @@
 package de.unisaarland.cs.se.selab.logging
 
 import de.unisaarland.cs.se.selab.incident.IncidentType
-import de.unisaarland.cs.se.selab.shared.CookType
-import de.unisaarland.cs.se.selab.shared.Rating
-import de.unisaarland.cs.se.selab.shared.UnitType
+import de.unisaarland.cs.se.selab.shared_data.CookType
+import de.unisaarland.cs.se.selab.shared_data.Rating
+import de.unisaarland.cs.se.selab.shared_data.UnitType
 import java.io.PrintWriter
 
 /**
