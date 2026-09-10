@@ -5,6 +5,10 @@ import de.unisaarland.cs.se.selab.data.Ingredient
 import de.unisaarland.cs.se.selab.data.Recipe
 import de.unisaarland.cs.se.selab.data.RestaurantType
 import de.unisaarland.cs.se.selab.incidents.Incident
+import de.unisaarland.cs.se.selab.shared_data.CustomerGroup
+import de.unisaarland.cs.se.selab.shared_data.Ingredient
+import de.unisaarland.cs.se.selab.shared_data.Recipe
+import de.unisaarland.cs.se.selab.shared_data.RestaurantType
 import de.unisaarland.cs.se.selab.simulation.Restaurant
 
 /**
