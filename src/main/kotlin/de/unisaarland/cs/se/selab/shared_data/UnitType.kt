@@ -32,20 +32,3 @@ enum class UnitType {
     }
 }
 
-/**
- * Where a table stands inside the front of the house (specification, Figure 3).
- */
-enum class TableType {
-    COMMON,
-    BAR,
-    SEPARATED,
-}
-
-/**
- * Whether a customer group is REGULAR, CASUAL or an EVENT (specification, Figure 6).
- */
-enum class GroupType {
-    REGULAR,
-    EVENT,
-    CASUAL,
-}
