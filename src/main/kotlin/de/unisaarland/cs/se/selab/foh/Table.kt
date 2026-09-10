@@ -12,16 +12,6 @@ enum class TableStatus {
 }
 
 /**
- * The kind of action a waiter performs; the action limit is counted per type and tick.
- */
-enum class ActionType {
-    SEATING,
-    ORDERING,
-    SERVING,
-    ESCORTING,
-}
-
-/**
  * One table of the front of the house.
  *
  * A merged table is a table in its own right: it carries the lowest id of the tables it was built

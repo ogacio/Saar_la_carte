@@ -8,6 +8,19 @@ package de.unisaarland.cs.se.selab.foh
  * load counts the customers the waiter is waiting on, the tick load counts the actions of one type
  * performed in the running tick.
  */
+
+
+/**
+ * The kind of action a waiter performs; the action limit is counted per type and tick.
+ */
+enum class ActionType {
+    SEATING,
+    ORDERING,
+    SERVING,
+    ESCORTING,
+}
+
+
 class Waiter {
     /** The id granted at the first action of the evening, null before that. */
     var id: Int? = null
