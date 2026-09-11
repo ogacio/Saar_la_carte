@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.kicthen
+package de.unisaarland.cs.se.selab.kitchen
 import de.unisaarland.cs.se.selab.shared_data.Meal
 import de.unisaarland.cs.se.selab.shared_data.Recipe
 
@@ -8,7 +8,7 @@ class CookRoaster (
     var nextId: Int
 
 ) {
-    public fun claim(r:Recipe,tick: Int):Cook? {
+    public fun claim(r:Recipe,tick: Int): Cook? {
 
     }
 
