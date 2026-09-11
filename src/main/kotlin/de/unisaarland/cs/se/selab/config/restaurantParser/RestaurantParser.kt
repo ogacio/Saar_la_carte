@@ -24,18 +24,23 @@ class RestaurantParser : ConfigParser()
             val cooks = serialiseCookCounts(rjd)
             val tables = serialiseTables(rjd)
             val recipes = resolveRecipes(rjd)
-            if(cooks != null && recipes != null && tables != null) {
-                var restaurant = Restaurant(
-                    rjd.id, rjd.name, rjd.type, rjd.openingTickStart, rjd.openingTickEnd,
-                    rjd.deliveryDrivers, rjd.event, rjd.positiveRatings, rjd.negativeRatings, recipes,
-                    cooks, rjd.waitstaff, tables
-                )
-                return restaurant
+            if(cooks != null && recipes != null && tables != null
+                && rjd.event != null && rjd.positiveRatings != null && rjd.negativeRatings != null)  {
+                if(checkUniqueDishNames(recipes) && checkUniqueTableIds(tables)
+                    && checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)
+                    && checkAtLeastOneOfEach(rjd)) {
+                    val type = RestaurantType.valueOf(rjd.type)
+                    val restaurant = Restaurant(
+                        rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
+                        rjd.deliveryDrivers, rjd.event, rjd.positiveRatings, rjd.negativeRatings, recipes,
+                        cooks, rjd.waitstaff, tables)
+                    return restaurant
+                }
             }
+            else return null
         } catch (expected: IllegalArgumentException) {
             return null
         }
-        return null
     }
 
     private fun resolveRecipes(rjd:RestaurantJsonDto) : MutableList<Recipe>? {
@@ -75,28 +80,31 @@ class RestaurantParser : ConfigParser()
                 return null
             }
         }
-
         return tables
     }
 
-// helper functions for validateFileScope
+// helper functions for serialiseRestaurant
 
     private fun checkUniqueDishNames(recipes:MutableList<Recipe>) : Boolean {
         for(recipe in recipes) {
+            var count = 0
             val name : String = recipe.dishName
             for (r in recipes) {
-                if (name == r.dishName) return false
+                if (name == r.dishName) count++
             }
+            if(count > 1) return false
         }
         return true
     }
 
     private fun checkUniqueTableIds(tables:MutableList<Table>) : Boolean {
         for(table in tables) {
+            var count = 0
             val tableId : Int = table.id
             for (t in tables) {
-                if (tableId == t.id) return false
+                if (tableId == t.id) count++
             }
+            if(count > 1) return false
         }
         return true
     }
@@ -110,17 +118,14 @@ class RestaurantParser : ConfigParser()
         return rjd.recipes.isNotEmpty() && rjd.kitchenStaff.isNotEmpty() && rjd.waitstaff > 0 && rjd.tables.isNotEmpty()
     }
 
+//helper functions for validateFileScope
+
     private fun checkBasicDishCoverage(type: RestaurantType, dishes:Set<String>) : Boolean {
-        val recipes : MutableCollection<Recipe> = model.recipesById.values
-        for(dish in dishes) {
-            for (recipe in recipes) {
-                if (recipe.dishName == dish && recipe.basicDishFor == type) return true
-            }
-        }
-        return false
+        // dishes = model.basicDishesFor(type)
+        return dishes.isNotEmpty()
     }
 
     private fun checkAtLeastOneRestaurant() : Boolean {
-        return restaurants != null
+        return model.allRestaurants().isNotEmpty()
     }
 }
