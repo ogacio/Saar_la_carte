@@ -1,6 +1,5 @@
 package de.unisaarland.cs.se.selab
-import de.unisaarland.cs.se.selab.data.RestaurantData
-import de.unisaarland.cs.se.selab.data.RestaurantType
+import de.unisaarland.cs.se.selab.shared_data.RestaurantData
 
 class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook){
     private var entries:MutableList<RestaurantData> = entries
@@ -9,42 +8,49 @@ class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook)
         entries = snapshots
     }
     fun choose(g: CustomerGroup): Int?{
-        val candidates = entries
-        candidates.filter{it.type in g.restaurantTypes}.filter{it.openAt(GlobalClock.getTickInEvening())}
-        candidates.filter{c -> g.getPreferences.all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}
+        var candidates:MutableList<RestaurantData> = entries
+        candidates = candidates.filter{it.getType() in g.getRestaurantTypes()}.filter{it.openAt(GlobalClock.getTickInEvening())}.toMutableList()
+        candidates = candidates.filter{c -> g.getPreferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}.toMutableList()
         if (g.isDelivery()) {
-            candidates.filter{it.getFreeDrivers()>0}
+            candidates = candidates.filter{it.getFreeDrivers()>0}.toMutableList()
         }else {
-            candidates.filter{it.getFreeSeats() >= g.getGroupSize()}
+            candidates = candidates.filter {
+                (it.getFreeSeats()[g.getTableType()] ?: 0) >= g.getGroupSize()
+            }.toMutableList()
         }
         val id = rank(candidates)
+        if (id!=null){
+               candidates.first{it.getId() == id}.take(g)
+        }
+        return id
     }
     fun chooseForEvent(g: CustomerGroup, eventEvening: Int): Int?{
-        var candidates = entries
-        candidates.filter{it.type in g.restaurantTypes}.filter{it.openAt(g.visitingTick)}
-        candidates.filter{c -> g.getPreferences.all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}
-        candidates.filter{it.eventSeatsLeft(g.getEventEvening())>=g.getGroupSize()}
+        var candidates:MutableList<RestaurantData> = entries
+        candidates = candidates.filter{it.getType() in g.getRestaurantTypes()}.filter{it.openAt(g.getVisitingTick())}.filter{it.getHostsEvents()}.toMutableList()
+        candidates = candidates.filter{c -> g.getPreferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}.toMutableList()
+        candidates = candidates.filter{it.eventSeatsLeft(g.getEventEvening())>=g.getGroupSize()}.toMutableList()
         val id = rank(candidates)
+        if (id!=null){
+            candidates.first{it.getId() == id}.takeForEvent(g, eventEvening)
+        }
+        return id
     }
     private fun rank(candidates: MutableList<RestaurantData>): Int?{
         if (candidates.isEmpty()){
             return null
         }else{
-            var highest = ratings.getById(candidates.get(0).id).score()
+            var highest = ratings.getById(candidates.get(0).getId()).score()
             for (i in candidates){
-                if (ratings.getById(i.id).score() > highest) {
-                    highest = ratings.getById(i.id).score()
+                if (ratings.getById(i.getId()).score() > highest) {
+                    highest = ratings.getById(i.getId()).score()
                 }
             }
-            for (i in candidates){
-                if (ratings.getById(i.id).score() < highest){
-                    candidates.remove(i)
-                }
+            candidates.removeIf {
+                ratings.getById(it.getId()).score() < highest
             }
-            candidates.sortWith(compareBy { it.id })
-            return candidates.get(0).id
+            candidates.sortWith(compareBy { it.getId() })
+            return candidates.get(0).getId()
 
         }
     }
-
 }
