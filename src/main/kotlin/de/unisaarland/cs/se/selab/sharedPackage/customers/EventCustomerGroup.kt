@@ -33,7 +33,7 @@ class EventCustomerGroup(
     fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
 
     /** The evening this group intends to hold its event. */
-    fun eventEvening(): Int = eventEvening
+    override fun eventEvening(): Int = eventEvening
 
     /** The favourite basic dish this group has chosen per restaurant type. */
     fun favouriteDishes(): Map<RestaurantType, String> = favouriteDishes

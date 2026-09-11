@@ -23,7 +23,7 @@ abstract class CustomerGroup(
     fun id(): Int = id
 
     /** The number of customers in this group. */
-    protected fun groupSize(): Int = groupSize
+    fun groupSize(): Int = groupSize
 
     /** Whether this group is REGULAR, CASUAL or an EVENT. */
     fun groupType(): GroupType = groupType
@@ -42,6 +42,8 @@ abstract class CustomerGroup(
 
     /** Whether the group visits a restaurant on [evening]. */
     abstract fun visitsOn(evening: Int): Boolean
+
+    abstract fun restaurantTypes(): Set<RestaurantType>
 
     /** The id of the restaurant the group is bound to, or null if it browses for one. */
     abstract fun homeRestaurant(): Int?
