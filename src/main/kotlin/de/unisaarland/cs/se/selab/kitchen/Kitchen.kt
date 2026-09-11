@@ -10,7 +10,6 @@ class Kitchen (
     val pantry:Pantry,
     var queue:MutableList<Order>,
     val reservationBook:ReservationBook,
-    val clock:GlobalClock
 ) {
     public fun enqueue(o:Order):Unit {
 
