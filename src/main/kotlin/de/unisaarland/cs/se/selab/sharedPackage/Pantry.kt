@@ -1,5 +1,4 @@
 package de.unisaarland.cs.se.selab.sharedPackage
-
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
 class Pantry (private var stock : MutableMap<Ingredient, MutableList<Int>>,

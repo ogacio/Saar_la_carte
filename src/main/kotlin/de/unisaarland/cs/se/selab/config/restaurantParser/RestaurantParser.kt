@@ -1,46 +1,79 @@
 package de.unisaarland.cs.se.selab.config.restaurantParser
-import de.unisaarland.cs.se.selab.kicthen.CookType
+import de.unisaarland.cs.se.selab.config.ConfigParser
+import de.unisaarland.cs.se.selab.config.ParsedModel
+import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.foh.Table
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.Restaurant
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import java.io.File
+import kotlin.collections.isNotEmpty
+import kotlin.collections.map
 import kotlin.collections.set
 
-class RestaurantParser : ConfigParser()
-{
+class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
+
     protected override fun readEntities(path:String) : Boolean {
 
+        var returnValue = true
+        val text = File(path).readText()
+        val fileDto: RestaurantFileDto = try {
+            Json.decodeFromString(text)
+        } catch (expected: SerializationException) {
+            return false
+        }
+        for (restaurantDto in fileDto.restaurants) {
+            val restaurant = serialiseRestaurant(restaurantDto)
+            if (restaurant == null || !model.registerRestaurant(restaurant)) {
+                returnValue = false
+                break
+            }
+        }
+        return returnValue
     }
 
     protected override fun validateFileScope() : Boolean {
 
+        var returnValue = true
+        if (!checkAtLeastOneRestaurant()) returnValue = false
+        val presentTypes = model.allRestaurants().map{ it.type }.toSet()
+        for (type in presentTypes) {
+            if (!checkBasicDishCoverage(model.basicDishesFor(type))) {
+                returnValue = false
+                break
+            }
+        }
+        return returnValue
     }
 
 // helper function for readEntities
 
     private fun serialiseRestaurant(rjd:RestaurantJsonDto) : Restaurant? {
+        var returnValue = true
         try {
             val cooks = serialiseCookCounts(rjd)
             val tables = serialiseTables(rjd)
             val recipes = resolveRecipes(rjd)
-            if(cooks != null && recipes != null && tables != null
-                && rjd.event != null && rjd.positiveRatings != null && rjd.negativeRatings != null)  {
-                if(checkUniqueDishNames(recipes) && checkUniqueTableIds(tables)
-                    && checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)
-                    && checkAtLeastOneOfEach(rjd)) {
-                    val type = RestaurantType.valueOf(rjd.type)
-                    val restaurant = Restaurant(
-                        rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
-                        rjd.deliveryDrivers, rjd.event, rjd.positiveRatings, rjd.negativeRatings, recipes,
-                        cooks, rjd.waitstaff, tables)
-                    return restaurant
-                }
+            if(cooks != null && recipes != null && tables != null)  {
+                if(!(checkUniqueDishNames(recipes) && checkUniqueTableIds(tables)
+                            && checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd))) returnValue = false
             }
-            else return null
-        } catch (expected: IllegalArgumentException) {
-            return null
-        }
+            else { returnValue = false }
+
+            val type = RestaurantType.valueOf(rjd.type)
+            if (returnValue && checkAtLeastOneOfEach(rjd)) {
+                val restaurant = Restaurant(
+                    rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
+                    rjd.deliveryDrivers, rjd.event, rjd.positiveRatings, rjd.negativeRatings, recipes,
+                    cooks, rjd.waitstaff, tables
+                )
+                return restaurant
+            }
+        } catch (expected: IllegalArgumentException) { }
+        return null
     }
 
     private fun resolveRecipes(rjd:RestaurantJsonDto) : MutableList<Recipe>? {
@@ -119,11 +152,9 @@ class RestaurantParser : ConfigParser()
     }
 
 //helper functions for validateFileScope
-
-    private fun checkBasicDishCoverage(type: RestaurantType, dishes:Set<String>) : Boolean {
-        // dishes = model.basicDishesFor(type)
-        return dishes.isNotEmpty()
-    }
+private fun checkBasicDishCoverage(dishes:Set<String>) : Boolean {
+    return dishes.isNotEmpty()
+}
 
     private fun checkAtLeastOneRestaurant() : Boolean {
         return model.allRestaurants().isNotEmpty()
