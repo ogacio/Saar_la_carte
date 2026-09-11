@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 /**
  * The amount of one [Ingredient] a [Recipe] requires.

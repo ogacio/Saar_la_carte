@@ -1,5 +1,5 @@
 package de.unisaarland.cs.se.selab
-import de.unisaarland.cs.se.selab.shared_data.RestaurantData
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 
 class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook){
     private var entries:MutableList<RestaurantData> = entries

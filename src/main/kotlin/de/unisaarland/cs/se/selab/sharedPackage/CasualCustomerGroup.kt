@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 import de.unisaarland.cs.se.selab.simulation.ratings.Experience
 import de.unisaarland.cs.se.selab.simulation.ratings.Rating

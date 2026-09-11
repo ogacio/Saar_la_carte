@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 /**
  * One kind of ingredient the supplier sells and the restaurants cook with.

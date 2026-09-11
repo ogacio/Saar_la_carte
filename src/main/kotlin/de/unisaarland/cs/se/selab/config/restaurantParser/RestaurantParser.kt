@@ -1,9 +1,9 @@
 package de.unisaarland.cs.se.selab.config.restaurantParser
 import de.unisaarland.cs.se.selab.kicthen.CookType
-import de.unisaarland.cs.se.selab.shared_data.Recipe
-import de.unisaarland.cs.se.selab.shared_data.RestaurantType
+import de.unisaarland.cs.se.selab.sharedPackage.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.foh.Table
-import de.unisaarland.cs.se.selab.shared_data.TableType
+import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.Restaurant
 import kotlin.collections.set
 

@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 data class Meal (
     val order:Order,

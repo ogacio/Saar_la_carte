@@ -1,9 +1,9 @@
 package de.unisaarland.cs.se.selab.kicthen
-import de.unisaarland.cs.se.selab.shared_data.Meal
-import de.unisaarland.cs.se.selab.shared_data.CustomerGroup
-import de.unisaarland.cs.se.selab.shared_data.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
-import de.unisaarland.cs.se.selab.shared_data.Order
+import de.unisaarland.cs.se.selab.sharedPackage.Order
 
 class Kitchen (
     val roster:CookRoster,

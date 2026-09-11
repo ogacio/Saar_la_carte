@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 data class RestaurantData(private val id: Int, private val type: RestaurantType, private val openingTick: Int, private val closingTick: Int,
                           private val dishes: MutableList<Recipe>, private var freeSeats: MutableMap<TableType, Int>, private var freeDrivers: Int,

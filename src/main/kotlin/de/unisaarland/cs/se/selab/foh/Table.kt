@@ -1,6 +1,6 @@
 package de.unisaarland.cs.se.selab.foh
 
-import de.unisaarland.cs.se.selab.shared_data.TableType
+import de.unisaarland.cs.se.selab.sharedPackage.TableType
 
 /**
  * Whether a table is free, held by a reservation or currently occupied.

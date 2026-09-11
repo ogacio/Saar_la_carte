@@ -1,5 +1,5 @@
 package de.unisaarland.cs.se.selab.kicthen
-import de.unisaarland.cs.se.selab.shared_data.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
 class Cook (

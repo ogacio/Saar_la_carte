@@ -2,13 +2,13 @@ package de.unisaarland.cs.se.selab.config.scenarioParser
 
 import de.unisaarland.cs.se.selab.config.ParsedModel
 import de.unisaarland.cs.se.selab.customer.EventCustomerGroup
-import de.unisaarland.cs.se.selab.shared_data.CasualCustomerGroup
-import de.unisaarland.cs.se.selab.shared_data.Customer
-import de.unisaarland.cs.se.selab.shared_data.CustomerGroup
-import de.unisaarland.cs.se.selab.shared_data.FoodPreference
-import de.unisaarland.cs.se.selab.shared_data.RegularCustomerGroup
-import de.unisaarland.cs.se.selab.shared_data.RestaurantType
-import de.unisaarland.cs.se.selab.shared_data.TableType
+import de.unisaarland.cs.se.selab.sharedPackage.CasualCustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.Customer
+import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.FoodPreference
+import de.unisaarland.cs.se.selab.sharedPackage.RegularCustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
+import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingLikelihood
 import kotlin.math.ceil
 

@@ -8,7 +8,7 @@ import de.unisaarland.cs.se.selab.incident.PackagingChange
 import de.unisaarland.cs.se.selab.incident.RecipeChange
 import de.unisaarland.cs.se.selab.incident.StaffChange
 import de.unisaarland.cs.se.selab.kitchen.CookType
-import de.unisaarland.cs.se.selab.shared_data.StaffType
+import de.unisaarland.cs.se.selab.sharedPackage.StaffType
 
 /** Turns [IncidentJsonDto]s into incidents and applies the constraints the schema cannot express. */
 class IncidentSerialiser(private val model: ParsedModel) {

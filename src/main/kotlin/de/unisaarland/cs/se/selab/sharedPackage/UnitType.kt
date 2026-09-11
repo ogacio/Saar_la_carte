@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 /**
  * The unit an [Ingredient] is measured in (specification, Figure 4).

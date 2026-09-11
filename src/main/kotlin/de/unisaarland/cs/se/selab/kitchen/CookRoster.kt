@@ -1,6 +1,6 @@
 package de.unisaarland.cs.se.selab.kicthen
-import de.unisaarland.cs.se.selab.shared_data.Meal
-import de.unisaarland.cs.se.selab.shared_data.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 
 class CookRoaster (
     val kitchenStaff:Map<CookType, Int>,

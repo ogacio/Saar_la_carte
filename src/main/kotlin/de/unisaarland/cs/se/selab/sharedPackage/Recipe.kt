@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 /**
  * The recipe for one dish: what it needs, how long it takes and who may cook it.

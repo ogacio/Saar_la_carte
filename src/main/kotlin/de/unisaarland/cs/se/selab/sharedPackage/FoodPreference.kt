@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.shared_data
+package de.unisaarland.cs.se.selab.sharedPackage
 
 /** The likes and dislikes of one subgroup of customers. */
 class FoodPreference(
