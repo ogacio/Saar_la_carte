@@ -1,5 +1,8 @@
-package de.unisaarland.cs.se.selab.sharedPackage
+package de.unisaarland.cs.se.selab.sharedPackage.customers
 
+import de.unisaarland.cs.se.selab.sharedPackage.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
+import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.ratings.Experience
 import de.unisaarland.cs.se.selab.simulation.ratings.Rating
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingLikelihood
@@ -12,11 +15,20 @@ class CasualCustomerGroup(
     visitingTick: Int,
     members: List<Customer>,
     preferences: List<FoodPreference>,
-    val restaurantTypes: Set<RestaurantType>,
-    val visitingEvenings: List<Int>,
+    private val restaurantTypes: Set<RestaurantType>,
+    private val visitingEvenings: List<Int>,
     deliveryDistance: Int,
-    val ratingLikelihood: RatingLikelihood,
+    private val ratingLikelihood: RatingLikelihood,
 ) : CustomerGroup(id, groupSize, GroupType.CASUAL, tableType, visitingTick, deliveryDistance, members, preferences) {
+
+    /** The restaurant types this group is willing to visit. */
+    fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
+
+    /** The evenings this group intends to get food from a restaurant. */
+    fun visitingEvenings(): List<Int> = visitingEvenings
+
+    /** How readily this group leaves a rating after an experience. */
+    fun ratingLikelihood(): RatingLikelihood = ratingLikelihood
 
     override fun visitsOn(evening: Int): Boolean = visitingEvenings.contains(evening)
 
