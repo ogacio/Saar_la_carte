@@ -1,14 +1,14 @@
 package de.unisaarland.cs.se.selab.config.scenarioParser
 
 import de.unisaarland.cs.se.selab.config.ParsedModel
-import de.unisaarland.cs.se.selab.customer.EventCustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.CasualCustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.Customer
-import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.FoodPreference
-import de.unisaarland.cs.se.selab.sharedPackage.RegularCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CasualCustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.FoodPreference
+import de.unisaarland.cs.se.selab.sharedPackage.customers.RegularCustomerGroup
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingLikelihood
 import kotlin.math.ceil
 
@@ -24,7 +24,7 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
     /** Serialises [dto] into its group, or null if any constraint fails. */
     fun serialise(dto: CustomerGroupJsonDto): CustomerGroup? {
         val preferences = serialiseFoodPreferences(dto.foodPreferences) ?: return null
-        if (preferences.sumOf { it.size } > dto.size) return null
+        if (preferences.sumOf { it.size() } > dto.size) return null
         return when (dto.type) {
             REGULAR -> serialiseRegular(dto, preferences)
             CASUAL -> serialiseCasual(dto, preferences)
@@ -179,7 +179,7 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
     private fun membersFor(size: Int, preferences: List<FoodPreference>): List<Customer> {
         val members = mutableListOf<Customer>()
         for (preference in preferences) {
-            repeat(preference.size) { members.add(Customer(preference)) }
+            repeat(preference.size()) { members.add(Customer(preference)) }
         }
         repeat(size - members.size) { members.add(Customer(null)) }
         return members
