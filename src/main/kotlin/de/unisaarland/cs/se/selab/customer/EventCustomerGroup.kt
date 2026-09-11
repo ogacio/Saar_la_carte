@@ -1,11 +1,12 @@
 package de.unisaarland.cs.se.selab.customer
 
-import de.unisaarland.cs.se.selab.shared_data.Experience
+import de.unisaarland.cs.se.selab.shared_data.CustomerGroup
 import de.unisaarland.cs.se.selab.shared_data.GroupType
-import de.unisaarland.cs.se.selab.shared_data.Rating
 import de.unisaarland.cs.se.selab.shared_data.Recipe
 import de.unisaarland.cs.se.selab.shared_data.RestaurantType
 import de.unisaarland.cs.se.selab.shared_data.TableType
+import de.unisaarland.cs.se.selab.simulation.ratings.Experience
+import de.unisaarland.cs.se.selab.simulation.ratings.Rating
 
 /**
  * A group that books a restaurant for one event evening (specification, Section 2.2, "EVENTS").
@@ -17,15 +18,14 @@ import de.unisaarland.cs.se.selab.shared_data.TableType
  * leaves a rating.
  */
 class EventCustomerGroup(
-    override val id: Int,
-    override val groupSize: Int,
-    override val tableType: TableType,
-    override val visitingTick: Int,
+    id: Int,
+    groupSize: Int,
+    tableType: TableType,
+    visitingTick: Int,
     val restaurantTypes: Set<RestaurantType>,
     val eventEvening: Int,
     val favouriteDishes: Map<RestaurantType, String>,
-) : CustomerGroupContract {
-    override val groupType: GroupType = GroupType.EVENT
+) : CustomerGroup(id, groupSize, GroupType.EVENT, tableType, visitingTick, null, emptyList(), emptyList()) {
 
     /** The restaurant the group booked, null until it browsed successfully. */
     var bookedRestaurant: Int? = null
