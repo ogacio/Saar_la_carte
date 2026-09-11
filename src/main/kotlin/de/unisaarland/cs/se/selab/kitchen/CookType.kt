@@ -1,4 +1,4 @@
-package de.unisaarland.cs.se.selab.kicthen
+package de.unisaarland.cs.se.selab.kitchen
 
 enum class CookType {
     EXEC,

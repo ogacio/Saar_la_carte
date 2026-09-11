@@ -8,6 +8,7 @@ abstract class ConfigParser(
     protected val model: ParsedModel,
     protected val validator: Validator = Validator(),
 ) {
+    constructor(model: Any) : this()
 
     protected val schemaPath: String
 

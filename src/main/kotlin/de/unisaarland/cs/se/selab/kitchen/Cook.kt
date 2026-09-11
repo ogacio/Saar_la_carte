@@ -1,23 +1,31 @@
-package de.unisaarland.cs.se.selab.kicthen
-import de.unisaarland.cs.se.selab.sharedPackage.Meal
+package de.unisaarland.cs.se.selab.kitchen
+import de.unisaarland.cs.se.selab.shared_data.Meal
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
 class Cook (
     private val type : CookType,
-    private var id: Int? = null,
-    private var busyUntil: Int? = null,
-    private var batch:MutableList<Meal>,
-    private var clock:GlobalClock)
-{
-    fun startCooking(meals:MutableList<Meal>,tick: Int):Unit {
+    private var id : Int? = null,
+    private var busyUntil : Int? = null,
+    private var batch : MutableList<Meal>,
+    private var clock : GlobalClock
+    )
 
+{
+    // recieves a list of all the meals that have the same type
+    fun startCooking(meals:MutableList<Meal>,tick: Int):Unit {
+        /* var meal in meals
+        busyUntil = tick + meal.getRecipe().durationInTicks() */
     }
 
-    fun endCooking(tick: Int):MutableList<Meal> {
-
+    fun endCooking(tick: Int) : MutableList<Meal>? {
+        if(busyUntil == tick) {
+            busyUntil = null
+            return batch
+        }
+        else return null
     }
 
     fun isFree(tick: Int):Boolean {
-
+        return busyUntil != null
     }
 }
