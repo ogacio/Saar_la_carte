@@ -28,7 +28,7 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
         return when (dto.type) {
             REGULAR -> serialiseRegular(dto, preferences)
             CASUAL -> serialiseCasual(dto, preferences)
-            EVENT -> serialiseEvent(dto)
+            EVENT -> serialiseEvent(dto, preferences)
             else -> null
         }
     }
@@ -92,21 +92,28 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
         dto: CustomerGroupJsonDto,
         preferences: List<FoodPreference>,
     ): CustomerGroup? {
+        if (!regularFieldsAreValid(dto)) return null
         val restaurantId = dto.restaurant ?: return null
-        val start = dto.visitingStart ?: return null
-        val period = dto.visitingPeriod ?: return null
-        if (model.restaurant(restaurantId) == null) return null
+        val tableType = tableTypeOf(dto) ?: return null
         return RegularCustomerGroup(
             id = dto.id,
             groupSize = dto.size,
-            tableType = tableTypeOf(dto),
+            tableType = tableType,
             visitingTick = dto.visitingTick,
             members = membersFor(dto.size, preferences),
             preferences = preferences,
-            visitingStart = start,
-            visitingPeriod = period,
+            visitingStart = dto.visitingStart ?: 0,
+            visitingPeriod = dto.visitingPeriod ?: 1,
             restaurantId = restaurantId,
         )
+    }
+
+    private fun regularFieldsAreValid(dto: CustomerGroupJsonDto): Boolean {
+        val restaurantId = dto.restaurant ?: return false
+        return dto.visitingStart != null &&
+            dto.visitingPeriod != null &&
+            tableTypeOf(dto) != null &&
+            model.restaurant(restaurantId) != null
     }
 
     private fun serialiseCasual(
@@ -114,10 +121,11 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
         preferences: List<FoodPreference>,
     ): CustomerGroup? {
         if (!casualFieldsAreValid(dto)) return null
+        val tableType = tableTypeOf(dto) ?: return null
         return CasualCustomerGroup(
             id = dto.id,
             groupSize = dto.size,
-            tableType = tableTypeOf(dto),
+            tableType = tableType,
             visitingTick = dto.visitingTick,
             members = membersFor(dto.size, preferences),
             preferences = preferences,
@@ -136,13 +144,19 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
         return distance <= 0 || deliveryOrderInPhase(dto.visitingTick, distance)
     }
 
-    private fun serialiseEvent(dto: CustomerGroupJsonDto): EventCustomerGroup? {
+    private fun serialiseEvent(
+        dto: CustomerGroupJsonDto,
+        preferences: List<FoodPreference>,
+    ): EventCustomerGroup? {
         if (!eventFieldsAreValid(dto)) return null
+        val tableType = tableTypeOf(dto) ?: return null
         return EventCustomerGroup(
             id = dto.id,
             groupSize = dto.size,
-            tableType = tableTypeOf(dto),
+            tableType = tableType,
             visitingTick = dto.visitingTick,
+            members = membersFor(dto.size, preferences),
+            preferences = preferences,
             restaurantTypes = restaurantTypesOf(dto).orEmpty(),
             eventEvening = dto.eventEvening ?: 0,
             favouriteDishes = favouriteDishesOf(dto.favoriteDishes).orEmpty(),
@@ -171,15 +185,31 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
         return members
     }
 
-    private fun tableTypeOf(dto: CustomerGroupJsonDto): TableType =
-        dto.tableType?.let { TableType.valueOf(it) } ?: TableType.COMMON
+    private fun tableTypeOf(dto: CustomerGroupJsonDto): TableType? {
+        val name = dto.tableType ?: return TableType.COMMON
+        return TableType.entries.firstOrNull { it.name == name }
+    }
 
-    private fun restaurantTypesOf(dto: CustomerGroupJsonDto): Set<RestaurantType>? =
-        dto.restaurantTypes?.map { RestaurantType.valueOf(it) }?.toSet()
+    private fun restaurantTypesOf(dto: CustomerGroupJsonDto): Set<RestaurantType>? {
+        val names = dto.restaurantTypes ?: return null
+        val types = names.map { name -> restaurantTypeOf(name) ?: return null }
+        return types.toSet()
+    }
 
-    private fun ratingLikelihoodOf(dto: CustomerGroupJsonDto): RatingLikelihood? =
-        dto.ratingLikelihood?.let { RatingLikelihood.valueOf(it) }
+    private fun restaurantTypeOf(name: String): RestaurantType? =
+        RestaurantType.entries.firstOrNull { it.name == name }
 
-    private fun favouriteDishesOf(raw: Map<String, String>?): Map<RestaurantType, String>? =
-        raw?.entries?.associate { (type, dish) -> RestaurantType.valueOf(type) to dish }
+    private fun ratingLikelihoodOf(dto: CustomerGroupJsonDto): RatingLikelihood? {
+        val name = dto.ratingLikelihood ?: return null
+        return RatingLikelihood.entries.firstOrNull { it.name == name }
+    }
+
+    private fun favouriteDishesOf(raw: Map<String, String>?): Map<RestaurantType, String>? {
+        val entries = raw ?: return null
+        val resolved = mutableMapOf<RestaurantType, String>()
+        for ((name, dish) in entries) {
+            resolved[restaurantTypeOf(name) ?: return null] = dish
+        }
+        return resolved
+    }
 }

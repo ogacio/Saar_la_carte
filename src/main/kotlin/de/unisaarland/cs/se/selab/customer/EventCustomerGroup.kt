@@ -1,6 +1,8 @@
 package de.unisaarland.cs.se.selab.customer
 
+import de.unisaarland.cs.se.selab.shared_data.Customer
 import de.unisaarland.cs.se.selab.shared_data.CustomerGroup
+import de.unisaarland.cs.se.selab.shared_data.FoodPreference
 import de.unisaarland.cs.se.selab.shared_data.GroupType
 import de.unisaarland.cs.se.selab.shared_data.Recipe
 import de.unisaarland.cs.se.selab.shared_data.RestaurantType
@@ -22,10 +24,12 @@ class EventCustomerGroup(
     groupSize: Int,
     tableType: TableType,
     visitingTick: Int,
+    members: List<Customer>,
+    preferences: List<FoodPreference>,
     val restaurantTypes: Set<RestaurantType>,
     val eventEvening: Int,
     val favouriteDishes: Map<RestaurantType, String>,
-) : CustomerGroup(id, groupSize, GroupType.EVENT, tableType, visitingTick, null, emptyList(), emptyList()) {
+) : CustomerGroup(id, groupSize, GroupType.EVENT, tableType, visitingTick, null, members, preferences) {
 
     /** The restaurant the group booked, null until it browsed successfully. */
     var bookedRestaurant: Int? = null

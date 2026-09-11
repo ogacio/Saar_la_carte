@@ -25,19 +25,33 @@ class IncidentSerialiser(private val model: ParsedModel) {
     private fun typeOf(dto: IncidentJsonDto): IncidentType? =
         IncidentType.entries.firstOrNull { it.name == dto.type }
 
+    private fun staffTypeOf(name: String?): StaffType? =
+        StaffType.entries.firstOrNull { it.name == name }
+
+    private fun cookTypeOf(name: String): CookType? =
+        CookType.entries.firstOrNull { it.name == name }
+
     private fun serialiseStaffChange(dto: IncidentJsonDto): StaffChange? {
+        if (!staffFieldsAreValid(dto)) return null
         val restaurantId = dto.restaurant ?: return null
-        if (model.restaurant(restaurantId) == null) return null
-        val staffType = dto.staffType?.let { StaffType.valueOf(it) } ?: return null
-        val cookType = dto.cookType?.let { CookType.valueOf(it) }
+        val staffType = staffTypeOf(dto.staffType) ?: return null
         return StaffChange(
             id = dto.id,
             evening = dto.evening,
             restaurantId = restaurantId,
-            number = dto.number ?: return null,
+            number = dto.number ?: 0,
             staffType = staffType,
-            cookType = cookType,
+            cookType = dto.cookType?.let { cookTypeOf(it) },
         )
+    }
+
+    private fun staffFieldsAreValid(dto: IncidentJsonDto): Boolean {
+        val restaurantId = dto.restaurant ?: return false
+        val cookTypeResolves = dto.cookType == null || cookTypeOf(dto.cookType) != null
+        return model.restaurant(restaurantId) != null &&
+            staffTypeOf(dto.staffType) != null &&
+            dto.number != null &&
+            cookTypeResolves
     }
 
     private fun serialiseRecipeChange(dto: IncidentJsonDto): RecipeChange? {
