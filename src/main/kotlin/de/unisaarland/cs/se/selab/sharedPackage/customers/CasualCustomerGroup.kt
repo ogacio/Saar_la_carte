@@ -22,7 +22,7 @@ class CasualCustomerGroup(
 ) : CustomerGroup(id, groupSize, GroupType.CASUAL, tableType, visitingTick, deliveryDistance, members, preferences) {
 
     /** The restaurant types this group is willing to visit. */
-    fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
+    override fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
 
     /** The evenings this group intends to get food from a restaurant. */
     fun visitingEvenings(): List<Int> = visitingEvenings

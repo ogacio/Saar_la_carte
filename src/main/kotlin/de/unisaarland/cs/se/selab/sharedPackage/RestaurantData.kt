@@ -1,8 +1,6 @@
 package de.unisaarland.cs.se.selab.sharedPackage
-import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.RegularCustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.CasualCustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.EventCustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+
 data class RestaurantData(private val id: Int, private val type: RestaurantType, private val openingTick: Int, private val closingTick: Int,
                           private val dishes: MutableList<Recipe>, private var freeSeats: MutableMap<TableType, Int>, private var freeDrivers: Int,
                           private val hostsEvents: Boolean, private val totalSeats:Int, private val eventSeatsBooked: MutableMap<Int, Int>) {
@@ -14,15 +12,15 @@ data class RestaurantData(private val id: Int, private val type: RestaurantType,
             }
             freeDrivers--
         }else {
-            val availableSeats = freeSeats[g.getTableType()] ?: 0
-            require(g.getGroupSize() <= availableSeats) {
+            val availableSeats = freeSeats[g.tableType()] ?: 0
+            require(g.groupSize() <= availableSeats) {
                 "Available seats should have been checked before take()"
             }
-            freeSeats[g.getTableType()] = availableSeats - g.getGroupSize()
+            freeSeats[g.tableType()] = availableSeats - g.groupSize()
         }
     }
     fun takeForEvent(g: CustomerGroup, evening: Int):Unit{
-        eventSeatsBooked[evening] = (eventSeatsBooked[evening] ?: 0) + g.getGroupSize()
+        eventSeatsBooked[evening] = (eventSeatsBooked[evening] ?: 0) + g.groupSize()
     }
     fun openAt(tick: Int): Boolean {
         return openingTick <= tick && closingTick >= tick
