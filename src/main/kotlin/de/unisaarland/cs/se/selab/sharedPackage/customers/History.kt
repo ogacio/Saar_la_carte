@@ -1,4 +1,6 @@
-package de.unisaarland.cs.se.selab.sharedPackage
+package de.unisaarland.cs.se.selab.sharedPackage.customers
+
+import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 
 /** The last three visits of a regular customer group. */
 class History {

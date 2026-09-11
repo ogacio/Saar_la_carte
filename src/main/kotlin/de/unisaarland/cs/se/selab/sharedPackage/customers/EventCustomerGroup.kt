@@ -1,9 +1,5 @@
-package de.unisaarland.cs.se.selab.customer
+package de.unisaarland.cs.se.selab.sharedPackage.customers
 
-import de.unisaarland.cs.se.selab.sharedPackage.Customer
-import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.FoodPreference
-import de.unisaarland.cs.se.selab.sharedPackage.GroupType
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
@@ -26,14 +22,24 @@ class EventCustomerGroup(
     visitingTick: Int,
     members: List<Customer>,
     preferences: List<FoodPreference>,
-    val restaurantTypes: Set<RestaurantType>,
-    val eventEvening: Int,
-    val favouriteDishes: Map<RestaurantType, String>,
+    private val restaurantTypes: Set<RestaurantType>,
+    private val eventEvening: Int,
+    private val favouriteDishes: Map<RestaurantType, String>,
 ) : CustomerGroup(id, groupSize, GroupType.EVENT, tableType, visitingTick, null, members, preferences) {
 
+    private var bookedRestaurant: Int? = null
+
+    /** The restaurant types this group considers for its event. */
+    fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
+
+    /** The evening this group intends to hold its event. */
+    fun eventEvening(): Int = eventEvening
+
+    /** The favourite basic dish this group has chosen per restaurant type. */
+    fun favouriteDishes(): Map<RestaurantType, String> = favouriteDishes
+
     /** The restaurant the group booked, null until it browsed successfully. */
-    var bookedRestaurant: Int? = null
-        private set
+    fun bookedRestaurant(): Int? = bookedRestaurant
 
     /**
      * Whether the group makes its reservation on [evening], three evenings before the event.
@@ -72,7 +78,7 @@ class EventCustomerGroup(
     override fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int> {
         val favourites = favouriteDishes.values.toSet()
         val dish = menu.firstOrNull { favourites.contains(it.dishName) } ?: return emptyMap()
-        return mapOf(dish to groupSize)
+        return mapOf(dish to groupSize())
     }
 
     override fun dishOverride(type: RestaurantType): String? = favouriteDishes[type]

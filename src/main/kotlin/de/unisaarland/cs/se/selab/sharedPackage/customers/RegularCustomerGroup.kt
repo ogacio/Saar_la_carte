@@ -1,5 +1,7 @@
-package de.unisaarland.cs.se.selab.sharedPackage
+package de.unisaarland.cs.se.selab.sharedPackage.customers
 
+import de.unisaarland.cs.se.selab.sharedPackage.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.ratings.Experience
 import de.unisaarland.cs.se.selab.simulation.ratings.Rating
 
@@ -18,6 +20,18 @@ class RegularCustomerGroup(
 
     private var failedAttempts = 0
 
+    /** The first evening this group visits the restaurant. */
+    fun visitingStart(): Int = visitingStart
+
+    /** The number of evenings between two visits of this group. */
+    fun visitingPeriod(): Int = visitingPeriod
+
+    /** The id of the restaurant this group visits periodically. */
+    fun restaurantId(): Int = restaurantId
+
+    /** The number of consecutive failed attempts this group has had so far. */
+    fun failedAttempts(): Int = failedAttempts
+
     override fun visitsOn(evening: Int): Boolean =
         !hasGivenUp() &&
             evening >= visitingStart &&
@@ -32,7 +46,7 @@ class RegularCustomerGroup(
     /** The dishes of the group's last three visits, counted once per member that ordered it. */
     override fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int> {
         val counts = mutableMapOf<Recipe, Int>()
-        for (visit in history.getLastThree()) {
+        for (visit in history().getLastThree()) {
             for (dish in visit) {
                 if (menu.contains(dish)) {
                     counts[dish] = (counts[dish] ?: 0) + 1
