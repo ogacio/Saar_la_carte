@@ -1,8 +1,7 @@
-package de.unisaarland.cs.se.selab
+package de.unisaarland.cs.se.selab.simulation
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
-import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
 class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook){
     private var entries:MutableList<RestaurantData> = entries
@@ -13,7 +12,7 @@ class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook)
     fun choose(g: CustomerGroup): Int?{
         var candidates:MutableList<RestaurantData> = entries
         candidates = candidates.filter{it.getType() in g.restaurantTypes()}.filter{it.openAt(GlobalClock.getTickInEvening())}.toMutableList()
-        candidates = candidates.filter{c -> g.preferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}.toMutableList()
+        candidates = candidates.filter{c -> g.preferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.excluded()}}}}.toMutableList()
         if (g.isDelivery()) {
             candidates = candidates.filter{it.getFreeDrivers()>0}.toMutableList()
         }else {
@@ -30,7 +29,7 @@ class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook)
     fun chooseForEvent(g: CustomerGroup, eventEvening: Int): Int?{
         var candidates:MutableList<RestaurantData> = entries
         candidates = candidates.filter{it.getType() in g.restaurantTypes()}.filter{it.openAt(g.visitingTick())}.filter{it.getHostsEvents()}.toMutableList()
-        candidates = candidates.filter{c -> g.preferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}.toMutableList()
+        candidates = candidates.filter{c -> g.preferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.excluded()}}}}.toMutableList()
         candidates = candidates.filter{it.eventSeatsLeft(g.eventEvening())>=g.groupSize()}.toMutableList()
         val id = rank(candidates)
         if (id!=null){
