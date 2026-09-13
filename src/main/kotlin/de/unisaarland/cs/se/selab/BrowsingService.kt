@@ -30,8 +30,8 @@ class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook)
     fun chooseForEvent(g: CustomerGroup, eventEvening: Int): Int?{
         var candidates:MutableList<RestaurantData> = entries
         candidates = candidates.filter{it.getType() in g.restaurantTypes()}.filter{it.openAt(g.visitingTick())}.filter{it.getHostsEvents()}.toMutableList()
-        candidates = candidates.filter{c -> g.getPreferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}.toMutableList()
-        candidates = candidates.filter{it.eventSeatsLeft(g.eventEvening())>=g.getGroupSize()}.toMutableList()
+        candidates = candidates.filter{c -> g.preferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.getExcluded()}}}}.toMutableList()
+        candidates = candidates.filter{it.eventSeatsLeft(g.eventEvening())>=g.groupSize()}.toMutableList()
         val id = rank(candidates)
         if (id!=null){
             candidates.first{it.getId() == id}.takeForEvent(g, eventEvening)
