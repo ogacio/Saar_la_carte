@@ -30,10 +30,10 @@ class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook)
         var candidates:MutableList<RestaurantData> = entries
         candidates = candidates.filter{it.getType() in g.restaurantTypes()}.filter{it.openAt(g.visitingTick())}.filter{it.getHostsEvents()}.toMutableList()
         candidates = candidates.filter{c -> g.preferences().all{preference -> c.getDishes().any{it.getIngredients().none{it.getIngredient() in preference.excluded()}}}}.toMutableList()
-        candidates = candidates.filter{it.eventSeatsLeft(g.eventEvening())>=g.groupSize()}.toMutableList()
+        candidates = candidates.filter{it.eventSeatsLeft(g.getEventEvening())>=g.groupSize()}.toMutableList()
         val id = rank(candidates)
         if (id!=null){
-            candidates.first{it.getId() == id}.takeForEvent(g, eventEvening)
+            candidates.first{it.getId() == id}.takeForEvent(g)
         }
         return id
     }

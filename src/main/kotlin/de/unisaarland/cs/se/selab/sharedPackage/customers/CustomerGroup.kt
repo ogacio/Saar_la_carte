@@ -16,8 +16,10 @@ abstract class CustomerGroup(
     private val visitingTick: Int,
     private val deliveryDistance: Int?,
     private val members: List<Customer>,
-    private val preferences: List<FoodPreference>,
+    private val preferences: List<FoodPreference>
 ) {
+    private val eventEvening: Int? = null
+
     private val history: History = History()
 
     /** The unique identifier of this customer group. */
@@ -43,6 +45,7 @@ abstract class CustomerGroup(
 
     /** The last three visits of this group, if it has visited before. */
     protected fun history(): History = history
+    abstract fun getEventEvening(): Int
     abstract fun getDeliveryDistance(): Int
     /** Whether the group visits a restaurant on [evening]. */
     abstract fun visitsOn(evening: Int): Boolean

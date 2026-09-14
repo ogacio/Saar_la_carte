@@ -34,4 +34,5 @@ class Order (
         return tick - placedTick
     }
     fun getCustomerGroup():CustomerGroup = group
+    fun getId(): Int = id
 }

@@ -19,7 +19,8 @@ data class RestaurantData(private val id: Int, private val type: RestaurantType,
             freeSeats[g.tableType()] = availableSeats - g.groupSize()
         }
     }
-    fun takeForEvent(g: CustomerGroup, evening: Int):Unit{
+    fun takeForEvent(g: CustomerGroup):Unit{
+        val evening = g.getEventEvening()
         eventSeatsBooked[evening] = (eventSeatsBooked[evening] ?: 0) + g.groupSize()
     }
     fun openAt(tick: Int): Boolean {
