@@ -22,7 +22,7 @@ class EventCustomerGroup(
     visitingTick: Int,
     members: List<Customer>,
     preferences: List<FoodPreference>,
-    private val restaurantTypes: Set<RestaurantType>,
+    override private val restaurantTypes: Set<RestaurantType>,
     private val eventEvening: Int,
     private val favouriteDishes: Map<RestaurantType, String>,
 ) : CustomerGroup(id, groupSize, GroupType.EVENT, tableType, visitingTick, null, members, preferences) {
@@ -33,7 +33,7 @@ class EventCustomerGroup(
     fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
 
     /** The evening this group intends to hold its event. */
-    override fun eventEvening(): Int = eventEvening
+    fun eventEvening(): Int = eventEvening
 
     /** The favourite basic dish this group has chosen per restaurant type. */
     fun favouriteDishes(): Map<RestaurantType, String> = favouriteDishes

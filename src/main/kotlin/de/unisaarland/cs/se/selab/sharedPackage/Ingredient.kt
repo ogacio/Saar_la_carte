@@ -10,7 +10,7 @@ class Ingredient(
     val name: String,
     val unit: UnitType,
     packagingVolume: Int,
-    val bestUntil: Int,
+    var bestUntil: Int,
 ) {
     /** The base amount in which the ingredient can be obtained from the supplier. */
     var packagingVolume: Int = packagingVolume

@@ -1,8 +1,10 @@
 package de.unisaarland.cs.se.selab.incident
 
-import de.unisaarland.cs.se.selab.sharedPackage.CookType
+import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
 import de.unisaarland.cs.se.selab.sharedPackage.StaffType
+import de.unisaarland.cs.se.selab.simulation.Simulator
+import de.unisaarland.cs.se.selab.simulation.Supplier
 
 /**
  * Staff joins or leaves one restaurant (specification, Section 2.2, "Staff Change").
@@ -22,7 +24,7 @@ class StaffChange(
     override val type: IncidentType = IncidentType.STAFF
 
     override fun apply(sim: Simulator) {
-        sim.restaurantById(restaurantId)?.changeStaff(staffType, cookType, number)
+        sim.restaurantsById(restaurantId)?.changeStaff(staffType, cookType, number)
     }
 }
 

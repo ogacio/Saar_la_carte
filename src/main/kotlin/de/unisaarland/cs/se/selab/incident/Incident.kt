@@ -1,5 +1,7 @@
 package de.unisaarland.cs.se.selab.incident
 
+import de.unisaarland.cs.se.selab.simulation.Simulator
+
 /**
  * The kind of an incident (specification, Figure 8).
  */

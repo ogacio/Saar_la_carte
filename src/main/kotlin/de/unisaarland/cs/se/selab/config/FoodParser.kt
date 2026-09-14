@@ -1,6 +1,6 @@
 package de.unisaarland.cs.se.selab.config
 
-import de.unisaarland.cs.se.selab.kicthen.CookType
+import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RecipeIngredient
@@ -21,7 +21,7 @@ import java.io.IOException
 class FoodParser(
     private val model: FoodRegistry,
     private val validator: FileValidator,
-) : ConfigStage {
+) : ConfigParser {
     private val schemaPath = SCHEMA_PATH
     private val json = Json { ignoreUnknownKeys = false }
     private var ingredientCount = 0
