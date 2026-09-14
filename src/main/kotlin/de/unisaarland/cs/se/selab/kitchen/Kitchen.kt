@@ -1,37 +1,59 @@
-package de.unisaarland.cs.se.selab.kicthen
+package de.unisaarland.cs.se.selab.kitchen
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
-import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
-import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.sharedPackage.Order
+import de.unisaarland.cs.se.selab.sharedPackage.Pantry
+import de.unisaarland.cs.se.selab.foh.ReservationBook
+import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
+import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
 class Kitchen (
-    val roster:CookRoster,
-    val pantry:Pantry,
-    var queue:MutableList<Order>,
-    val reservationBook:ReservationBook,
-) {
-    public fun enqueue(o:Order):Unit {
+    val roaster : CookRoaster,
+    val pantry : Pantry,
+    var queue : MutableList<Order>,
+    val reservationBook : ReservationBook
+    )
+
+{
+    fun enqueue(o:Order) {
+        queue.add(o)
+    }
+
+    fun cook() : MutableList<Meal> {// responsible for making MutableList<Meal> from the queue with the same meals inside,
+                                    // then start calling roaster.startCooking on all
+        for (o in queue) {
+            for (m in o.meals) {
+                if(m.status == MealStatus.QUEUED && roaster.hasEligible(m.recipe)) {
+                    val allOfTypeM =
+                    val willCook = roaster.startCooking(allOfTypeM)
+                }
+            }
+        }
+
+        // we have to reserve ingredients here
+    }
+
+    fun planEvening(expectedCostumers : MutableList<CustomerGroup>, otherSeats : Int) {
+        pantry.checkDateAndCleanOut()
 
     }
 
-    public fun cook():MutableList<Meal> {
-
+    fun finishedMeals () : MutableList<Meal> {  // has to update queue
+        var finished = roaster.finished()
     }
 
-    public fun planEvening(expectedCostumers:MutableList<CustomerGroup>,otherSeats: Int):Unit {
-
+    fun canCook(r:Recipe) : Boolean {
+        return roaster.hasEligible(r)
     }
 
-    public fun canCook(r:Recipe):Boolean {
-
+    fun changeStaff(type:CookType,delta: Int) {
+        roaster.changeStaff(type, delta)
     }
 
-    public fun changeStaff(type:CookType,delta: Int):Unit {
-
-    }
-
-    public fun closeEvening():Unit {
-
+    fun closeEvening() {
+        roaster.resetEvening()
+        pantry.discardEvening()
+        queue.clear()
     }
 }
