@@ -39,7 +39,7 @@ abstract class CustomerGroup(
 
     /** The last three visits of this group, if it has visited before. */
     protected fun history(): History = history
-
+    abstract fun getDeliveryDistance(): Int
     /** Whether the group visits a restaurant on [evening]. */
     abstract fun visitsOn(evening: Int): Boolean
 

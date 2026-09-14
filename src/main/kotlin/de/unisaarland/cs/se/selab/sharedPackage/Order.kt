@@ -33,4 +33,5 @@ class Order (
     public fun ticksSince(tick: Int) : Int {
         return tick - placedTick
     }
+    fun getCustomerGroup():CustomerGroup = group
 }

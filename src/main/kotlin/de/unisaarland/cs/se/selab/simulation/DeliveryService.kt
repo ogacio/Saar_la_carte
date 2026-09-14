@@ -3,17 +3,18 @@ import de.unisaarland.cs.se.selab.foh.DriverState
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.simulation.Simulator
 
-class DeliveryService {
+object DeliveryService {
     private val allDrivers = mutableListOf<DeliveryDriver>()
     fun placeOrder(g: CustomerGroup, restaurant:Restaurant, tick: Int): Order?{
         //TODO
     }
-    fun chooseDriverForOrder(restaurantId: Int): Int{
-        val driver = allDrivers.filter{it.getRestaurantId() == restaurantId}.first{it.isFree()}
+    fun chooseDriverForOrder(restaurantId: Int): Int?{
+        val driver = allDrivers.filter{it.getRestaurantId() == restaurantId}.firstOrNull{it.isFree()}
+        if (driver == null){return null}
         if (driver.getId()==null){
             driver.setId(Simulator.restaurantsById(restaurantId).getFoh().getDeliveryDesk().grantDriverId())
         }
-        return driver.getId()!!
+        return driver.getId()
     }
     fun calculateTravelTicks(distance: Int):Int{
         return (distance+4)/5

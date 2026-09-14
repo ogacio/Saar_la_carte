@@ -7,7 +7,6 @@ class Simulator(
     private val customers: CustomerRegistry,
     private val incidents: MutableList<Incident>,
     private val browsingService: BrowsingService,
-    private val deliveryService: DeliveryService,
     private val ratingBook: RatingBook,
     private val statistics: Statistics
 ) {
