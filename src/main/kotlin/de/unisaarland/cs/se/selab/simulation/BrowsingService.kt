@@ -3,9 +3,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 
-class BrowsingService (entries:MutableList<RestaurantData>, ratings: RatingBook){
-    private var entries:MutableList<RestaurantData> = entries
-    private val ratings:RatingBook = ratings
+class BrowsingService (var entries:MutableList<RestaurantData>, var ratings: RatingBook){
     fun refresh(snapshots: MutableList<RestaurantData>): Unit{
         entries = snapshots
     }
