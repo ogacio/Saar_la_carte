@@ -1,0 +1,26 @@
+{
+  "ingredients": [
+    {
+      "name": "x",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 1
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Dish X",
+      "duration": 2,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "x",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

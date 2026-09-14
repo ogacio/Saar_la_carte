@@ -1,5 +1,7 @@
 package de.unisaarland.cs.se.selab.sharedPackage
 
+import de.unisaarland.cs.se.selab.kitchen.CookType
+
 /**
  * The recipe for one dish: what it needs, how long it takes and who may cook it.
  */
