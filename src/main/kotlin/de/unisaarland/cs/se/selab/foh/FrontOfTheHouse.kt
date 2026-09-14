@@ -4,7 +4,7 @@ import de.unisaarland.cs.se.selab.simulation.ratings.ReservationBook
 
 
 class FrontOfTheHouse(
-    private val ctx: SubUnits,
+    private val sbu: SubUnits,
     private val tables: TableAssignmentService,
     private val reservations: ReservationBook,
     private val waitstaff: WaiterAssignmentService,
@@ -19,6 +19,7 @@ class FrontOfTheHouse(
 
     private val visits: MutableList<Visit> = mutableListOf()
     private var regularsForTonight: MutableList<CustomerGroup> = mutableListOf()
+    private var turnedAway: List<CustomerGroup> = emptyList()
     
 
 
@@ -54,7 +55,7 @@ class FrontOfTheHouse(
     }
 
     public fun sendCustomersAway(group: CustomerGroup) {
-        rating.rateFailedReservation(group, ctx)
+        rating.rateFailedReservation(group, sbu)
 
     }
 
@@ -63,16 +64,25 @@ class FrontOfTheHouse(
     }
 
     /** Call each service in order. Order corresponds top-down in the definition of the methods */
-    public fun callSeatingService(arrivals: MutableList<CustomerGroup>) {
-        // TODO
+    public fun callSeatingService(arrivals: MutableList<CustomerGroup>) {    
+        for (group in arrivals) {
+            Logger.Customer.arrival(sbu.restaurantId, group.id())
+            visits.add(Visit(group))
+        }
+        // Insert the visit in oerder needed REGULARS -> EVENT -> CASUAL
+        visits.sortWith(
+            compareBy<Visit> { it.group.groupType().ordinal }
+                .thenBy { it.group.id() },
+        )
+        seating.seatAll(visits, sbu)
     }
 
     public fun callOrderingService() {
-        // TODO
+        oerdering.takeOrders(visits, sbu)
     }
 
     public fun callServingService() {
-        // TODO
+        serving.serve(visits, sbu)
     }
 
     public fun mealsReady(meals: MutableList<Meal>) {
@@ -84,15 +94,17 @@ class FrontOfTheHouse(
     }
 
     public fun callDiningService() {
-        // TODO
+        dinig.eat(visits, sbu)
     }
 
     public fun callEscortingService() {
-        // TODO
+        escorting.escort(visits, sbu)
     }
 
     public fun callRatingService() {
-        // TODO
+        rating.rate(visits, turnedAway, sbu)
+        turnedAway = emptyList()
+        visits.removeAll { it.state is GoneState }
     }
 
 
