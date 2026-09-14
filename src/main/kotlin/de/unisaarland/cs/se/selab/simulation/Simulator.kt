@@ -1,6 +1,6 @@
 package de.unisaarland.cs.se.selab.simulation
-
-
+import de.unisaarland.cs.se.selab.incident.Incident
+import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 class Simulator(
     private val maxTicks: Int,
     private val restaurants: MutableList<Restaurant>,
@@ -27,8 +27,8 @@ class Simulator(
         //TODO: implement the event booking logic here
     }
 
-    public fun restaurantsById(id: Int): Restaurant? {
-        return restaurants.find { it.id == id }
+    fun restaurantsById(id: Int): Restaurant? {
+        return restaurants.first{it.id == id}
     }
 
     public fun run() {

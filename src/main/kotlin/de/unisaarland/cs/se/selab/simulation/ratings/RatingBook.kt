@@ -17,6 +17,8 @@ class RatingBook {
     public fun ratingScore(restaurantId: Int): Int? {
         return ratings[restaurantId]?.score()
     }
-
+    fun getById(restaurantId: Int): RatingScore {
+        return ratings[restaurantId]!!
+    }
     
 }

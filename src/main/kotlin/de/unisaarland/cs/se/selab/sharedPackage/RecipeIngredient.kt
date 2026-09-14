@@ -20,7 +20,7 @@ class RecipeIngredient(
         val adapted = amount * (FULL_PERCENT + percent) / FULL_PERCENT
         amount = adapted.coerceAtLeast(1)
     }
-
+    fun getIngredient(): Ingredient = ingredient
     /** Percentage base used by the RECIPE incident. */
     private companion object {
         const val FULL_PERCENT = 100

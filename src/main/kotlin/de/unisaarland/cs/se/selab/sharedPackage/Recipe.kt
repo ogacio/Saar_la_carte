@@ -32,4 +32,5 @@ class Recipe(
     private companion object {
         const val MINUTES_PER_TICK = 10
     }
+    fun getIngredients(): List<RecipeIngredient> = ingredients
 }
