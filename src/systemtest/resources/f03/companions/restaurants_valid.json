@@ -1,0 +1,69 @@
+{
+  "restaurants": [
+    {
+      "id": 1,
+      "name": "Sakura",
+      "type": "ASIAN",
+      "openingTickStart": 1,
+      "openingTickEnd": 24,
+      "deliveryDrivers": 0,
+      "event": false,
+      "positiveRatings": 0,
+      "negativeRatings": 0,
+      "recipes": [
+        1,
+        3
+      ],
+      "kitchenStaff": {
+        "EXEC": 1,
+        "SOUS": 0,
+        "TOURNANT": 0,
+        "SAUCE": 0,
+        "FISH": 0,
+        "ROAST": 0,
+        "VEGETABLE": 1,
+        "PASTRY": 0
+      },
+      "waitstaff": 1,
+      "tables": [
+        {
+          "id": 1,
+          "type": "COMMON",
+          "size": 4
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Le Bistro",
+      "type": "EUROPEAN",
+      "openingTickStart": 1,
+      "openingTickEnd": 24,
+      "deliveryDrivers": 0,
+      "event": false,
+      "positiveRatings": 0,
+      "negativeRatings": 0,
+      "recipes": [
+        2
+      ],
+      "kitchenStaff": {
+        "EXEC": 0,
+        "SOUS": 0,
+        "TOURNANT": 0,
+        "SAUCE": 1,
+        "FISH": 0,
+        "ROAST": 1,
+        "VEGETABLE": 0,
+        "PASTRY": 0
+      },
+      "waitstaff": 1,
+      "tables": [
+        {
+          "id": 1,
+          "type": "COMMON",
+          "size": 4
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "ingredients": [
+    {
+      "name": "salt",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 1
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Salted Water",
+      "duration": 2,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "salt",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

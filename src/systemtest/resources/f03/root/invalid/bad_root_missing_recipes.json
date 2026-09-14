@@ -1,0 +1,28 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 20,
+      "bestBefore": 5
+    },
+    {
+      "name": "beef",
+      "unit": "g",
+      "packagingVolume": 50,
+      "bestBefore": 3
+    },
+    {
+      "name": "tofu",
+      "unit": "X",
+      "packagingVolume": 1,
+      "bestBefore": 4
+    },
+    {
+      "name": "broth",
+      "unit": "mL",
+      "packagingVolume": 500,
+      "bestBefore": 7
+    }
+  ]
+}
