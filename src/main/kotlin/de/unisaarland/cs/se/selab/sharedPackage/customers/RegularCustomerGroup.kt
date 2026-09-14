@@ -1,6 +1,7 @@
 package de.unisaarland.cs.se.selab.sharedPackage.customers
 
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.ratings.Experience
 import de.unisaarland.cs.se.selab.simulation.ratings.Rating
@@ -37,6 +38,9 @@ class RegularCustomerGroup(
             evening >= visitingStart &&
             (evening - visitingStart) % visitingPeriod == 0
 
+    /** REGULAR groups are bound to one fixed restaurant and never browse by type. */
+    override fun restaurantTypes(): Set<RestaurantType> = emptySet()
+
     override fun homeRestaurant(): Int = restaurantId
 
     /** Every regular group rates every visit; a negative experience gives a negative rating. */
@@ -68,6 +72,11 @@ class RegularCustomerGroup(
     /** Resets the failure counter after a successful visit. */
     fun recordSuccessfulVisit() {
         failedAttempts = 0
+    }
+
+    /** A negative experience counts as a failed attempt; anything else resets the streak. */
+    override fun recordOutcome(e: Experience) {
+        if (e == Experience.NEGATIVE) recordFailedAttempt() else recordSuccessfulVisit()
     }
 
     private companion object {

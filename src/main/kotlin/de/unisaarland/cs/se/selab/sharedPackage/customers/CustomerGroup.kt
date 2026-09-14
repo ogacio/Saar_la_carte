@@ -1,5 +1,6 @@
 package de.unisaarland.cs.se.selab.sharedPackage.customers
 
+import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
@@ -34,6 +35,9 @@ abstract class CustomerGroup(
     /** The tick within an evening when this group wants to get food from a restaurant. */
     fun visitingTick(): Int = visitingTick
 
+    /** The delivery distance in kilometers, or null if the group never orders delivery. */
+    fun deliveryDistance(): Int? = deliveryDistance
+
     /** The food preferences declared for this group. */
     fun preferences(): List<FoodPreference> = preferences
 
@@ -66,4 +70,12 @@ abstract class CustomerGroup(
 
     /** Whether the group has stopped visiting restaurants for good. */
     open fun hasGivenUp(): Boolean = false
+
+    /** Records the dishes of a completed order as this group's latest visit. */
+    open fun recordVisit(evening: Int, o: Order) {
+        history.shiftAndPutNew(o.meals.map { it.recipe })
+    }
+
+    /** Records whether a visit succeeded or failed, for groups that track consecutive failures. */
+    open fun recordOutcome(e: Experience) = Unit
 }
