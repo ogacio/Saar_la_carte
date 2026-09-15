@@ -1,9 +1,10 @@
 package de.unisaarland.cs.se.selab.kicthen
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
-import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
-import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.sharedPackage.Order
+import de.unisaarland.cs.se.selab.kitchen.CookType
+import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 
 class Kitchen (
     val roster:CookRoster,
@@ -32,6 +33,7 @@ class Kitchen (
     }
 
     public fun closeEvening():Unit {
-
+        roster.resetEvening()
+        queue.clear()
     }
 }

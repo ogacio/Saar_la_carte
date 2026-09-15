@@ -39,7 +39,14 @@ class FrontOfTheHouse(
         /**TODO: From the spec we have that 
         customers still inside are escorted outside immediately. 
         Those groups that have finished eating see this as a non-negative experience, 
-        for all other groups this counts as a negative experience.*/  
+        for all other groups this counts as a negative experience.*/
+        deliveryDesk.resetForEvening()
+        tables.splitAllMerged()
+        waitstaff.resetEvening()
+
+        visits.clear()
+        regularsForTonight.clear()
+        //TODO
     }
 
 
