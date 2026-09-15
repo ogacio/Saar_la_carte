@@ -35,4 +35,5 @@ class Order (
     }
     fun getCustomerGroup():CustomerGroup = group
     fun getId(): Int = id
+    fun getMeals():List<Meal> = meals
 }

@@ -1,7 +1,7 @@
 package de.unisaarland.cs.se.selab.simulation
 import de.unisaarland.cs.se.selab.logging.Logger
 
-class Statistics {
+object Statistics {
     private val cooked = mutableMapOf<Int, Int>()
     private val served = mutableMapOf<Int, Int>()
     private val delivered = mutableMapOf<Int, Int>()
