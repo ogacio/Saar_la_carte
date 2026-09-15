@@ -6,18 +6,19 @@ import de.unisaarland.cs.se.selab.simulation.GlobalClock
 class CookRoaster (
     val kitchenStaff : Map<CookType, Int>,
     val cooks : MutableList<Cook> = mutableListOf(),
-    var nextId : Int = 1
+    var nextId : Int = 1,
+    val clock: GlobalClock
     )
 
 {
     // has to be called early in restaurant, makes the cooks field
     fun initialiseCooks () {
         for((type,number) in kitchenStaff) {
-            var number = number
-            while(number != 0) {
-                val cook = Cook(type, clock = GlobalClock)
+            var remaining = number
+            while(remaining != 0) {
+                val cook = Cook(type, clock = clock)
                 cooks.add(cook)
-                number--
+                remaining--
             }
         }
     }
@@ -58,26 +59,29 @@ class CookRoaster (
     fun changeStaff(type:CookType, delta: Int) {
         var delta = delta
         if(delta >= 0) {
-            val cook = Cook(type, clock = GlobalClock)
             while(delta != 0) {
+                val cook = Cook(type, clock = clock)
                 cooks.add(cook)
                 delta--
             }
         }
         else {
+            val cookCopy = cooks.toMutableList()
             for(cook in cooks) {
                 if(delta == 0) break
                 if(cook.getType() == type) {
-                    cooks.remove(cook)
+                    cookCopy.remove(cook)
                     delta++
                 }
             }
+            cooks.clear()
+            cooks.addAll(cookCopy)
         }
     }
 
     fun resetEvening() {
         for (cook in cooks) {
-            cook.setId(null)
+            cook.reset()
         }
         nextId = 1
     }

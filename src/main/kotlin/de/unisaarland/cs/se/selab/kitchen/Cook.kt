@@ -40,6 +40,12 @@ class Cook (
         return busyUntil == 0
     }
 
+    fun reset() {
+        busyUntil = 0
+        id = null
+        batch.clear()
+    }
+
     fun setId(id:Int?) { this.id = id }
     fun getId() : Int? = id
     fun getType() : CookType = type
