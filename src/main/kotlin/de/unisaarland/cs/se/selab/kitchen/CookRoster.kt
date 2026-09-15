@@ -1,8 +1,10 @@
 package de.unisaarland.cs.se.selab.kicthen
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
+import de.unisaarland.cs.se.selab.kitchen.CookType
+import de.unisaarland.cs.se.selab.kitchen.Cook
 
-class CookRoaster (
+class CookRoster (
     val kitchenStaff:Map<CookType, Int>,
     val cooks:MutableList<Cook>,
     var nextId: Int
@@ -25,6 +27,9 @@ class CookRoaster (
     }
 
     public fun resetEvening():Unit {
-
+        for (i in cooks){
+            i.reset()
+        }
+        nextId = 1
     }
 }

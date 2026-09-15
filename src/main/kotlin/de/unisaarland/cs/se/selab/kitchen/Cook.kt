@@ -1,13 +1,11 @@
 package de.unisaarland.cs.se.selab.kitchen
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
-import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
 class Cook (
     private val type : CookType,
     private var id : Int? = null,
     private var busyUntil : Int? = null,
     private var batch : MutableList<Meal>,
-    private var clock : GlobalClock
     )
 
 {
@@ -27,5 +25,10 @@ class Cook (
 
     fun isFree(tick: Int):Boolean {
         return busyUntil != null
+    }
+    fun reset(): Unit{
+        id = null
+        busyUntil = null
+        batch.clear()
     }
 }
