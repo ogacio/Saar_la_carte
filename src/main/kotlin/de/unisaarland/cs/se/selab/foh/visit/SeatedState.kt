@@ -1,5 +1,7 @@
 package de.unisaarland.cs.se.selab.foh.visit
 
+import de.unisaarland.cs.se.selab.sharedPackage.Order
+
 
 class SeatedState : VisitState() {
 

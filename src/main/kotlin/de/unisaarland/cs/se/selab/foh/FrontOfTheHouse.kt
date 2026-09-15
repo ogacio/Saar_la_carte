@@ -1,6 +1,8 @@
 package de.unisaarland.cs.se.selab.foh
 
+import de.unisaarland.cs.se.selab.simulation.SubUnits
 import de.unisaarland.cs.se.selab.simulation.ratings.ReservationBook
+import de.unisaarland.cs.se.selab.foh.visit.Visit
 
 
 class FrontOfTheHouse(
@@ -71,7 +73,7 @@ class FrontOfTheHouse(
     }
 
     public fun callOrderingService() {
-        oerdering.takeOrders(visits, sbu)
+        ordering.takeOrders(visits, sbu)
     }
 
     public fun callServingService() {
@@ -87,7 +89,7 @@ class FrontOfTheHouse(
     }
 
     public fun callDiningService() {
-        dinig.eat(visits, sbu)
+        dining.eat(visits, sbu)
     }
 
     public fun callEscortingService() {

@@ -1,50 +1,59 @@
+package de.unisaarland.cs.se.selab.foh.visit
 
+import de.unisaarland.cs.se.selab.foh.Table
+import de.unisaarland.cs.se.selab.foh.Waiter
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
+import de.unisaarland.cs.se.selab.sharedPackage.Order
+import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 
 class Visit(
     private val group: CustomerGroup,
 ) {
-    private var state: VisitState = AwaitingSeatState
+    var state: VisitState = AwaitingSeatState()
     var table: Table? = null
     var waiters: List<Waiter> = emptyList()
     var wasSeated: Boolean = false
     var order: Order? = null
 
-    val seatingAttempts: Int
-    val orderedTick: Int?
-    val firstMealTick: Int?
-    val rated: Boolean
+    var seatingAttempts: Int = 0
+    var orderedTick: Int? = null
+    var firstMealTick: Int? = null
+    var rated: Boolean = false
 
-    val leftUnservedThisTick: Int
-    val finishedEatingThisTick: Int
+    var leftUnservedThisTick: Int = 0
+    var finishedEatingThisTick: Int = 0
 
 
-    public fun seated(table: Table, waiter: Waiter, tick: Int): VisitState {
+    public fun seated(table: Table, waiter: List<Waiter>, tick: Int): Unit {
         state.onSeated(this, table, waiter, tick)
     }
 
     /** No waiter was free this tick; the group waits and tries once more. */
-    public noWaiterFree(tick: Int) = state.onNoWaiterFree(this, tick)
+    public fun noWaiterFree(tick: Int) = state.onNoWaiterFree(this, tick)
 
     /** The group is sent away: no table, or an EVENT group that could not be seated completely. */
-    public sentAway(tick: Int) = state.onSentAway(this, tick)
+    public fun sentAway(tick: Int) = state.onSentAway(this, tick)
 
     /** The group placed [order]. */
-    public ordered(order: Order, tick: Int) = state.onOrdered(this, order, tick)
+    public fun ordered(order: Order, tick: Int) = state.onOrdered(this, order, tick)
 
     /** Nobody in the group found a dish. */
-    public orderingFailed(tick: Int) = state.onOrderingFailed(this, tick)
+    public fun orderingFailed(tick: Int) = state.onOrderingFailed(this, tick)
 
     /** The kitchen finished [meal] of this group's order. */
-    public mealCooked(meal: Meal, tick: Int) = state.onMealCooked(this, meal, tick)
+    public fun mealCooked(meal: Meal, tick: Int) = state.onMealCooked(this, meal, tick)
 
     /** [meals] are served to their customers. */
-    public serve(meals: List<Meal>, tick: Int) = state.onServed(this, meals, tick)
+    public fun serve(meals: List<Meal>, tick: Int) = state.onServed(this, meals, tick)
 
     /**
      * The eating step of a tick. Resets the two per-tick counters, then lets the
      * state react: waiting deadlines, and who finished eating.
      */
-    public advance(tick: Int) {
+    public fun advance(tick: Int) {
         leftUnservedThisTick = 0
         finishedEatingThisTick = 0
         state.onTickElapsed(this, tick)
@@ -52,7 +61,7 @@ class Visit(
     }
 
     /** Escorts up to [n] customers outside and returns how many actually left. */
-    public escort(n: Int, tick: Int): Int {
+    public fun escort(n: Int, tick: Int): Int {
         val before = customersInside().size
         state.onEscorted(this, n, tick)
         return before - customersInside().size
@@ -62,7 +71,7 @@ class Visit(
      * Opening time is over: everyone still inside is escorted out at once, whatever
      * phase the visit is in. Called by the FOH in closeOpeningTime.
      */
-    public sendOut() {
+    public fun sendOut() {
         if (state is GoneState) return
         sentOutFinished = customersInside().all { it.status == CustomerStatus.DONE_EATING }
         leaveUnserved(customersWaitingForFood())

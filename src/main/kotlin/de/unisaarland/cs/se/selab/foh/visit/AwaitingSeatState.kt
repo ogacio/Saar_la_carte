@@ -1,5 +1,8 @@
 package de.unisaarland.cs.se.selab.foh.visit
 
+import de.unisaarland.cs.se.selab.foh.Table
+import de.unisaarland.cs.se.selab.foh.Waiter
+
 class AwaitingSeatState: VisitState() {
 
     override fun onSeated(visit: Visit, table: Table, waiters: List<Waiter>, tick: Int) { 

@@ -1,5 +1,12 @@
 package de.unisaarland.cs.se.selab.foh
 
+import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
+import de.unisaarland.cs.se.selab.foh.visit.Visit
+import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
+import de.unisaarland.cs.se.selab.simulation.GlobalClock
+import de.unisaarland.cs.se.selab.simulation.SubUnits
+
 
 class SeatingService(
     private val tables: TableAssignmentService,

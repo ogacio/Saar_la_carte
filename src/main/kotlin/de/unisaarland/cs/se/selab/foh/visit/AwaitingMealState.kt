@@ -1,12 +1,15 @@
 package de.unisaarland.cs.se.selab.foh.visit
 
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
+
 
 class AwaitingMealState : VisitState() {
 
-    const val TOLERATE_TICKS = 5
+    val tolerated_ticks = 5
 
     override fun onMealCooked(visit: Visit, meal: Meal, tick: Int) {
-        if (visit.firstMealTick == null) v.firstMealTick = tick
+        if (visit.firstMealTick == null) visit.firstMealTick = tick
     }
 
     /** Hands the meals to their customers. Partial serving keeps the table here. */
@@ -25,7 +28,7 @@ class AwaitingMealState : VisitState() {
 
         val servedSomebody = visit.group.members.any { it.servedTick != null }
         if (!servedSomebody) {
-            if (waited >= PATIENCE_TICKS) {
+            if (waited >= tolerated_ticks) {
                 val everyone = visit.customersInside()
                 visit.leftUnservedThisTick = everyone.size
                 visit.leaveUnserved(everyone)
@@ -35,7 +38,7 @@ class AwaitingMealState : VisitState() {
             return
         }
 
-        if (waited >= PATIENCE_TICKS + EXTRA_PATIENCE_TICKS) {
+        if (waited >= tolerated_ticks + 2) {
             val unserved = visit.customersWaitingForFood()
             visit.leftUnservedThisTick = unserved.size
             visit.leaveUnserved(unserved)
