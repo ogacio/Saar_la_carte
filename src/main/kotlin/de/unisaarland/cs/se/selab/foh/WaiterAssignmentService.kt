@@ -8,10 +8,17 @@ package de.unisaarland.cs.se.selab.foh
  * many waiters as the action needs, and the attempt only counts if the whole group is covered
  * within one tick.
  */
+private const val BUSY_LOAD = 10
+
 class WaiterAssignmentService(
     private val waitstaff: MutableList<Waiter>,
 ) {
     private var nextId = 1
+
+    /**
+     * How many actions of type [action] the whole waitstaff can still perform in this tick.
+     */
+    fun capacity(action: ActionType): Int = waitstaff.sumOf { it.remaining(action) }
 
     /**
      * Picks the permanent waiter for a group of [groupSize] customers, or null if none is free.
@@ -20,8 +27,20 @@ class WaiterAssignmentService(
      * that the others keep the capacity to seat larger groups; once everybody is busy the least
      * loaded waiter balances the load. The chosen waiter receives its id if it does not have one.
      */
-
-
+    fun assignPermanent(groupSize: Int): Waiter? {
+        // Rule 1: only waiters whose SEATING tick load stays within the limit with this group.
+        val eligible = waitstaff.filter { it.remaining(ActionType.SEATING) >= groupSize }
+        // Rule 2: among the waiters with a current load below 10, the one with the most customers.
+        val notBusy = eligible.filter { it.currentLoad < BUSY_LOAD }
+        val chosen = if (notBusy.isNotEmpty()) {
+            notBusy.minWithOrNull(compareByDescending<Waiter> { it.currentLoad }.thenBy { idOrLast(it) })
+        } else {
+            // Rule 3: everybody is busy, so the one with the least customers balances the load.
+            eligible.minWithOrNull(compareBy<Waiter> { it.currentLoad }.thenBy { idOrLast(it) })
+        }
+        chosen?.let { grantId(it) }
+        return chosen
+    }
 
     /**
      * Spreads [groupSize] customers of an EVENT group over the waiters for [action].
@@ -30,8 +49,33 @@ class WaiterAssignmentService(
      * whole group in this tick. The allocation is only planned here, the caller books it with
      * [Waiter.consume] once it decided to carry it out.
      */
+    fun assignEvent(
+        groupSize: Int,
+        action: ActionType,
+        cookedMeals: Map<Waiter, Int> = emptyMap(),
+    ): Map<Waiter, Int>? {
+        val candidates = waitstaff
+            .filter { it.remaining(action) > 0 }
+            .sortedWith(eventPriority(action, cookedMeals))
+        val plan = linkedMapOf<Waiter, Int>()
+        var left = groupSize
+        for (waiter in candidates) {
+            if (left == 0) break
+            val share = minOf(left, waiter.remaining(action))
+            plan[waiter] = share
+            left -= share
+        }
+        if (left > 0) return null
+        plan.keys.forEach { grantId(it) }
+        return plan
+    }
 
-
+    /**
+     * The waiter the event manager would pick first for [action], ignoring capacity. Nothing is
+     * planned and no id is granted; used to name "the first that would have served" in a log.
+     */
+    fun currentEventWaiter(action: ActionType, cookedMeals: Map<Waiter, Int> = emptyMap()): Waiter? =
+        waitstaff.sortedWith(eventPriority(action, cookedMeals)).firstOrNull()
 
     /**
      * Starts a new tick for every waiter.
@@ -73,5 +117,28 @@ class WaiterAssignmentService(
             waiter.id = nextId
             nextId++
         }
+    }
+
+    /**
+     * The waiter's id for tie-breaking. Waiters without an id sort last: they would receive a higher
+     * id than everybody who already acted.
+     */
+    private fun idOrLast(waiter: Waiter): Int = waiter.id ?: Int.MAX_VALUE
+
+    /**
+     * The order in which the event manager uses the waiters for [action]; ties go to the lowest id.
+     */
+    private fun eventPriority(action: ActionType, cookedMeals: Map<Waiter, Int>): Comparator<Waiter> {
+        val first = when (action) {
+            // "the manager prioritizes the waiters in descending order of the current load to perform the SEATING"
+            // ORDERING has no rule of its own in the spec; it follows SEATING (open point).
+            ActionType.SEATING, ActionType.ORDERING -> compareByDescending<Waiter> { it.currentLoad }
+            // "the manager prioritizes the waiters in descending number of cooked meals in the kitchen
+            // that belong to their assigned tables"
+            ActionType.SERVING -> compareByDescending<Waiter> { cookedMeals[it] ?: 0 }
+            // "For EVENT groups, the waitstaff manager prioritizes waiters with the lowest current load."
+            ActionType.ESCORTING -> compareBy<Waiter> { it.currentLoad }
+        }
+        return first.thenBy { idOrLast(it) }
     }
 }

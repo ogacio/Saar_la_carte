@@ -1,5 +1,5 @@
 package de.unisaarland.cs.se.selab.sharedPackage
-import de.unisaarland.cs.se.selab.kicthen.Kitchen
+import de.unisaarland.cs.se.selab.kitchen.Kitchen
 
 class Menu(
     private val recipes: MutableList<Recipe>,
