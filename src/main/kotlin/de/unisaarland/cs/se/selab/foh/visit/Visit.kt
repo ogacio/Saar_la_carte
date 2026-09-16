@@ -198,7 +198,7 @@ class Visit(val group: CustomerGroup) {
      * permanent waiter no longer waits on them.
      */
     fun leaveUnserved(customers: List<Customer>) {
-        order?.meals.orEmpty().filter { it.customer in customers }.forEach { it.abort() }
+        order?.meals.orEmpty().filter { it.customer in customers }.forEach { it.status = MealStatus.ABORTED }
         customers.forEach { it.leave() }
         if (group.groupType() != GroupType.EVENT) {
             waiters.forEach { it.adjustLoad(-customers.size) }
