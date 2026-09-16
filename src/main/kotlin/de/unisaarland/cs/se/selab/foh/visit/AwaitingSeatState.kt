@@ -3,19 +3,19 @@ package de.unisaarland.cs.se.selab.foh.visit
 import de.unisaarland.cs.se.selab.foh.Table
 import de.unisaarland.cs.se.selab.foh.Waiter
 
-class AwaitingSeatState: VisitState() {
+class AwaitingSeatState : VisitState() {
 
-    override fun onSeated(visit: Visit, table: Table, waiters: List<Waiter>, tick: Int) { 
+    override fun onSeated(visit: Visit, table: Table, waiters: List<Waiter>, tick: Int) {
         visit.table = table
         visit.waiters = waiters
+        visit.wasSeated = true
         visit.state = SeatedState()
     }
 
-
     /** "The customers try again the next tick and then leave, they do not reconsider." */
     override fun onNoWaiterFree(visit: Visit, tick: Int) {
-        if (visit.noWaiterAttempts == 0) {
-            visit.noWaiterAttempts = 1
+        if (visit.seatingAttempts == 0) {
+            visit.seatingAttempts = 1
             return
         }
         giveUp(visit)
@@ -30,6 +30,4 @@ class AwaitingSeatState: VisitState() {
         visit.failedAttempt = true
         visit.state = GoneState()
     }
-
-
 }

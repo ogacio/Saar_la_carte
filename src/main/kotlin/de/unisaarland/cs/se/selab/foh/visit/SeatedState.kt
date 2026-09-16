@@ -2,7 +2,6 @@ package de.unisaarland.cs.se.selab.foh.visit
 
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 
-
 class SeatedState : VisitState() {
 
     /**
@@ -24,5 +23,4 @@ class SeatedState : VisitState() {
         visit.leaveUnserved(visit.customersInside())
         visit.state = GoneState()
     }
-    
 }

@@ -1,7 +1,7 @@
 package de.unisaarland.cs.se.selab.simulation
 
 object GlobalClock {
-    private var currentTick: Int = 0
+    var currentTick: Int = 0
     private var evening: Int = 0
     private var tickInEvening: Int = 0
     fun advanceTick(): Unit{

@@ -25,6 +25,4 @@ sealed class VisitState {
     open fun onTickElapsed(visit: Visit, tick: Int) = Unit
 
     open fun onEscorted(visit: Visit, n: Int, tick: Int) = Unit
-
-
 }
