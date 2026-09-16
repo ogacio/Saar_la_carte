@@ -1,0 +1,27 @@
+{
+  "ingredients": [
+    {
+      "name": "tofu",
+      "unit": "X",
+      "packagingVolume": 5,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Tofu Bowl",
+      "duration": 2,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "tofu",
+          "amount": 3
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    }
+  ]
+}
