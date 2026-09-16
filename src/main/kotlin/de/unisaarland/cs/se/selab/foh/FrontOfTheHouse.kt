@@ -3,6 +3,7 @@ package de.unisaarland.cs.se.selab.foh
 import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
@@ -152,5 +153,8 @@ class FrontOfTheHouse(
         if (table != null && visit.group.groupType() == GroupType.CASUAL) tables.release(table)
     }
 
-    fun getWaitstaff(): WaiterAssignmentService = waitstaff
+    fun getWaitstaff() : WaiterAssignmentService = waitstaff
+    fun getServices() = services
+    fun getTables() = tables
+    fun getReservationBook(): ReservationBook = reservations
 }

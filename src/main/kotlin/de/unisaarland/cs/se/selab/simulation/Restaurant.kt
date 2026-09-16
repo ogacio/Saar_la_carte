@@ -30,12 +30,12 @@ class Restaurant (
     /**
     prepares the kitchen and the front of the house at the preparation phase
      */
-    fun prepare(regulars : MutableList<CustomerGroup>, supplier : Supplier) {
+    fun prepare(regulars : MutableList<CustomerGroup>) {
         var regularsSeats : Int = 0
         for (r in regulars) {
             regularsSeats += r.getGroupSize()
         }
-        kitchen.planEvening(regulars, data.getTotalSeats()-regularsSeats,supplier)
+        kitchen.planEvening(regulars, data.getTotalSeats()-regularsSeats)
         foh.prepareEvening(clock.getEvening(), regulars)
     }
 
@@ -59,7 +59,18 @@ class Restaurant (
     returns the RestaurantData of the restaurant
 -     */
     fun snapshot() : RestaurantData {
-        // TODO
+        return RestaurantData(
+            id,
+            type,
+            openingTick,
+            closingTick,
+            menu.getRecipes(),
+            foh.getTables().freeSeats(),
+            foh.getDeliveryDesk().amountFreeDrivers(),
+            hostsEvents,
+            foh.getTables().totalSeats(),
+            foh.getReservationBook().getEventSeatsBooked()
+            )
     }
 
     fun bookEvent(g : CustomerGroup, evening : Int) : Boolean {
@@ -77,7 +88,7 @@ class Restaurant (
     fun isOpen(tick: Int) : Boolean {
         return tick in openingTick..closingTick
     }
-    
+
     /**
      * One tick of this restaurant, steps 1 to 7 in the spec's order, between "Restaurant Start" and "Restaurant End".
      * [arrivals] are the groups arriving now. At the closing tick everyone still inside is sent out before rating.
@@ -96,4 +107,9 @@ class Restaurant (
         Logger.restaurantEnd(id)
     }
 
+    fun getFoh(): FrontOfTheHouse = foh
+    fun getKitchen() : Kitchen = kitchen
+    fun getPantry() : Pantry = pantry
+    fun getId(): Int = id
+    fun getMenu(): Menu = menu
 }

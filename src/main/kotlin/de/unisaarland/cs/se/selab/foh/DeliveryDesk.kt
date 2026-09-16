@@ -6,16 +6,16 @@ class DeliveryDesk (private val drivers: MutableList<DeliveryDriver>, private va
     private val newOrders: MutableList<Order> = mutableListOf()
     private val ready: MutableList<Order> = mutableListOf()
     private var nextDriverId: Int = 1
-    fun sendForOrder(o:Order):Order? {
+    fun sendForOrder(o:Order): Int? {
         val id = DeliveryService.chooseDriverForOrder(restaurantId)
         if (id != null) {
             ready.remove(o)
         } else {
-            return o
+            return null
         }
         val driver = drivers.first { it.getId() == id }
         driver.receiveOrder(o)
-        return null
+        return id
     }
     fun enqueue(o: Order): Unit{
         newOrders.add(o)
@@ -45,4 +45,5 @@ class DeliveryDesk (private val drivers: MutableList<DeliveryDriver>, private va
     fun getRestaurantId(): Int = restaurantId
     fun getDrivers(): List<DeliveryDriver> = drivers
 
+    fun amountFreeDrivers(): Int = drivers.count{it.isFree()}
 }

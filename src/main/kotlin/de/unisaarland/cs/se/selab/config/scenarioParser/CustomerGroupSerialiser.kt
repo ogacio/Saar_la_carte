@@ -121,8 +121,8 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
 
     /** The visiting tick must leave time to be served before closing: p.30, `visitingTick <= openingTickEnd - 3`. */
     private fun visitingTickFitsOpeningWindow(visitingTick: Int, restaurant: Restaurant): Boolean =
-        visitingTick >= restaurant.openingTickStart &&
-            visitingTick <= restaurant.openingTickEnd - CLOSING_LEAD
+        visitingTick >= restaurant.openingTick &&
+            visitingTick <= restaurant.closingTick - CLOSING_LEAD
 
     private fun serialiseCasual(
         dto: CustomerGroupJsonDto,

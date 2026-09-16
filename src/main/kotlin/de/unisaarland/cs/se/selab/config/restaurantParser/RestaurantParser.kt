@@ -1,13 +1,35 @@
 package de.unisaarland.cs.se.selab.config.restaurantParser
 import de.unisaarland.cs.se.selab.config.ConfigParser
 import de.unisaarland.cs.se.selab.config.ParsedModel
+import de.unisaarland.cs.se.selab.foh.DeliveryDesk
+import de.unisaarland.cs.se.selab.foh.DeliveryDriver
+import de.unisaarland.cs.se.selab.foh.FohServices
+import de.unisaarland.cs.se.selab.foh.FrontOfTheHouse
 import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.foh.Table
+import de.unisaarland.cs.se.selab.foh.TableAssignmentService
+import de.unisaarland.cs.se.selab.foh.Waiter
+import de.unisaarland.cs.se.selab.foh.WaiterAssignmentService
+import de.unisaarland.cs.se.selab.foh.services.DiningService
+import de.unisaarland.cs.se.selab.foh.services.EscortingService
+import de.unisaarland.cs.se.selab.foh.services.OrderingService
+import de.unisaarland.cs.se.selab.foh.services.RatingService
+import de.unisaarland.cs.se.selab.foh.services.SeatingService
+import de.unisaarland.cs.se.selab.foh.services.ServingService
+import de.unisaarland.cs.se.selab.kitchen.CookRoaster
+import de.unisaarland.cs.se.selab.kitchen.Kitchen
+import de.unisaarland.cs.se.selab.sharedPackage.Menu
+import de.unisaarland.cs.se.selab.sharedPackage.Order
+import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
+import de.unisaarland.cs.se.selab.simulation.GlobalClock
+import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Restaurant
+import de.unisaarland.cs.se.selab.simulation.SubUnits
+import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -16,6 +38,8 @@ import kotlin.collections.map
 import kotlin.collections.set
 
 class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
+
+    override val schemaPath: String = "/schema/restaurant.schema"
 
     protected override fun readEntities(path:String) : Boolean {
 
@@ -50,44 +74,126 @@ class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
         return returnValue
     }
 
-// helper function for readEntities
+// helper function for readEntities, creates Restaurant objects
 
     private fun serialiseRestaurant(rjd:RestaurantJsonDto) : Restaurant? {
-        var returnValue = true
         try {
-            val cooks = serialiseCookCounts(rjd)
-            val tables = serialiseTables(rjd)
-            val recipes = resolveRecipes(rjd)
-            if(cooks != null && recipes != null && tables != null)  {
-                if(!(checkUniqueDishNames(recipes) && checkUniqueTableIds(tables)
-                            && checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd))) returnValue = false
-            }
-            else { returnValue = false }
-
             val type = RestaurantType.valueOf(rjd.type)
-            if (returnValue && checkAtLeastOneOfEach(rjd)) {
-                val eventSeats : MutableMap<Int,Int> = mutableMapOf<Int,Int>()
-                val seats : MutableMap<TableType, Int> = mutableMapOf<TableType, Int>()
-                var totalSeats = 0
+            if (checkAtLeastOneOfEach(rjd)) {
 
-                for( t in rjd.tables ) {
-                    if ( seats.containsKey(  ) ) {
+                val clock = GlobalClock
+                val foh : FrontOfTheHouse?
+                val pantry = Pantry()
+                val kitchen : Kitchen?
+                val menu : Menu?
 
+                // create kitchen, foh and menu
+                val kitchenStaff = serialiseCookCounts(rjd)
+                val tables = serialiseTables(rjd)
+                val recipes = resolveRecipes(rjd)
+
+                if(kitchenStaff != null && tables != null && recipes != null)  {
+
+                    // create kitchen: roaster, tableAssignmentService, reservationBook
+                    val roaster = CookRoaster(kitchenStaff)
+                    val tableAssignmentService = TableAssignmentService(tables)
+                    val reservationBook = ReservationBook(tableAssignmentService)
+                    kitchen = Kitchen(roaster, pantry, mutableListOf<Order>(), reservationBook)
+
+                    // create menu
+                    menu = Menu(recipes, pantry, kitchen)
+
+                    // create foh: deliveryDesk, waiterAssignmentService, fohSevices
+                    val deliveryDrivers : MutableList<DeliveryDriver> = mutableListOf()
+                    var driverCounter = rjd.deliveryDrivers
+                    while(driverCounter > 0) {
+                        val driver = DeliveryDriver(rjd.id)
+                        deliveryDrivers.add(driver)
+                        driverCounter--
                     }
+                    val deliveryDesk = DeliveryDesk(deliveryDrivers, rjd.id)
+
+                    val waitstaff : MutableList<Waiter> = mutableListOf()
+                    var waiterCounter = rjd.waitstaff
+                    while(waiterCounter > 0) {
+                        val waiter = Waiter()
+                        waitstaff.add(waiter)
+                        waiterCounter--
+                    }
+                    val waiterAssignmentService = WaiterAssignmentService(waitstaff)
+
+                    val fohServices = FohServices(
+                        SeatingService(tableAssignmentService, waiterAssignmentService, reservationBook),
+                        OrderingService(waiterAssignmentService, type),
+                        ServingService(waiterAssignmentService, deliveryDesk, type),
+                        DiningService(),
+                        EscortingService(waiterAssignmentService),
+                        RatingService()
+                    )
+
+                    val subunit = SubUnits(rjd.id, menu, pantry, kitchen)
+
+                    foh = FrontOfTheHouse(subunit, tableAssignmentService, reservationBook,
+                        waiterAssignmentService, fohServices, deliveryDesk)
                 }
 
-                val data = RestaurantData(rjd.id, type, rjd.openingTickStart, rjd.openingTickEnd,
-                    recipes!!, , rjd.deliveryDrivers, rjd.event, , eventSeats
+                else {
+                    kitchen = null
+                    foh = null
+                    menu = null
+                }
+
+                val data = createData(rjd)
+
+                if (foh != null && kitchen != null && menu != null && data != null) {
+                    return Restaurant(
+                        rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
+                        rjd.event, rjd.positiveRatings, rjd.negativeRatings,
+                        foh, kitchen, pantry, menu, clock, data
                     )
-                val restaurant = Restaurant(
-                    rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
-                    rjd.event, rjd.positiveRatings, rjd.negativeRatings,
-                    rjd.deliveryDrivers, rjd.event, recipes,
-                    cooks, rjd.waitstaff, data
-                )
-                return restaurant
+                }
             }
         } catch (expected: IllegalArgumentException) { }
+        return null
+    }
+
+    // creates data
+    private fun createData (rjd:RestaurantJsonDto) : RestaurantData? {
+        var returnValue = true
+
+        val tables = serialiseTables(rjd)
+        val recipes = resolveRecipes(rjd)
+        if (recipes != null && tables != null) {
+            if (!(checkUniqueDishNames(recipes) && checkUniqueTableIds(tables)
+                        && checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd))
+            ) returnValue = false
+
+            if (returnValue) {
+                try {
+                    val type = RestaurantType.valueOf(rjd.type)
+
+                    val seats: MutableMap<TableType, Int> = mutableMapOf<TableType, Int>()
+                    var totalSeats = 0
+
+                    for (t in tables) {
+                        if (seats.containsKey( t.type )) {
+                            seats.replace( t.type, seats[ t.type ]!! + t.size)
+                        }
+                        else {
+                            seats[ t.type ] = t.size
+                        }
+                        totalSeats += t.size
+                    }
+
+                    return RestaurantData(
+                        rjd.id, type, rjd.openingTickStart, rjd.openingTickEnd,
+                        recipes, seats, rjd.deliveryDrivers, rjd.event,
+                        totalSeats,  mutableMapOf<Int, Int>()
+                    )
+                }
+                catch (expected: IllegalArgumentException) { }
+            }
+        }
         return null
     }
 
@@ -103,17 +209,19 @@ class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
     }
 
     private fun serialiseCookCounts(rjd:RestaurantJsonDto) : Map<CookType, Int>? {
+        var returnValue = true
         val cooksDto : Map<String, Int> = rjd.kitchenStaff
         val cooks = mutableMapOf<CookType, Int>()
         for ((key, value) in cooksDto) {
             try {
-                if (key == "EXEC" && value != 0 && value != 1) { return null }
+                if (key == "EXEC" && value != 0 && value != 1) { returnValue = false }
                 cooks[CookType.valueOf(key)] = value
             } catch (expected: IllegalArgumentException) {
-                return null
+                returnValue = false
             }
         }
-        return cooks
+        return if(returnValue) { cooks }
+                else null
     }
 
     private fun serialiseTables(rjd:RestaurantJsonDto) : MutableList<Table>? {

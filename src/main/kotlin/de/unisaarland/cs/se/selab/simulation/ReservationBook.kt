@@ -4,6 +4,7 @@ import de.unisaarland.cs.se.selab.foh.Table
 import de.unisaarland.cs.se.selab.foh.TableAssignmentService
 import de.unisaarland.cs.se.selab.foh.TableStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 
 /**
  * The table reservations of one restaurant (spec, "Front of house", F14).
@@ -78,5 +79,17 @@ class ReservationBook(
     private fun markReserved(table: Table) {
         table.status = TableStatus.RESERVED
         table.originals().forEach { it.status = TableStatus.RESERVED }
+    }
+
+    /** returns mapping: evening to booked event seats **/
+    fun getEventSeatsBooked(): Map<Int, Int> {
+        val temporary = mutableMapOf<Int, Int>()
+        for (i in upcoming.keys) {
+            val number = upcoming[i]!!.filter { it.groupType() == GroupType.EVENT }.sumOf { it.groupSize() }
+            if (number > 0) {
+                temporary[i] = number
+            }
+        }
+        return temporary.toMap()
     }
 }

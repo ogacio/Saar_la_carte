@@ -1,10 +1,11 @@
 package de.unisaarland.cs.se.selab.foh
 
-import de.unisaarland.cs.se.selab.simulation.DeliveryService
-import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.sharedPackage.Order
+import de.unisaarland.cs.se.selab.simulation.DeliveryService
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
+/**does deliveries**/
 class DeliveryDriver(private val restaurantId: Int) {
     private var id: Int? = null
     private var departureTick: Int? = null
@@ -15,7 +16,8 @@ class DeliveryDriver(private val restaurantId: Int) {
     private var distance: Int? = null
     private var switch: Boolean = false
 
-    fun plusTick(): Unit{
+    /**simulates one tick of the driver**/
+    fun plusTick() {
         if (state == DriverState.WAITING || departureTick == GlobalClock.getTickInEvening())return
         ticksLeft = ticksLeft!! - 1
         if (state == DriverState.DELIVERING) {
@@ -27,7 +29,7 @@ class DeliveryDriver(private val restaurantId: Int) {
             )
         }
         if (ticksLeft == 0) {
-            if(state == DriverState.DELIVERING) {
+            if (state == DriverState.DELIVERING) {
                 Logger.Delivery.deliveryArrival(
                     restaurantId,
                     id!!,
@@ -55,12 +57,13 @@ class DeliveryDriver(private val restaurantId: Int) {
                 startReturn(travelTicks!!)
             } else {
                 Logger.Delivery.deliveryReturned(restaurantId, id!!)
-                if (switch) {abort()}else{clearDelivery()}
+                if (switch) { abort() } else { clearDelivery() }
             }
         }
     }
 
-    fun receiveOrder(o:Order): Unit{
+    /** after getting passed an order by a waiter the driver prepares**/
+    fun receiveOrder(o: Order) {
         order = o
         departureTick = GlobalClock.getTickInEvening()
         state = DriverState.DELIVERING
@@ -75,14 +78,20 @@ class DeliveryDriver(private val restaurantId: Int) {
             travelTicks!!
         )
     }
+
+    /**waiting?**/
     fun isFree(): Boolean {
         return state == DriverState.WAITING
     }
-    fun abort(): Unit {
+
+    /**resets driver**/
+    fun abort() {
         clearDelivery()
         id = null
     }
-    private fun clearDelivery(){
+
+    /**resets everything except for the id**/
+    private fun clearDelivery() {
         departureTick = null
         order = null
         ticksLeft = null
@@ -91,24 +100,49 @@ class DeliveryDriver(private val restaurantId: Int) {
         distance = null
         switch = false
     }
-    private fun startReturn(travelTicks:Int): Unit{
+
+    /**transition to return**/
+    private fun startReturn(travelTicks: Int) {
         ticksLeft = travelTicks
         state = DriverState.RETURNING
     }
+
+    /**calculates the drivenDistance for logging**/
     private fun drivenDistance(): Int {
-        return if (ticksLeft == 0 && distance!! % 5 != 0) {
-            distance!! % 5
-        } else 5
+        val tickDistance = 5
+        return if (ticksLeft == 0 && distance!! % tickDistance != 0) {
+            distance!! % tickDistance
+        } else {
+            tickDistance
+        }
     }
-    fun switch(): Unit {switch=!switch}
-    fun resetId(): Unit {id = null}
-    fun isDelivering():Boolean{return state==DriverState.DELIVERING}
-    fun isWaiting():Boolean{return state==DriverState.WAITING}
-    fun isReturning():Boolean{return state==DriverState.RETURNING}
+
+    /**switch to choose wether to reset id too**/
+    fun switch() { switch = !switch }
+
+    /**id = null**/
+    fun resetId() { id = null }
+
+    /****/
+    fun isDelivering(): Boolean { return state == DriverState.DELIVERING }
+
+    /****/
+    fun isWaiting(): Boolean { return state == DriverState.WAITING }
+
+    /****/
+    fun isReturning(): Boolean { return state == DriverState.RETURNING }
+
+    /****/
     fun getRestaurantId() = restaurantId
+
+    /****/
     fun getDepartureTick() = departureTick
+
+    /****/
     fun getId() = id
-    fun setId(id: Int){
+
+    /**id = input**/
+    fun setId(id: Int) {
         this.id = id
     }
 }
