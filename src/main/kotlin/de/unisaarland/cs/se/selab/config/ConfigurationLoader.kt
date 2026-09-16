@@ -1,4 +1,11 @@
 package de.unisaarland.cs.se.selab.config
+import de.unisaarland.cs.se.selab.config.restaurantParser.RestaurantParser
+import de.unisaarland.cs.se.selab.config.scenarioParser.ScenarioParser
+import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.simulation.BrowsingService
+import de.unisaarland.cs.se.selab.simulation.CustomerRegistry
+import de.unisaarland.cs.se.selab.simulation.Simulator
+import java.io.File
 
 class ConfigurationLoader(
     private val foodPath: String,
@@ -23,9 +30,7 @@ class ConfigurationLoader(
         val customers = CustomerRegistry(model.allCustomerGroups())
         val incidents = model.allIncidents()
         val browsingService = BrowsingService()
-        val deliveryService = DeliveryService()
         val ratingBook = RatingBook()
-        val statistics = Statistics()
 
         return Simulator(
             maxTicks,
@@ -33,9 +38,7 @@ class ConfigurationLoader(
             customers,
             incidents,
             browsingService,
-            deliveryService,
             ratingBook,
-            statistics,
         )
     }
 

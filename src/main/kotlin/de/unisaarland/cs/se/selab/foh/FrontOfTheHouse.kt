@@ -66,7 +66,7 @@ class FrontOfTheHouse(
         turnedAway = turnedAway + groups
     }
 
-    /** An EVENT group reserving three evenings ahead; the table itself is chosen on the evening. */
+    /** An EVENT group reserving three evenings ahead; the table itself is chosen in the evening. */
     fun bookEvent(group: CustomerGroup, evening: Int): Boolean = reservations.bookAhead(group, evening)
 
     /** The delivery desk of this restaurant, used by the delivery service. */
@@ -104,8 +104,13 @@ class FrontOfTheHouse(
     fun mealsReady(meals: List<Meal>) {
         val tick = GlobalClock.currentTick
         for (meal in meals) {
-            val visit = visits.firstOrNull { it.order?.id === meal.orderId }
-            if (visit != null) visit.mealCooked(meal, tick) else deliveryDesk.mealCooked(meal)
+            val visit = visits.firstOrNull { it.order?.id == meal.orderId }
+            if (visit != null) {
+                visit.mealCooked(meal, tick)
+                continue
+            }
+            val delivery = deliveryDesk.getNewOrders().firstOrNull { it.id == meal.orderId } ?: continue
+            if (delivery.allCooked()) deliveryDesk.readyOrder(delivery)
         }
     }
 
@@ -113,7 +118,7 @@ class FrontOfTheHouse(
     fun callServingService() = services.serving.serve(visits, sbu)
 
     /** Step 4: the drivers prepare, drive, deliver and return. */
-    fun callDeliveryDesk() = deliveryDesk.send()
+    fun callDeliveryDesk() = deliveryDesk.getDrivers().forEach { it.plusTick() }
 
     /** Step 5: eating; waiting deadlines and finished eaters. */
     fun callDiningService() = services.dining.eat(visits, sbu)
@@ -142,7 +147,7 @@ class FrontOfTheHouse(
 
     /**
      * Opening time is over: everyone still inside is escorted out at once. Their visits
-     * end here, so the Simulator must run [callRatingService] afterwards in the same tick.
+     * end here, so the Simulator must run [callRatingService] afterward in the same tick.
      */
     fun closeOpeningTime() = visits.forEach { it.sendOut() }
 

@@ -2,7 +2,6 @@ package de.unisaarland.cs.se.selab.sharedPackage
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 
 class Order (
-    var id : Int,
     var group : CustomerGroup,
     var restaurantId : Int,
     var customerGroupId : Int,
@@ -10,6 +9,12 @@ class Order (
     var isDelivery : Boolean,
     var meals : MutableList<Meal> )
 {
+    companion object {
+        private var nextId = 1
+
+        fun grantId(): Int = nextId++
+    }
+    val id = grantId()
     public fun dishCounts() : Map<String, Int> {
         val out = mutableMapOf<String, Int>()
         for (meal in meals) {

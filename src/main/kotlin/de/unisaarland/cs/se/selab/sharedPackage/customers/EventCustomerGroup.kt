@@ -35,7 +35,7 @@ class EventCustomerGroup(
     /** The evening this group intends to hold its event. */
     override fun getEventEvening(): Int = eventEvening
 
-    /** EVENT groups never order delivery. */
+    /** Event groups always eat in the restaurant, so they have no delivery distance. */
     override fun getDeliveryDistance(): Int = 0
 
     /** The favourite basic dish this group has chosen per restaurant type. */

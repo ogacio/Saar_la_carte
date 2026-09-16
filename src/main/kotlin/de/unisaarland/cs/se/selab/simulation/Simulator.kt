@@ -2,6 +2,7 @@ package de.unisaarland.cs.se.selab.simulation
 import de.unisaarland.cs.se.selab.incident.Incident
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 
+
 class Simulator(
     private val maxTicks: Int,
     private val restaurants: MutableList<Restaurant>,
@@ -9,7 +10,6 @@ class Simulator(
     private val incidents: MutableList<Incident>,
     private val browsingService: BrowsingService,
     private val ratingBook: RatingBook,
-    private val statistics: Statistics
 ) {
 
     private fun runOnlineOrders() {
@@ -32,8 +32,12 @@ class Simulator(
         return restaurants.first{it.id == id}
     }
 
-    public fun run() {
+    fun run() {
         //TODO: implement the simulation loop here
+    }
+
+    fun getBrowsingService(): BrowsingService {
+        return browsingService
     }
 
 

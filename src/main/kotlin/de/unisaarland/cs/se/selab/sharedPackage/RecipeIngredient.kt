@@ -20,7 +20,14 @@ class RecipeIngredient(
         val adapted = amount * (FULL_PERCENT + percent) / FULL_PERCENT
         amount = adapted.coerceAtLeast(1)
     }
+
+    /**
+     * The same value as [ingredient], for callers that use the getter style. The JVM name is changed
+     * because the property's generated getter is already called `getIngredient`.
+     */
+    @JvmName("ingredientValue")
     fun getIngredient(): Ingredient = ingredient
+
     /** Percentage base used by the RECIPE incident. */
     private companion object {
         const val FULL_PERCENT = 100

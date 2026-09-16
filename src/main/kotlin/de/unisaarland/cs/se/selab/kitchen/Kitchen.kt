@@ -40,7 +40,7 @@ class Kitchen (
             }
         }
 
-        // we have to reserve ingredients here
+        // we have to reserve ingredients here (only if it is not delivery)
     }
 
     // called by Restaurant -> prepare, gets the supplies from Supplier into the Pantry
