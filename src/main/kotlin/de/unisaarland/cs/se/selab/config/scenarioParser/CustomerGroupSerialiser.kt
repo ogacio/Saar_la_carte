@@ -9,11 +9,13 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.FoodPreference
 import de.unisaarland.cs.se.selab.sharedPackage.customers.RegularCustomerGroup
+import de.unisaarland.cs.se.selab.simulation.Restaurant
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingLikelihood
 import kotlin.math.ceil
 
 private const val COOKING_TICKS = 3
 private const val DELIVERY_KM_PER_TICK = 5.0
+private const val CLOSING_LEAD = 3
 private const val REGULAR = "REGULAR"
 private const val CASUAL = "CASUAL"
 private const val EVENT = "EVENT"
@@ -110,11 +112,17 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
 
     private fun regularFieldsAreValid(dto: CustomerGroupJsonDto): Boolean {
         val restaurantId = dto.restaurant ?: return false
+        val restaurant = model.restaurant(restaurantId) ?: return false
         return dto.visitingStart != null &&
             dto.visitingPeriod != null &&
             tableTypeOf(dto) != null &&
-            model.restaurant(restaurantId) != null
+            visitingTickFitsOpeningWindow(dto.visitingTick, restaurant)
     }
+
+    /** The visiting tick must leave time to be served before closing: p.30, `visitingTick <= openingTickEnd - 3`. */
+    private fun visitingTickFitsOpeningWindow(visitingTick: Int, restaurant: Restaurant): Boolean =
+        visitingTick >= restaurant.openingTickStart &&
+            visitingTick <= restaurant.openingTickEnd - CLOSING_LEAD
 
     private fun serialiseCasual(
         dto: CustomerGroupJsonDto,
