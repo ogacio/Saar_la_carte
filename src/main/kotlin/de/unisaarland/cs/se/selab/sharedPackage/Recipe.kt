@@ -39,4 +39,6 @@ class Recipe(
     private companion object {
         const val MINUTES_PER_TICK = 10
     }
+    fun getId(): Int = id
+    fun getDishName(): String = dishName
 }
