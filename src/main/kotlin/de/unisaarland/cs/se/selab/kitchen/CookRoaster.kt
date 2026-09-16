@@ -3,18 +3,22 @@ import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
-class CookRoaster (
-    val kitchenStaff : Map<CookType, Int>,
-    val cooks : MutableList<Cook> = mutableListOf(),
-    var nextId : Int = 1,
-    )
-
-{
-    // has to be called early in restaurant, makes the cooks field
-    fun initialiseCooks () {
-        for((type,number) in kitchenStaff) {
+/**
+ * manages the cooks mostly
+ */
+class CookRoaster(
+    val kitchenStaff: Map<CookType, Int>,
+    val cooks: MutableList<Cook> = mutableListOf(),
+    var nextId: Int = 1,
+) {
+    /**
+     * has to be called early in simulator, makes the cooks field
+     * - might have to be moved into restaurant parser, since so far it never gets called
+     */
+    fun initialiseCooks() {
+        for ((type, number) in kitchenStaff) {
             var remaining = number
-            while(remaining != 0) {
+            while (remaining != 0) {
                 val cook = Cook(type, clock = GlobalClock)
                 cooks.add(cook)
                 remaining--
@@ -22,12 +26,14 @@ class CookRoaster (
         }
     }
 
-    // returns the cook that starts cooking the meals - that all have the same type - (if any is free)
-    fun startCooking(meals : MutableList<Meal>) : Cook? {
+    /**
+     * returns the cook that starts cooking the meals - that all have the same type - (if any is free)
+     */
+    fun startCooking(meals: MutableList<Meal>): Cook? {
         val meal = meals[0]
-        for(cook in cooks) {
-            if(cook.isFree() && meal.recipe.cookTypes.contains(cook.getType())) {
-                if(cook.getId() == null) {
+        for (cook in cooks) {
+            if (cook.isFree() && meal.recipe.cookTypes.contains(cook.getType())) {
+                if (cook.getId() == null) {
                     cook.setId(nextId)
                     nextId++
                 }
@@ -38,37 +44,44 @@ class CookRoaster (
         return null
     }
 
-    // returns all the meals that are cooked in this tick
-    fun finished() : MutableList<Meal> {
+    /**
+     * returns all the meals that are cooked in this tick
+     */
+    fun finished(): MutableList<Meal> {
         val finished = mutableListOf<Meal>()
-        for(cook in cooks) {
+        for (cook in cooks) {
             val finishedOrNot = cook.cookingFinished()
-            if(finishedOrNot!= null) finished.addAll(finishedOrNot)
+            if (finishedOrNot != null) finished.addAll(finishedOrNot)
         }
         return finished
     }
 
-    fun hasEligible(r: Recipe) : Boolean {
-        for(cook in cooks) {
-            if(r.cookTypes.contains(cook.getType())) return true
+    /**
+     * returns if we have a cook to cook the recipe
+     */
+    fun hasEligible(r: Recipe): Boolean {
+        for (cook in cooks) {
+            if (r.cookTypes.contains(cook.getType())) return true
         }
         return false
     }
 
-    fun changeStaff(type:CookType, delta: Int) {
+    /**
+     * triggered by incident, adds or removes cooks
+     */
+    fun changeStaff(type: CookType, delta: Int) {
         var delta = delta
-        if(delta >= 0) {
-            while(delta != 0) {
+        if (delta >= 0) {
+            while (delta != 0) {
                 val cook = Cook(type, clock = GlobalClock)
                 cooks.add(cook)
                 delta--
             }
-        }
-        else {
+        } else {
             val cookCopy = cooks.toMutableList()
-            for(cook in cooks) {
-                if(delta == 0) break
-                if(cook.getType() == type) {
+            for (cook in cooks) {
+                if (delta == 0) break
+                if (cook.getType() == type) {
                     cookCopy.remove(cook)
                     delta++
                 }
@@ -78,6 +91,9 @@ class CookRoaster (
         }
     }
 
+    /**
+     * called at the end of the evening, resets every needed field for the next night
+     */
     fun resetEvening() {
         for (cook in cooks) {
             cook.reset()

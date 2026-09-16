@@ -1,19 +1,22 @@
 package de.unisaarland.cs.se.selab.config.restaurantParser
 import kotlinx.serialization.Serializable
 
+/**
+ * describes what fields the json file has
+ */
 @Serializable
-data class RestaurantJsonDto (
+data class RestaurantJsonDto(
     public val id: Int,
     public val name: String,
-    public val type:String,
+    public val type: String,
     public val openingTickStart: Int,
     public val openingTickEnd: Int,
     public val deliveryDrivers: Int,
-    public val event:Boolean,
+    public val event: Boolean,
     public val positiveRatings: Int,
     public val negativeRatings: Int,
-    public val recipes:MutableList<Int>,
-    public val kitchenStaff:Map<String, Int>,
+    public val recipes: MutableList<Int>,
+    public val kitchenStaff: Map<String, Int>,
     public val waitstaff: Int,
-    public val tables:MutableList<TableDto>,
+    public val tables: MutableList<TableDto>,
 )
