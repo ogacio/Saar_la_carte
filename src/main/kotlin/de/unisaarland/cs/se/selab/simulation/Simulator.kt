@@ -9,7 +9,6 @@ class Simulator(
     private val incidents: MutableList<Incident>,
     private val browsingService: BrowsingService,
     private val ratingBook: RatingBook,
-    private val statistics: Statistics
 ) {
 
     private fun runOnlineOrders() {

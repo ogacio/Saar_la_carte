@@ -33,4 +33,6 @@ class Recipe(
         const val MINUTES_PER_TICK = 10
     }
     fun getIngredients(): List<RecipeIngredient> = ingredients
+    fun getId(): Int = id
+    fun getDishName(): String = dishName
 }

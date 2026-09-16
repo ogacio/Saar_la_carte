@@ -30,7 +30,7 @@ class Kitchen (
             }
         }
 
-        // we have to reserve ingredients here
+        // we have to reserve ingredients here (only if it is not delivery)
     }
 
     fun planEvening(expectedCostumers : MutableList<CustomerGroup>, otherSeats : Int) {

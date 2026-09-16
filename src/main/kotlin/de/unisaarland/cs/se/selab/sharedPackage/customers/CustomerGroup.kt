@@ -84,4 +84,5 @@ abstract class CustomerGroup(
 
     /** Records whether a visit succeeded or failed, for groups that track consecutive failures. */
     open fun recordOutcome(e: Experience) = Unit
+    abstract fun getMembers()
 }

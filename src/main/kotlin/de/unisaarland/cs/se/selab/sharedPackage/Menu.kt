@@ -7,13 +7,13 @@ class Menu(
     private val kitchen: Kitchen
 ) {
     private val orderable = mutableListOf<Recipe>()
-    fun refresh(): Unit {
+    fun refresh() {
         orderable.clear()
         for (i in recipes) {
-            if (pantry.canCover(i)&&kitchen.canCook(i)){
+            if (pantry.canCover(i) && kitchen.canCook(i)) {
                 orderable.add(i)
             }
         }
     }
-    fun getOrderables():List<Recipe> = orderable
+    fun getOrderables(): List<Recipe> = orderable
 }
