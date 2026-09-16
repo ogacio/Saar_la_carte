@@ -1,15 +1,16 @@
 package de.unisaarland.cs.se.selab.config
 
-import de.unisaarland.cs.se.selab.sharedPackage.CustomerGroup
+import de.unisaarland.cs.se.selab.incident.Incident
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.simulation.Restaurant
 
 /**
- * Model for storing parsed configuration data.
+ * Everything read from the three configuration files, looked up by name or id (F01).
+ * The parsers register what they read; ConfigurationLoader takes it over once all files are valid.
  */
-
 class ParsedModel {
 
     private val ingredientsByName = mutableMapOf<String, Ingredient>()
@@ -46,7 +47,7 @@ class ParsedModel {
 
     fun registerRestaurant(r: Restaurant): Boolean = register(restaurantsById, r.id, r)
 
-    fun registerCustomerGroup(g: CustomerGroup): Boolean = register(customerGroupsById, g.id, g)
+    fun registerCustomerGroup(g: CustomerGroup): Boolean = register(customerGroupsById, g.id(), g)
 
     fun registerIncident(i: Incident): Boolean = register(incidentsById, i.id, i)
 
@@ -63,7 +64,7 @@ class ParsedModel {
         restaurantsById.values.sortedBy { it.id }.toMutableList()
 
     fun allCustomerGroups(): MutableList<CustomerGroup> =
-        customerGroupsById.values.sortedBy { it.id }.toMutableList()
+        customerGroupsById.values.sortedBy { it.id() }.toMutableList()
 
     fun allIncidents(): MutableList<Incident> =
         incidentsById.values.sortedBy { it.id }.toMutableList()

@@ -51,4 +51,6 @@ class Customer(private val preference: FoodPreference?) {
     fun doneEating() {
         status = CustomerStatus.DONE_EATING
     }
+
+    /** */
 }

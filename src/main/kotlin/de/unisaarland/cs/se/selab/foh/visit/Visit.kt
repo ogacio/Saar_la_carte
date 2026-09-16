@@ -164,7 +164,7 @@ class Visit(val group: CustomerGroup) {
 
     /**
      * How the group experienced the visit (spec, "Rating"). Never seated or ordered, or
-     * food missing for anyone: negative. Otherwise the last meal decides: before the
+     * food missing for anyone: negative. Otherwise, the last meal decides: before the
      * end of the 4-tick expectation window positive, exactly at its end neutral, later
      * negative. A group sent out at the end of opening time that had finished eating
      * sees at least a neutral experience; one that had not, a negative one.
