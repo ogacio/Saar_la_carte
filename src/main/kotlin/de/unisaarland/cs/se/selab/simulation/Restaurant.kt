@@ -29,12 +29,12 @@ class Restaurant (
     /**
     prepares the kitchen and the front of the house at the preparation phase
      */
-    fun prepare(regulars : MutableList<CustomerGroup>, supplier : Supplier) {
+    fun prepare(regulars : MutableList<CustomerGroup>) {
         var regularsSeats : Int = 0
         for (r in regulars) {
             regularsSeats += r.getGroupSize()
         }
-        kitchen.planEvening(regulars, data.getTotalSeats()-regularsSeats,supplier)
+        kitchen.planEvening(regulars, data.getTotalSeats()-regularsSeats)
         foh.prepareEvening(clock.getEvening(), regulars)
     }
 

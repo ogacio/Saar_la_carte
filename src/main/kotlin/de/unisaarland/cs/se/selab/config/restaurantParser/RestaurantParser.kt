@@ -28,6 +28,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Restaurant
+import de.unisaarland.cs.se.selab.simulation.SubUnits
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -37,6 +38,8 @@ import kotlin.collections.map
 import kotlin.collections.set
 
 class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
+
+    override val schemaPath: String = "/schema/restaurant.schema"
 
     protected override fun readEntities(path:String) : Boolean {
 
@@ -97,6 +100,9 @@ class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
                     val reservationBook = ReservationBook(tableAssignmentService)
                     kitchen = Kitchen(roaster, pantry, mutableListOf<Order>(), reservationBook)
 
+                    // create menu
+                    menu = Menu(recipes, pantry, kitchen)
+
                     // create foh: deliveryDesk, waiterAssignmentService, fohSevices
                     val deliveryDrivers : MutableList<DeliveryDriver> = mutableListOf()
                     var driverCounter = rjd.deliveryDrivers
@@ -122,14 +128,13 @@ class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
                         ServingService(waiterAssignmentService, deliveryDesk, type),
                         DiningService(),
                         EscortingService(waiterAssignmentService),
-                        RatingService(RatingBook())
+                        RatingService()
                     )
 
-                    foh = FrontOfTheHouse(null, tableAssignmentService, reservationBook,
-                        waiterAssignmentService, fohServices, deliveryDesk)
+                    val subunit = SubUnits(rjd.id, menu, pantry, kitchen)
 
-                    // create menu
-                    menu = Menu(recipes, pantry, kitchen)
+                    foh = FrontOfTheHouse(subunit, tableAssignmentService, reservationBook,
+                        waiterAssignmentService, fohServices, deliveryDesk)
                 }
 
                 else {

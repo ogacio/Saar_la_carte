@@ -171,5 +171,5 @@ class FrontOfTheHouse(
         if (table != null && visit.group.groupType() == GroupType.CASUAL) tables.release(table)
     }
 
-    fun getWaitstaff () : WaiterAssignmentService = waitstaff
+    fun getWaitstaff() : WaiterAssignmentService = waitstaff
 }
