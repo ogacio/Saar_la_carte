@@ -1,6 +1,6 @@
 package de.unisaarland.cs.se.selab.sharedPackage
 
-class Pantry (private var stock : MutableList<Pair<Ingredient, Int>>,  // (ingredient, amount)
+class Pantry (private var stock : MutableList<Pair<Ingredient, Int>> = mutableListOf(),  // (ingredient, amount)
               private var reserved : MutableList<Pair<Ingredient, Int>> = mutableListOf(),
 ) {
 
