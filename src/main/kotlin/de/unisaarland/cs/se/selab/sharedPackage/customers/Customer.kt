@@ -56,5 +56,4 @@ class Customer(private val preference: FoodPreference?) {
         status = CustomerStatus.DONE_EATING
     }
 
-    /** */
 }

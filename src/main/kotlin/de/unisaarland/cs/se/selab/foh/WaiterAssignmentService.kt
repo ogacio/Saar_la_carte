@@ -78,6 +78,19 @@ class WaiterAssignmentService(
         waitstaff.sortedWith(eventPriority(action, cookedMeals)).firstOrNull()
 
     /**
+     * The waiter who carries the next meals to a delivery driver: "The waiters with the lowest id
+     * starts". Only waiters with SERVING actions left count; those without an id come last and
+     * receive one now. Null if nobody can serve anymore this tick.
+     */
+    fun nextServingWaiter(): Waiter? {
+        val waiter = waitstaff
+            .filter { it.remaining(ActionType.SERVING) > 0 }
+            .minByOrNull { idOrLast(it) } ?: return null
+        grantId(waiter)
+        return waiter
+    }
+
+    /**
      * Starts a new tick for every waiter.
      */
     fun beginTick() = waitstaff.forEach { it.beginTick() }

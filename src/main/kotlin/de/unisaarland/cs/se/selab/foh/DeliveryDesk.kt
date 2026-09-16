@@ -43,4 +43,6 @@ class DeliveryDesk (private val drivers: MutableList<DeliveryDriver>, private va
     }
     fun getReady(): List<Order> = ready
     fun getRestaurantId(): Int = restaurantId
+    fun getDrivers(): List<DeliveryDriver> = drivers
+
 }

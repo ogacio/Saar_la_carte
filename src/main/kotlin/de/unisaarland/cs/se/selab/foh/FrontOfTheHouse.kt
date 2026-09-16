@@ -3,7 +3,6 @@ package de.unisaarland.cs.se.selab.foh
 import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
-import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
@@ -96,24 +95,6 @@ class FrontOfTheHouse(
         services.ordering.logStatus(sbu)
     }
 
-    /**
-     * The kitchen's hand-back after step 2: every cooked meal goes to the visit that
-     * ordered it. Meals of delivery orders have no visit and go to the delivery desk.
-     * Must run before callServingService, so the hold-back rule sees this tick's meals.
-     */
-    fun mealsReady(meals: List<Meal>) {
-        val tick = GlobalClock.currentTick
-        for (meal in meals) {
-            val visit = visits.firstOrNull { it.order?.id == meal.orderId }
-            if (visit != null) {
-                visit.mealCooked(meal, tick)
-                continue
-            }
-            val delivery = deliveryDesk.getNewOrders().firstOrNull { it.id == meal.orderId } ?: continue
-            if (delivery.allCooked()) deliveryDesk.readyOrder(delivery)
-        }
-    }
-
     /** Step 3: serving, including the hand-over of complete delivery orders to drivers. */
     fun callServingService() = services.serving.serve(visits, sbu)
 
@@ -171,5 +152,5 @@ class FrontOfTheHouse(
         if (table != null && visit.group.groupType() == GroupType.CASUAL) tables.release(table)
     }
 
-    fun getWaitstaff () : WaiterAssignmentService = waitstaff
+    fun getWaitstaff(): WaiterAssignmentService = waitstaff
 }

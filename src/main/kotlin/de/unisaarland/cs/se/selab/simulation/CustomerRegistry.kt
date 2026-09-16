@@ -4,7 +4,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 
-/** Holds every customer group and answers who is due to act on a given evening and tick. */
+/** Holds every customer group and answers who are due to act on a given evening and tick. */
 class CustomerRegistry(
     private val groups: MutableList<CustomerGroup>,
 ) {
@@ -37,6 +37,15 @@ class CustomerRegistry(
         }
         return tick == decisionTick
     }
+
+    /** REGULAR groups of [restaurantId] and EVENT groups booked there that arrive at [tick] of [evening]. */
+    fun arriving(restaurantId: Int, evening: Int, tick: Int): List<CustomerGroup> =
+        groups.filter {
+            it.groupType() != GroupType.CASUAL &&
+                it.homeRestaurant() == restaurantId &&
+                it.visitsOn(evening) &&
+                it.visitingTick() == tick
+        }
 
     private companion object {
         const val DELIVERY_COOKING_TICKS = 3

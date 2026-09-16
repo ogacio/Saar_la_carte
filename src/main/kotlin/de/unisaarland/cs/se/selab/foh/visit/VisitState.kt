@@ -18,8 +18,6 @@ sealed class VisitState {
 
     open fun onOrderingFailed(visit: Visit, tick: Int) = Unit
 
-    open fun onMealCooked(visit: Visit, meal: Meal, tick: Int) = Unit
-
     open fun onServed(visit: Visit, meals: List<Meal>, tick: Int) = Unit
 
     open fun onTickElapsed(visit: Visit, tick: Int) = Unit

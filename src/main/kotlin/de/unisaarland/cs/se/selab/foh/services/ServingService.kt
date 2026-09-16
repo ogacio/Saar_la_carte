@@ -15,13 +15,14 @@ import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.SubUnits
 
 /**
- * Step 3: carries cooked meals to the tables, then lets the delivery desk hand
- * complete delivery orders to the drivers (spec, "Serving").
+ * Step 3: carries cooked meals to the tables, then brings complete delivery orders
+ * to the drivers (spec, "Serving").
  *
  * Whether a table may be served at all is the hold-back rule in [Visit.servableMeals].
  * Which meals go out first is decided here: basic dishes, then ascending recipe id.
  * For EVENT tables the manager ranks the waiters by the cooked meals waiting for their
- * own tables (P03).
+ * own tables (P03). Handing a meal for a driver is a SERVING action like serving it at a table;
+ * which driver takes the order is up to the [DeliveryDesk].
  */
 class ServingService(
     private val waitstaff: WaiterAssignmentService,
@@ -29,22 +30,25 @@ class ServingService(
     private val restaurantType: RestaurantType,
 ) {
 
-    /** Serves every table with meals ready, in group order, then the delivery hand-over, then the summary. */
+    /** "They prioritize basic dishes, and in a tie sort by ascending recipe id." Tables and drivers alike. */
+    private val mealPriority = compareBy<Meal>({ !it.recipe.isBasicFor(restaurantType) }, { it.recipe.id })
+
+    /** Serves every table with meals ready, in group order, then the delivery orders, then the summary. */
     fun serve(visits: List<Visit>, sbu: SubUnits) {
         val tick = GlobalClock.currentTick
         val carried = mutableMapOf<Waiter, Int>()
 
         for (visit in visits) {
             if (visit.state !is AwaitingMealState) continue
+            // The kitchen has just cooked (step 2): the first cooked meal starts the hold-back window.
+            if (visit.firstMealTick == null && visit.cookedMeals().isNotEmpty()) visit.firstMealTick = tick
             val table = visit.table ?: continue
             serveTable(visit, table, sbu, tick, visits).forEach { (waiter, meals) ->
                 carried[waiter] = (carried[waiter] ?: 0) + meals
             }
         }
-        // Meals handed to a delivery driver count in the serving status as well.
-        deliveryDesk.handOver(waitstaff).forEach { (waiter, meals) ->
-            carried[waiter] = (carried[waiter] ?: 0) + meals
-        }
+        // "the total number of meals served or delivered to a driver"
+        serveDeliveryDesk(carried, sbu)
 
         Logger.Foh.servingStatus(sbu.restaurantId, carried.size, carried.values.sum())
     }
@@ -60,9 +64,7 @@ class ServingService(
         tick: Int,
         visits: List<Visit>,
     ): Map<Waiter, Int> {
-        val queue = visit.servableMeals(tick).sortedWith(
-            compareBy<Meal>({ !it.recipe.isBasicFor(restaurantType) }, { it.recipe.id }),
-        )
+        val queue = visit.servableMeals(tick).sortedWith(mealPriority)
         // EVENT tables: the manager ranks the waiters by the cooked meals waiting for their own tables.
         val cookedMeals = if (visit.group.groupType() == GroupType.EVENT) cookedMealsPerWaiter(visits) else emptyMap()
         val plan = if (queue.isEmpty()) emptyMap() else planWaiters(visit, queue.size, tick, cookedMeals)
@@ -116,6 +118,38 @@ class ServingService(
         if (isEvent) return waitstaff.assignEvent(count, ActionType.SERVING, cookedMeals).orEmpty()
         val waiter = visit.waiters.firstOrNull() ?: return emptyMap()
         return mapOf(waiter to count)
+    }
+
+    /**
+     * "For deliveries, the meals queue until all meals of an order are ready and a driver is free.
+     * Then, all waiters with a SERVING tick load below the action limit deliver meals to the drivers
+     * ... The waiters with the lowest id starts, and the order with the lowest id takes precedence."
+     *
+     * The delivery desk holds the complete orders and picks the driver. An order is only handed over
+     * if the waitstaff can still carry all of its meals this tick; every meal is one SERVING action.
+     */
+    private fun serveDeliveryDesk(carried: MutableMap<Waiter, Int>, sbu: SubUnits) {
+        for (order in deliveryDesk.getReady().sortedBy { it.id }) {
+            val meals = order.meals.sortedWith(mealPriority)
+            if (waitstaff.capacity(ActionType.SERVING) < meals.size) return
+            val driverId = deliveryDesk.sendForOrder(order) ?: return
+            var next = 0
+            while (next < meals.size) {
+                // The capacity check above guarantees a waiter with SERVING actions left.
+                val waiter = checkNotNull(waitstaff.nextServingWaiter())
+                val batch = meals.drop(next).take(waiter.remaining(ActionType.SERVING))
+                waiter.consume(ActionType.SERVING, batch.size)
+                Logger.Foh.deliveryHandover(
+                    sbu.restaurantId,
+                    checkNotNull(waiter.id),
+                    dishCounts(batch),
+                    driverId,
+                    order.id,
+                )
+                carried[waiter] = (carried[waiter] ?: 0) + batch.size
+                next += batch.size
+            }
+        }
     }
 
     /** "For tables that serve event customer groups, they log ... the first that would have served." */

@@ -2,6 +2,7 @@ package de.unisaarland.cs.se.selab.simulation
 import de.unisaarland.cs.se.selab.foh.FrontOfTheHouse
 import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.kitchen.Kitchen
+import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.Menu
 import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
@@ -76,4 +77,23 @@ class Restaurant (
     fun isOpen(tick: Int) : Boolean {
         return tick in openingTick..closingTick
     }
+    
+    /**
+     * One tick of this restaurant, steps 1 to 7 in the spec's order, between "Restaurant Start" and "Restaurant End".
+     * [arrivals] are the groups arriving now. At the closing tick everyone still inside is sent out before rating.
+     */
+    fun runRestaurantTick(arrivals: List<CustomerGroup>, tick: Int) {
+        Logger.restaurantStart(id)
+        foh.beginTick()
+        foh.callSeatingAndOrdering(arrivals)
+        kitchen.cook()
+        foh.callServingService()
+        foh.callDeliveryDesk()
+        foh.callDiningService()
+        foh.callEscortingService()
+        if (tick == closingTick) foh.closeOpeningTime()
+        foh.callRatingService()
+        Logger.restaurantEnd(id)
+    }
+
 }

@@ -40,7 +40,7 @@ class Visit(val group: CustomerGroup) {
     /** The tick the order was taken. Every waiting deadline counts from here. */
     var orderedTick: Int? = null
 
-    /** The tick the first meal of the order was cooked. The hold-back rule counts from here. */
+    /** The tick the first meal of the order was cooked, set by serving. The hold-back rule counts from here. */
     var firstMealTick: Int? = null
 
     /** Whether the table already waited one tick because the waitstaff lacked SERVING capacity. */
@@ -76,9 +76,6 @@ class Visit(val group: CustomerGroup) {
 
     /** Nobody in the group found a dish. */
     fun orderingFailed(tick: Int) = state.onOrderingFailed(this, tick)
-
-    /** The kitchen finished [meal] of this group's order. */
-    fun mealCooked(meal: Meal, tick: Int) = state.onMealCooked(this, meal, tick)
 
     /** [meals] are served to their customers. */
     fun serve(meals: List<Meal>, tick: Int) = state.onServed(this, meals, tick)

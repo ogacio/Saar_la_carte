@@ -9,35 +9,31 @@ import kotlinx.cli.required
 import java.io.File
 import java.io.PrintWriter
 
-
 private const val MAX_TICKS_LIMIT = 1000
 
 private fun run(
-    food: String, 
-    restaurants: String, 
-    scenario: String, 
-    maxTicks: Int, 
-    logLevel: LogLevel, 
-    out: String?) {
+    food: String,
+    restaurants: String,
+    scenario: String,
+    maxTicks: Int,
+    logLevel: LogLevel,
+    out: String?,
+) {
+    val writer = if (out != null) {
+        PrintWriter(File(out))
+    } else {
+        PrintWriter(System.out)
+    }
 
-        val writer = if (out != null) {
-            PrintWriter(File(out))
-        } else {
-            PrintWriter(System.out)
-        }
-
-        writer.use {
-            Logger.configure(logLevel, writer)
-            val simulator = ConfigurationLoader(food, restaurants, scenario, maxTicks).load()
-            simulator?.run()
-        }
+    writer.use {
+        Logger.configure(logLevel, writer)
+        val simulator = ConfigurationLoader(food, restaurants, scenario, maxTicks).load()
+        simulator?.run()
+    }
 }
 
-
-/**
- Main Function
- **/
-fun main(args: Array<String>) { 
+/** Main Function */
+fun main(args: Array<String>) {
     val parser = ArgParser("simulation")
 
     val food by parser.option(

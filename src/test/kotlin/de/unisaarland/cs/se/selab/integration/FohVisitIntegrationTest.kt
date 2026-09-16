@@ -72,10 +72,7 @@ class FohVisitIntegrationTest {
         val order = Order(1, group, restaurantId, group.id(), tick, false, mutableListOf())
         group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1))) }
         visit.ordered(order, tick)
-        order.meals.forEach {
-            it.status = MealStatus.COOKED
-            visit.mealCooked(it, tick)
-        }
+        order.meals.forEach { it.status = MealStatus.COOKED }
         return order.meals
     }
 

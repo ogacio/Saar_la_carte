@@ -49,7 +49,7 @@ class ConfigurationLoader(
     private fun buildSimulator(): Simulator {
         val restaurants = model.allRestaurants()
         for (restaurant in restaurants) {
-            RatingBook.initializeRatings(restaurant.id, restaurant.positiveRatings, restaurant.negativeRatings)
+            RatingBook.initializeRatings(restaurant.id, restaurant.initialPositiveRatings, restaurant.initialNegativeRatings)
         }
         return Simulator(
             maxTicks,
@@ -57,7 +57,6 @@ class ConfigurationLoader(
             CustomerRegistry(model.allCustomerGroups()),
             model.allIncidents(),
             BrowsingService(mutableListOf(), RatingBook),
-            RatingBook,
         )
     }
 }

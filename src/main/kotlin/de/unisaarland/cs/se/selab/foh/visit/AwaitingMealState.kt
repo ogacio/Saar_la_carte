@@ -6,10 +6,6 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 
 class AwaitingMealState : VisitState() {
 
-    override fun onMealCooked(visit: Visit, meal: Meal, tick: Int) {
-        if (visit.firstMealTick == null) visit.firstMealTick = tick
-    }
-
     /** Hands the meals to their customers. Partial serving keeps the table here. */
     override fun onServed(visit: Visit, meals: List<Meal>, tick: Int) {
         for (meal in meals) {

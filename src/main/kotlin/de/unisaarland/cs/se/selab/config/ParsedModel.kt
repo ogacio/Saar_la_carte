@@ -68,4 +68,7 @@ class ParsedModel {
 
     fun allIncidents(): MutableList<Incident> =
         incidentsById.values.sortedBy { it.id }.toMutableList()
+
+    fun allRecipes(): List<Recipe> = recipesById.values.sortedBy { it.id }
+
 }
