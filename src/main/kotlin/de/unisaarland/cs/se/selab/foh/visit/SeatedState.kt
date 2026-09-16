@@ -2,6 +2,10 @@ package de.unisaarland.cs.se.selab.foh.visit
 
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 
+/**
+ * The group sits at its table and orders in the same tick; the visit leaves this phase
+ * either with an order or with nobody finding a dish.
+ */
 class SeatedState : VisitState() {
 
     /**

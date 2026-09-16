@@ -3,6 +3,10 @@ package de.unisaarland.cs.se.selab.foh.visit
 import de.unisaarland.cs.se.selab.foh.Table
 import de.unisaarland.cs.se.selab.foh.Waiter
 
+/**
+ * The group has arrived and waits for a waiter and a table. Without a free waiter it tries
+ * once more in the next tick; without a table it is sent away.
+ */
 class AwaitingSeatState : VisitState() {
 
     override fun onSeated(visit: Visit, table: Table, waiters: List<Waiter>, tick: Int) {

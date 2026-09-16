@@ -7,14 +7,12 @@ import de.unisaarland.cs.se.selab.foh.visit.SeatedState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
-import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 import de.unisaarland.cs.se.selab.simulation.SubUnits
-
 
 /**
  * Step 1, ordering: takes the order of a group right after it was seated (spec, "Ordering").
@@ -111,7 +109,7 @@ class OrderingService(
 
     /** Creates the order with one queued meal per customer who chose a dish; Order assigns its own id. */
     private fun buildOrder(visit: Visit, sbu: SubUnits, tick: Int, choices: List<Pair<Customer, Recipe>>): Order {
-      /*  val order = Order(
+        val order = Order(
             visit.group,
             sbu.restaurantId,
             visit.group.id(),
@@ -122,8 +120,7 @@ class OrderingService(
         choices.forEach { (customer, recipe) ->
             order.meals.add(Meal(order.id, customer, recipe))
         }
-        return order */
-        TODO("buildOrder waits for Order without the id parameter")
+        return order
     }
 
     /**

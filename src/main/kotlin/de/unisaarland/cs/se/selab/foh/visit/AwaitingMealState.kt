@@ -4,6 +4,10 @@ import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 
+/**
+ * Waiting for food. Served customers may already be eating: the table stays in this
+ * phase until nobody is waiting for a meal any more.
+ */
 class AwaitingMealState : VisitState() {
 
     /** Hands the meals to their customers. Partial serving keeps the table here. */

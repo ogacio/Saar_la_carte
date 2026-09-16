@@ -21,14 +21,19 @@ class ParsedModel {
 
     // ------------------------------------------------------------------ lookup
 
+    /** The ingredient called [name], or null if the food file has none. */
     fun ingredient(name: String): Ingredient? = ingredientsByName[name]
 
+    /** The recipe with [id], or null if the food file has none. */
     fun recipe(id: Int): Recipe? = recipesById[id]
 
+    /** The restaurant with [id], or null if the restaurants file has none. */
     fun restaurant(id: Int): Restaurant? = restaurantsById[id]
 
+    /** The customer group with [id], or null if the scenario file has none. */
     fun customerGroup(id: Int): CustomerGroup? = customerGroupsById[id]
 
+    /** The incident with [id], or null if the scenario file has none. */
     fun incident(id: Int): Incident? = incidentsById[id]
 
     // ------------------------------------------------------------ registration
@@ -41,34 +46,45 @@ class ParsedModel {
         return true
     }
 
+    /** Stores [i] under its name; false if an ingredient with that name already exists. */
     fun registerIngredient(i: Ingredient): Boolean = register(ingredientsByName, i.name, i)
 
+    /** Stores [r] under its id; false if a recipe with that id already exists. */
     fun registerRecipe(r: Recipe): Boolean = register(recipesById, r.id, r)
 
+    /** Stores [r] under its id; false if a restaurant with that id already exists. */
     fun registerRestaurant(r: Restaurant): Boolean = register(restaurantsById, r.id, r)
 
+    /** Stores [g] under its id; false if a customer group with that id already exists. */
     fun registerCustomerGroup(g: CustomerGroup): Boolean = register(customerGroupsById, g.id(), g)
 
+    /** Stores [i] under its id; false if an incident with that id already exists. */
     fun registerIncident(i: Incident): Boolean = register(incidentsById, i.id, i)
 
     // ------------------------------------------------------------ cross-checks
+    /** The dish names of all recipes that are a basic dish for restaurants of [type]. */
     fun basicDishesFor(type: RestaurantType): Set<String> =
         recipesById.values.filter { it.basicDishFor == type }.map { it.dishName }.toSet()
 
+    /** The names of all ingredients read so far. */
     fun allIngredientNames(): Set<String> = ingredientsByName.keys.toSet()
 
+    /** The dish names of all recipes read so far. */
     fun allDishNames(): Set<String> = recipesById.values.map { it.dishName }.toSet()
 
     // ------------------------------------------------------------ hand-off
+    /** All restaurants in ascending id, for the simulation. */
     fun allRestaurants(): MutableList<Restaurant> =
         restaurantsById.values.sortedBy { it.id }.toMutableList()
 
+    /** All customer groups in ascending id, for the simulation. */
     fun allCustomerGroups(): MutableList<CustomerGroup> =
         customerGroupsById.values.sortedBy { it.id() }.toMutableList()
 
+    /** All incidents in ascending id, for the simulation. */
     fun allIncidents(): MutableList<Incident> =
         incidentsById.values.sortedBy { it.id }.toMutableList()
 
+    /** All recipes in ascending id. */
     fun allRecipes(): List<Recipe> = recipesById.values.sortedBy { it.id }
-
 }

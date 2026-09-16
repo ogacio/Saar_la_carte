@@ -1,5 +1,8 @@
 package de.unisaarland.cs.se.selab.foh
 
+/** "all waiter with a current load below 10, as they do not have much to do yet" */
+private const val BUSY_LOAD = 10
+
 /**
  * Decides which waiter serves which customer group.
  *
@@ -8,8 +11,6 @@ package de.unisaarland.cs.se.selab.foh
  * many waiters as the action needs, and the attempt only counts if the whole group is covered
  * within one tick.
  */
-private const val BUSY_LOAD = 10
-
 class WaiterAssignmentService(
     private val waitstaff: MutableList<Waiter>,
 ) {

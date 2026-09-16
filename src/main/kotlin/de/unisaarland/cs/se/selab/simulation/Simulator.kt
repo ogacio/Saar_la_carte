@@ -4,9 +4,13 @@ import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 
-
 private const val TICKS_PER_EVENING = 24
 
+/**
+ * Runs the whole simulation: evening by evening (incidents, preparation, serving ticks, end of the
+ * evening) until [maxTicks] is reached, then logs the statistics. It only keeps time and order;
+ * what happens inside a restaurant during a tick is up to [Restaurant.runRestaurantTick].
+ */
 class Simulator(
     private val maxTicks: Int,
     private val restaurants: MutableList<Restaurant>,
@@ -39,7 +43,6 @@ class Simulator(
         Logger.servingEnded(evening)
     }
 
-
     /** One tick: tick log, restaurant decisions, then every restaurant in ascending id. */
     private fun runTick() {
         GlobalClock.advanceTick()
@@ -52,7 +55,7 @@ class Simulator(
 
         for (restaurant in restaurants.sortedBy { it.id }) {
             val arrivals = customers.arriving(restaurant.id, GlobalClock.getEvening(), tick) +
-                    walkIns[restaurant.id].orEmpty()
+                walkIns[restaurant.id].orEmpty()
             restaurant.runRestaurantTick(arrivals, tick)
         }
     }
@@ -108,11 +111,15 @@ class Simulator(
         upcomingIncidents.removeAll(incidentsThisEvening)
     }
 
-
+    /** The restaurant with [id], or null if there is none; used by incidents and the delivery service. */
     fun restaurantsById(id: Int): Restaurant? {
-        return restaurants.firstOrNull{it.id == id}
+        return restaurants.firstOrNull { it.id == id }
     }
 
+    /**
+     * Starts the simulation: "Simulation started", evenings until [maxTicks] ticks have run, then the
+     * simulation statistics per restaurant.
+     */
     fun run() {
         Logger.simulationStarted()
         while (GlobalClock.currentTick < maxTicks) {
@@ -121,9 +128,8 @@ class Simulator(
         Statistics.report(restaurants.map { it.id })
     }
 
+    /** The browsing service with every restaurant's current snapshot; used by the recipe change incident. */
     fun getBrowsingService(): BrowsingService {
         return browsingService
     }
-
-
 }

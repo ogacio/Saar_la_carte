@@ -49,7 +49,11 @@ class ConfigurationLoader(
     private fun buildSimulator(): Simulator {
         val restaurants = model.allRestaurants()
         for (restaurant in restaurants) {
-            RatingBook.initializeRatings(restaurant.id, restaurant.initialPositiveRatings, restaurant.initialNegativeRatings)
+            RatingBook.initializeRatings(
+                restaurant.id,
+                restaurant.initialPositiveRatings,
+                restaurant.initialNegativeRatings
+            )
         }
         return Simulator(
             maxTicks,

@@ -3,7 +3,6 @@ package de.unisaarland.cs.se.selab.foh
 import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
-import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
@@ -153,8 +152,15 @@ class FrontOfTheHouse(
         if (table != null && visit.group.groupType() == GroupType.CASUAL) tables.release(table)
     }
 
-    fun getWaitstaff() : WaiterAssignmentService = waitstaff
-    fun getServices() = services
-    fun getTables() = tables
+    /** The waiter assignment of this restaurant; the restaurant applies staff changes to it. */
+    fun getWaitstaff(): WaiterAssignmentService = waitstaff
+
+    /** The six services that run the tick steps of this front of house. */
+    fun getServices(): FohServices = services
+
+    /** The tables of this restaurant; the restaurant's snapshot reads free and total seats from them. */
+    fun getTables(): TableAssignmentService = tables
+
+    /** The reservations of this restaurant; the restaurant's snapshot reads the booked event seats from it. */
     fun getReservationBook(): ReservationBook = reservations
 }
