@@ -8,7 +8,7 @@ class Cook (
     private var id: Int? = null,
     private var busyUntil: Int = 0,
     private var batch: MutableList<Meal> = mutableListOf(),
-    var clock : GlobalClock
+    var clock : GlobalClock = GlobalClock
 )
 
 {

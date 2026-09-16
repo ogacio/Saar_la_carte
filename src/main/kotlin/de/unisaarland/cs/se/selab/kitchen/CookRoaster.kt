@@ -7,7 +7,6 @@ class CookRoaster (
     val kitchenStaff : Map<CookType, Int>,
     val cooks : MutableList<Cook> = mutableListOf(),
     var nextId : Int = 1,
-    val clock: GlobalClock
     )
 
 {
@@ -16,7 +15,7 @@ class CookRoaster (
         for((type,number) in kitchenStaff) {
             var remaining = number
             while(remaining != 0) {
-                val cook = Cook(type, clock = clock)
+                val cook = Cook(type, clock = GlobalClock)
                 cooks.add(cook)
                 remaining--
             }
@@ -51,7 +50,7 @@ class CookRoaster (
 
     fun hasEligible(r: Recipe) : Boolean {
         for(cook in cooks) {
-            if(cook.isFree() && r.cookTypes.contains(cook.getType())) return true
+            if(r.cookTypes.contains(cook.getType())) return true
         }
         return false
     }
@@ -60,7 +59,7 @@ class CookRoaster (
         var delta = delta
         if(delta >= 0) {
             while(delta != 0) {
-                val cook = Cook(type, clock = clock)
+                val cook = Cook(type, clock = GlobalClock)
                 cooks.add(cook)
                 delta--
             }
