@@ -28,9 +28,15 @@ class Recipe(
      */
     fun cookableBy(type: CookType): Boolean = cookTypes.contains(type)
 
+    /**
+     * The same list as [ingredients], for callers that use the getter style. The JVM name is changed
+     * because the property's generated getter is already called `getIngredients`.
+     */
+    @JvmName("ingredientList")
+    fun getIngredients(): List<RecipeIngredient> = ingredients
+
     /** Length of a tick, used to convert the recipe duration into ticks. */
     private companion object {
         const val MINUTES_PER_TICK = 10
     }
-    fun getIngredients(): List<RecipeIngredient> = ingredients
 }
