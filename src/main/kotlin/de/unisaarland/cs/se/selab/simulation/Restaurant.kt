@@ -58,7 +58,18 @@ class Restaurant (
     returns the RestaurantData of the restaurant
 -     */
     fun snapshot() : RestaurantData {
-        // TODO
+        return RestaurantData(
+            id,
+            type,
+            openingTick,
+            closingTick,
+            menu.getRecipes(),
+            foh.getTables().freeSeats(),
+            foh.getDeliveryDesk().amountFreeDrivers(),
+            hostsEvents,
+            foh.getTables().totalSeats(),
+            foh.getReservationBook().getEventSeatsBooked()
+            )
     }
 
     fun bookEvent(g : CustomerGroup, evening : Int) : Boolean {
@@ -76,4 +87,9 @@ class Restaurant (
     fun isOpen(tick: Int) : Boolean {
         return tick in openingTick..closingTick
     }
+    fun getFoh(): FrontOfTheHouse = foh
+    fun getKitchen() : Kitchen = kitchen
+    fun getPantry() : Pantry = pantry
+    fun getId(): Int = id
+    fun getMenu(): Menu = menu
 }

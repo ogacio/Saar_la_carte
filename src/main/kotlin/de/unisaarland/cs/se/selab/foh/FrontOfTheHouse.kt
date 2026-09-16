@@ -172,4 +172,7 @@ class FrontOfTheHouse(
     }
 
     fun getWaitstaff () : WaiterAssignmentService = waitstaff
+    fun getServices() = services
+    fun getTables() = tables
+    fun getReservationBook(): ReservationBook = reservations
 }

@@ -6,12 +6,12 @@ data class RestaurantData(
     private val type: RestaurantType,
     private val openingTick: Int,
     private val closingTick: Int,
-    private val dishes: MutableList<Recipe>,
-    private var freeSeats: MutableMap<TableType, Int>,
+    private val dishes: List<Recipe>,
+    private var freeSeats: Map<TableType, Int>,
     private var freeDrivers: Int,
     private val hostsEvents: Boolean,
     private val totalSeats: Int,
-    private val eventSeatsBooked: MutableMap<Int, Int>
+    private val eventSeatsBooked: Map<Int, Int>
 ) {
 
     fun take(g: CustomerGroup) {

@@ -16,4 +16,5 @@ class Menu(
         }
     }
     fun getOrderables(): List<Recipe> = orderable
+    fun getRecipes(): List<Recipe> = recipes
 }
