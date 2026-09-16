@@ -2,10 +2,10 @@ package de.unisaarland.cs.se.selab.foh
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.simulation.DeliveryService
 
-class DeliveryDesk (private val drivers: MutableList<DeliveryDriver>, val restaurantId: Int) {
-    val newOrders: MutableList<Order> = mutableListOf()
-    val ready: MutableList<Order> = mutableListOf()
-    var nextDriverId: Int = 1
+class DeliveryDesk (private val drivers: MutableList<DeliveryDriver>, private val restaurantId: Int) {
+    private val newOrders: MutableList<Order> = mutableListOf()
+    private val ready: MutableList<Order> = mutableListOf()
+    private var nextDriverId: Int = 1
     fun sendForOrder(o:Order):Order? {
         val id = DeliveryService.chooseDriverForOrder(restaurantId)
         if (id != null) {
@@ -41,4 +41,6 @@ class DeliveryDesk (private val drivers: MutableList<DeliveryDriver>, val restau
         newOrders.remove(o)
         ready.add(o)
     }
+    fun getReady(): List<Order> = ready
+    fun getRestaurantId(): Int = restaurantId
 }
