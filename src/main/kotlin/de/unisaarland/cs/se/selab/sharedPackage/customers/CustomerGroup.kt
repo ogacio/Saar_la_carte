@@ -40,6 +40,9 @@ abstract class CustomerGroup(
     /** The delivery distance in kilometers, or null if the group never orders delivery. */
     fun deliveryDistance(): Int? = deliveryDistance
 
+    /** Customers in group */
+    fun members(): List<Customer> = members
+
     /** The food preferences declared for this group. */
     fun preferences(): List<FoodPreference> = preferences
 

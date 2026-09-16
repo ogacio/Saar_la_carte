@@ -46,4 +46,9 @@ class Customer(private val preference: FoodPreference?) {
     fun leave() {
         status = CustomerStatus.LEFT
     }
+
+    /** Set the status to DONE_EATING */
+    fun doneEating() {
+        status = CustomerStatus.DONE_EATING
+    }
 }

@@ -187,7 +187,7 @@ class Visit(val group: CustomerGroup) {
     fun recordFinishedEaters(tick: Int) {
         for (customer in group.members()) {
             if (customer.status() == CustomerStatus.SERVED && customer.isDoneEating(tick)) {
-                customer.finishEating()
+                customer.doneEating()
                 finishedEatingThisTick++
             }
         }
