@@ -5,6 +5,7 @@ import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.foh.Table
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.Restaurant
 import kotlinx.serialization.SerializationException
@@ -65,10 +66,24 @@ class RestaurantParser(model : ParsedModel) : ConfigParser(model) {
 
             val type = RestaurantType.valueOf(rjd.type)
             if (returnValue && checkAtLeastOneOfEach(rjd)) {
+                val eventSeats : MutableMap<Int,Int> = mutableMapOf<Int,Int>()
+                val seats : MutableMap<TableType, Int> = mutableMapOf<TableType, Int>()
+                var totalSeats = 0
+
+                for( t in rjd.tables ) {
+                    if ( seats.containsKey(  ) ) {
+
+                    }
+                }
+
+                val data = RestaurantData(rjd.id, type, rjd.openingTickStart, rjd.openingTickEnd,
+                    recipes!!, , rjd.deliveryDrivers, rjd.event, , eventSeats
+                    )
                 val restaurant = Restaurant(
                     rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
-                    rjd.deliveryDrivers, rjd.event, rjd.positiveRatings, rjd.negativeRatings, recipes,
-                    cooks, rjd.waitstaff, tables
+                    rjd.event, rjd.positiveRatings, rjd.negativeRatings,
+                    rjd.deliveryDrivers, rjd.event, recipes,
+                    cooks, rjd.waitstaff, data
                 )
                 return restaurant
             }

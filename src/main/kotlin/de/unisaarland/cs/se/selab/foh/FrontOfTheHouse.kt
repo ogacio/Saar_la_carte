@@ -165,4 +165,6 @@ class FrontOfTheHouse(
         // REGULAR and EVENT tables stay reserved for the whole evening, "even after the group has left".
         if (table != null && visit.group.groupType() == GroupType.CASUAL) tables.release(table)
     }
+
+    fun getWaitstaff () : WaiterAssignmentService = waitstaff
 }

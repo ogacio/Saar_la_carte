@@ -37,4 +37,5 @@ data class RestaurantData(private val id: Int, private val type: RestaurantType,
     fun getClosingTick() = closingTick
     fun getHostsEvents() = hostsEvents
     fun getDishes() = dishes
+    fun getTotalSeats() = totalSeats
 }
