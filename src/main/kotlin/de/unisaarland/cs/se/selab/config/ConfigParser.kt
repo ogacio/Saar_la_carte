@@ -1,28 +1,26 @@
 package de.unisaarland.cs.se.selab.config
 
 /**
- * Abstract class for parsing configuration files.
+ * Template for parsing one configuration file (F01).
+ *
+ * [parse] runs three steps: the file must match its JSON schema, then its entities are read
+ * into [model], then the rules that need the whole file are checked. Each step runs only if
+ * the previous one succeeded, because `&&` stops at the first `false`.
  */
-
 abstract class ConfigParser(
     protected val model: ParsedModel,
     protected val validator: Validator = Validator(),
 ) {
-    constructor(model: Any) : this()
+    /** The JSON schema file this parser's configuration must match. */
+    protected abstract val schemaPath: String
 
-    protected val schemaPath: String
-
-    // Two abstract methods that subclasses must implement to handle
-    // specific parsing logic for different configuration files.
+    /** Reads the entities of the file at [path] into [model]; false if one of them is invalid. */
     protected abstract fun readEntities(path: String): Boolean
+
+    /** Checks the rules that need all entities of the file at once; false if one is violated. */
     protected abstract fun validateFileScope(): Boolean
 
-    public fun parse(path: String): Boolean =
-        /**
-         * If the schema validation fails, the subsequent steps (reading entities and validating file scope)
-         * will not be executed due to short-circuit evaluation of the logical AND operator.
-         */
-        validator.validateFile(path, schemaPath) &&
-            readEntities(path) &&
-            validateFileScope()
+    /** Validates, reads and checks the file at [path]; true only if all three steps succeed. */
+    fun parse(path: String): Boolean =
+        validator.validateFile(path, schemaPath) && readEntities(path) && validateFileScope()
 }

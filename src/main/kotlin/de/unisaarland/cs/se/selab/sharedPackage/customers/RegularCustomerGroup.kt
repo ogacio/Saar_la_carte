@@ -41,6 +41,12 @@ class RegularCustomerGroup(
     /** REGULAR groups are bound to one fixed restaurant and never browse by type. */
     override fun restaurantTypes(): Set<RestaurantType> = emptySet()
 
+    /** REGULAR groups have no event evening. */
+    override fun getEventEvening(): Int = 0
+
+    /** REGULAR groups never order delivery. */
+    override fun getDeliveryDistance(): Int = 0
+
     override fun homeRestaurant(): Int = restaurantId
 
     /** Every regular group rates every visit; a negative experience gives a negative rating. */

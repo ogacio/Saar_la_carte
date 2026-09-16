@@ -1,24 +1,22 @@
 package de.unisaarland.cs.se.selab.simulation.ratings
 
-class RatingBook {
-    private val ratings: MutableMap<Int, RatingScore>
+object RatingBook {
+    private val ratings: MutableMap<Int, RatingScore> = mutableMapOf()
 
-    public fun initializeRatings(restaurantId: Int, initialPositive: Int, initialNegative: Int) {
-        ratings[restaurantId] = RatingScore().apply {
-            setPositiveRatings(initialPositive)
-            setNegativeRatings(initialNegative)
-        }
+    fun initializeRatings(restaurantId: Int, initialPositive: Int, initialNegative: Int) {
+        ratings[restaurantId] = RatingScore(initialPositive, initialNegative)
     }
 
-    public fun addRating(restaurantId: Int, rating: Rating) {
+    fun addRating(restaurantId: Int, rating: Rating) {
         ratings[restaurantId]?.addRating(rating)
     }
 
-    public fun ratingScore(restaurantId: Int): Int? {
+    fun ratingScore(restaurantId: Int): Int? {
         return ratings[restaurantId]?.score()
     }
+
     fun getById(restaurantId: Int): RatingScore {
         return ratings[restaurantId]!!
     }
-    
+
 }

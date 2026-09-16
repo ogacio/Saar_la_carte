@@ -15,6 +15,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 import de.unisaarland.cs.se.selab.simulation.SubUnits
 
+
 /**
  * Step 1, ordering: takes the order of a group right after it was seated (spec, "Ordering").
  *
@@ -119,7 +120,7 @@ class OrderingService(
             meals = mutableListOf(),
         )
         choices.forEach { (customer, recipe) ->
-            order.meals.add(Meal(order, customer, recipe, null, MealStatus.QUEUED))
+            order.meals.add(Meal(order.id, customer, recipe))
         }
         return order */
         TODO("buildOrder waits for Order without the id parameter")

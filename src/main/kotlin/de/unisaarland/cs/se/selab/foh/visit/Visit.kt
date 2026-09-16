@@ -164,7 +164,7 @@ class Visit(val group: CustomerGroup) {
 
     /**
      * How the group experienced the visit (spec, "Rating"). Never seated or ordered, or
-     * food missing for anyone: negative. Otherwise the last meal decides: before the
+     * food missing for anyone: negative. Otherwise, the last meal decides: before the
      * end of the 4-tick expectation window positive, exactly at its end neutral, later
      * negative. A group sent out at the end of opening time that had finished eating
      * sees at least a neutral experience; one that had not, a negative one.
@@ -198,7 +198,7 @@ class Visit(val group: CustomerGroup) {
      * permanent waiter no longer waits on them.
      */
     fun leaveUnserved(customers: List<Customer>) {
-        order?.meals.orEmpty().filter { it.customer in customers }.forEach { it.abort() }
+        order?.meals.orEmpty().filter { it.customer in customers }.forEach { it.status = MealStatus.ABORTED }
         customers.forEach { it.leave() }
         if (group.groupType() != GroupType.EVENT) {
             waiters.forEach { it.adjustLoad(-customers.size) }
