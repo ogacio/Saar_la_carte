@@ -4,7 +4,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.Pantry
-import de.unisaarland.cs.se.selab.foh.ReservationBook
+import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
 import de.unisaarland.cs.se.selab.simulation.Supplier
 

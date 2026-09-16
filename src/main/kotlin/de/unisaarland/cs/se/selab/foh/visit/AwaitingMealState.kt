@@ -1,6 +1,7 @@
 package de.unisaarland.cs.se.selab.foh.visit
 
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 
 class AwaitingMealState : VisitState() {
@@ -12,7 +13,7 @@ class AwaitingMealState : VisitState() {
     /** Hands the meals to their customers. Partial serving keeps the table here. */
     override fun onServed(visit: Visit, meals: List<Meal>, tick: Int) {
         for (meal in meals) {
-            meal.markServed()
+            meal.status = MealStatus.SERVED
             meal.customer.receive(meal, tick)
         }
         if (visit.customersWaitingForFood().isEmpty()) visit.state = EatingUpState()

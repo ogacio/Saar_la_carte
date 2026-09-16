@@ -104,7 +104,7 @@ class FrontOfTheHouse(
     fun mealsReady(meals: List<Meal>) {
         val tick = GlobalClock.currentTick
         for (meal in meals) {
-            val visit = visits.firstOrNull { it.order === meal.order }
+            val visit = visits.firstOrNull { it.order?.id === meal.orderId }
             if (visit != null) visit.mealCooked(meal, tick) else deliveryDesk.mealCooked(meal)
         }
     }
