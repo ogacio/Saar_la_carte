@@ -8,7 +8,6 @@ private const val EATING_TICKS = 2
 /** One customer inside a group, following its subgroup's food preference if it has one. */
 class Customer(private val preference: FoodPreference?) {
 
-    // set by OrderingService once F18 exists; no writer today
     private var chosenDish: Recipe? = null
     private var meal: Meal? = null
     private var servedTick: Int? = null
@@ -19,6 +18,11 @@ class Customer(private val preference: FoodPreference?) {
 
     /** The dish this customer decided on, null until it has ordered. */
     fun chosenDish(): Recipe? = chosenDish
+
+    /** Records the dish this customer decided to order. */
+    fun choose(dish: Recipe) {
+        chosenDish = dish
+    }
 
     /** The meal this customer was served, null until it has received one. */
     fun meal(): Meal? = meal
@@ -51,4 +55,6 @@ class Customer(private val preference: FoodPreference?) {
     fun doneEating() {
         status = CustomerStatus.DONE_EATING
     }
+
+    /** */
 }

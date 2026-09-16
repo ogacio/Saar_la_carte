@@ -45,7 +45,10 @@ class CasualCustomerGroup(
         RatingLikelihood.ALWAYS ->
             if (experience == Experience.NEGATIVE) Rating.NEGATIVE else Rating.POSITIVE
     }
-    override fun getDeliveryDistance():Int = deliveryDistance
+    override fun getDeliveryDistance(): Int = deliveryDistance() ?: 0
+
+    /** CASUAL groups have no event evening. */
+    override fun getEventEvening(): Int = 0
 
     /** The kitchen guesses casual orders itself; this group contributes nothing fixed. */
     override fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int> = emptyMap()

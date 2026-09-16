@@ -15,10 +15,9 @@ import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
  * [rate] handles a group whose visit ended this tick, [rateFailedReservation] a group
  * whose table reservation failed; that group rates in the first tick of the evening.
  * The FOH calls them for all such groups together, in group order, and then [logStatus] once.
+ * Ratings go into the one [RatingBook] of the simulation.
  */
-class RatingService(
-    private val ratings: RatingBook,
-) {
+class RatingService {
     private var rated = 0
 
     /** Normal rating: the group of a finished [visit] judges how the visit went. */
@@ -50,9 +49,9 @@ class RatingService(
      */
     private fun leaveRating(group: CustomerGroup, experience: Experience, sbu: SubUnits) {
         val rating = group.ratingFor(experience) ?: return
-        ratings.addRating(sbu.restaurantId, rating)
+        RatingBook.addRating(sbu.restaurantId, rating)
         Statistics.recordRating(sbu.restaurantId)
-        val score = ratings.getById(sbu.restaurantId)
+        val score = RatingBook.getById(sbu.restaurantId)
         Logger.Customer.rating(sbu.restaurantId, group.id(), rating, score.positiveRatings, score.negativeRatings)
         rated++
     }

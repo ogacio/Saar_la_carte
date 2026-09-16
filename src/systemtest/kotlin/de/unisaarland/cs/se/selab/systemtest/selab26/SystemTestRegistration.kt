@@ -46,6 +46,31 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMissingRecipes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootNotObject
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootRecipesNull
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootSingleIngredientSingleRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01FirstTickLogOrder
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01SecondEveningStartsAtTick25
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01StopsAfterFullEvening
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07ServedAndDeliveredCountedSeparately
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07StatisticsInAscendingRestaurantId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F13DishWithoutEligibleCookIsNotOrdered
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14EventReservedBeforeRegular
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14RegularWithoutTableIsNotReserved
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16BarGroupSentAwayRatesNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16CasualGroupSeatedAtMergedTable
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeatedNextTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19TableHeldBackUntilAllMealsAreCooked
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F20DeliveryOverSevenKilometres
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21VisitServedEscortedAndRated
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28HighestRatingDifferenceWins
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28NoNewCustomersInLastThreeTicks
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TieGoesToLowestId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F30GroupStillEatingAtClosingRatesNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventOrdersFavouriteDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWaiters
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsNeutralExperience
 
 /**
  * Used for test registration
@@ -60,6 +85,7 @@ object SystemTestRegistration {
     fun registerSystemTestsForReferenceImplementation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
         registerFoodParserTests(testSuite)
+        registerFrontOfHouseTests(testSuite)
     }
 
     /**
@@ -79,6 +105,38 @@ object SystemTestRegistration {
      */
     fun registerSystemTestsMutantSimulation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
+        registerFrontOfHouseTests(testSuite)
+    }
+
+    /**
+     * Registers the simulation scenario tests of F01, F07, F13, F14, F16, F18-F21, F28, F30, P03 and P05.
+     */
+    private fun registerFrontOfHouseTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F01FirstTickLogOrder())
+        testSuite.registerTest(F01StopsAfterFullEvening())
+        testSuite.registerTest(F01SecondEveningStartsAtTick25())
+        testSuite.registerTest(F07StatisticsInAscendingRestaurantId())
+        testSuite.registerTest(F14RegularWithoutTableIsNotReserved())
+        testSuite.registerTest(F14EventReservedBeforeRegular())
+        testSuite.registerTest(F16CasualGroupSeatedAtMergedTable())
+        testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
+        testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
+        testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
+        testSuite.registerTest(F18FavouriteDishAndHighestRecipeId())
+        testSuite.registerTest(F13DishWithoutEligibleCookIsNotOrdered())
+        testSuite.registerTest(F21VisitServedEscortedAndRated())
+        testSuite.registerTest(P03EventOrdersFavouriteDish())
+        testSuite.registerTest(F28TieGoesToLowestId())
+        testSuite.registerTest(F28HighestRatingDifferenceWins())
+        testSuite.registerTest(F28NoNewCustomersInLastThreeTicks())
+        testSuite.registerTest(F20DeliveryOverSevenKilometres())
+        testSuite.registerTest(F18SecondCustomerFindsNoDishAndLeaves())
+        testSuite.registerTest(F19TableHeldBackUntilAllMealsAreCooked())
+        testSuite.registerTest(P05SomeLikelihoodSkipsNeutralExperience())
+        testSuite.registerTest(P05AlwaysLikelihoodRatesNeutralPositive())
+        testSuite.registerTest(F30GroupStillEatingAtClosingRatesNegative())
+        testSuite.registerTest(F07ServedAndDeliveredCountedSeparately())
+        testSuite.registerTest(P03EventSeatedByTwoWaiters())
     }
 
     /**

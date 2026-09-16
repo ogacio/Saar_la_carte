@@ -31,7 +31,7 @@ class CustomerRegistry(
         if (!group.visitsOn(evening)) return false
         val distance = group.deliveryDistance() ?: 0
         val decisionTick = if (distance > 0) {
-            group.visitingTick() - DeliveryService().calculateTravelTicks(distance) - DELIVERY_COOKING_TICKS
+            group.visitingTick() - DeliveryService.calculateTravelTicks(distance) - DELIVERY_COOKING_TICKS
         } else {
             group.visitingTick()
         }

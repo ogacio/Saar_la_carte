@@ -18,21 +18,16 @@ import java.io.IOException
  * The stage keeps the order `validateFile` then `readEntities` then `validateFileScope`, so every
  * constraint that can be decided on a single entity fails before the whole-file constraints run.
  */
-class FoodParser(
-    private val model: FoodRegistry,
-    private val validator: FileValidator,
-) : ConfigParser {
-    private val schemaPath = SCHEMA_PATH
+class FoodParser(model: ParsedModel) : ConfigParser(model) {
+    override val schemaPath: String = SCHEMA_PATH
     private val json = Json { ignoreUnknownKeys = false }
     private var ingredientCount = 0
-
-    override fun parse(path: String): Boolean =
-        validator.validateFile(path, schemaPath) && readEntities(path) && validateFileScope()
+    private val recipes = mutableListOf<Recipe>()
 
     /**
      * Reads the food file at [path] and registers everything it contains.
      */
-    private fun readEntities(path: String): Boolean {
+    override fun readEntities(path: String): Boolean {
         val file = decode(path) ?: return false
         return readIngredients(file.ingredients) && readRecipes(file.recipes)
     }
@@ -60,6 +55,7 @@ class FoodParser(
             if (!model.registerRecipe(recipe)) {
                 return false
             }
+            recipes.add(recipe)
         }
         return true
     }
@@ -136,15 +132,13 @@ class FoodParser(
     /**
      * Checks the constraints that can only be decided once the whole food file has been read.
      */
-    private fun validateFileScope(): Boolean {
-        val recipes = model.allRecipes()
-        return ingredientCount > 0 && recipes.isNotEmpty() && checkBasicDishUniqueness(recipes)
-    }
+    override fun validateFileScope(): Boolean =
+        ingredientCount > 0 && recipes.isNotEmpty() && checkBasicDishUniqueness(recipes)
 
     /**
      * Whether there is exactly one default recipe per basic dish name.
      */
-    private fun checkBasicDishUniqueness(recipes: List<Recipe>): Boolean {
+    private fun checkBasicDishUniqueness(recipes: MutableList<Recipe>): Boolean {
         val basicNames = recipes.filter { it.basicDishFor != null }.map { it.dishName }
         return basicNames.size == basicNames.toSet().size
     }

@@ -1,9 +1,9 @@
 package de.unisaarland.cs.se.selab.simulation.ratings
 
 
-class RatingScore {
-    var positiveRatings: Int = 0
-    var negativeRatings: Int = 0
+class RatingScore(initialPositive: Int, initialNegative: Int) {
+    var positiveRatings: Int = initialPositive
+    var negativeRatings: Int = initialNegative
 
     public fun addRating(rating: Rating) {
         when (rating) {
@@ -12,7 +12,7 @@ class RatingScore {
         }
     }
 
-    public fun score: Int {
+    public fun score(): Int {
         return positiveRatings - negativeRatings
     }
 

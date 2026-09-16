@@ -2,6 +2,7 @@ package de.unisaarland.cs.se.selab.incident
 
 import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
+import de.unisaarland.cs.se.selab.sharedPackage.RecipeIngredient
 import de.unisaarland.cs.se.selab.sharedPackage.StaffType
 import de.unisaarland.cs.se.selab.simulation.Simulator
 import de.unisaarland.cs.se.selab.simulation.Supplier
@@ -44,10 +45,13 @@ class RecipeChange(
     override val type: IncidentType = IncidentType.RECIPE
 
     override fun apply(sim: Simulator) {
-        for (recipe in sim.allRecipes()) {
-            recipe.ingredients
-                .filter { it.ingredient.name == ingredient.name }
-                .forEach { it.adaptBy(adaptation) }
+        // Restaurants may share the same Recipe objects, so every occurrence is adapted only once.
+        for (restaurant in sim.getBrowsingService().entries) {
+            for (recipe in restaurant.getDishes()) {
+                recipe.getIngredients()
+                    .filter { it.getIngredient().name == ingredient.name && adapted.add(it) }
+                    .forEach { it.adaptBy(adaptation) }
+            }
         }
     }
 }
