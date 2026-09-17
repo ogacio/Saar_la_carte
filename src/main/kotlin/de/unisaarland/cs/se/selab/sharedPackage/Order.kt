@@ -7,7 +7,10 @@ import de.unisaarland.cs.se.selab.simulation.GlobalClock
  */
 class Order(
     private var group: CustomerGroup,
+    private var restaurantId: Int,
+    private var customerGroupId: Int,
     private var placedTick: Int,
+    private var isDelivery: Boolean,
     private var meals: MutableList<Meal>
 ) {
     /**
@@ -71,4 +74,19 @@ class Order(
      * returns meals
      */
     fun getMeals(): List<Meal> = meals
+
+    /**
+     * returns if it is a delivery order or not
+     */
+    fun getIsDelivery(): Boolean = isDelivery
+
+    /**
+     * returnes the restaurant id
+     */
+    fun getRestaurantId(): Int = restaurantId
+
+    /**
+     * returns the customer group id
+     */
+    fun getCustomerGroupId(): Int = customerGroupId
 }
