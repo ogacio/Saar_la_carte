@@ -6,6 +6,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.Menu
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
@@ -20,7 +21,8 @@ class Kitchen(
     val roaster: CookRoaster,
     val pantry: Pantry,
     val queue: MutableList<Order>,
-    val reservationBook: ReservationBook
+    val reservationBook: ReservationBook,
+    val restaurantType: RestaurantType
 ) {
     /**
      * called by foh, puts the order into the queue
@@ -53,9 +55,11 @@ class Kitchen(
             }
         }
 
-        for ((recipe, mealList) in mealsToCookByRecipe) {
-            mealList.sortByDescending { it.orderId }
-            roaster.startCooking(mealList)
+        val sortedEntries = mealsToCookByRecipe.entries.sortedWith(
+            compareBy({ !it.key.isBasicFor(restaurantType) }, { it.key.getId() })
+        )
+        for (entry in sortedEntries) {
+            roaster.startCooking(entry.value)
         }
     }
 
