@@ -50,14 +50,14 @@ class OrderingServiceOrderedTest {
         val higherId = recipe(2)
         whenever(pantry.reserve(any())).thenReturn(true)
         whenever(menu.getOrderables()).thenReturn(listOf(favourite, higherId))
-        val preference = FoodPreference(1, emptySet(), emptySet(), listOf(favourite.dishName))
+        val preference = FoodPreference(1, emptySet(), emptySet(), listOf(favourite.getDishName()))
         val waiter = Waiter()
         val visit = seatedVisit(Visit(casual(3, 1, preference = preference)), waiter)
         val service = OrderingService(WaiterAssignmentService(mutableListOf(waiter)), RestaurantType.EUROPEAN)
 
         service.takeOrder(visit, sbu, 2)
 
-        assertEquals(favourite, visit.order?.meals?.get(0)?.recipe)
+        assertEquals(favourite, visit.order?.getMeals()?.get(0)?.recipe)
     }
 
     @Test
@@ -72,7 +72,7 @@ class OrderingServiceOrderedTest {
 
         service.takeOrder(visit, sbu, 2)
 
-        assertEquals(high, visit.order?.meals?.get(0)?.recipe)
+        assertEquals(high, visit.order?.getMeals()?.get(0)?.recipe)
     }
 
     @Test
@@ -81,7 +81,7 @@ class OrderingServiceOrderedTest {
         val eventDish = recipe(2)
         whenever(pantry.reserve(any())).thenReturn(true)
         whenever(menu.getOrderables()).thenReturn(listOf(personalFavourite, eventDish))
-        val preference = FoodPreference(1, emptySet(), emptySet(), listOf(personalFavourite.dishName))
+        val preference = FoodPreference(1, emptySet(), emptySet(), listOf(personalFavourite.getDishName()))
         val group = EventCustomerGroup(
             3,
             1,
@@ -91,7 +91,7 @@ class OrderingServiceOrderedTest {
             listOf(preference),
             setOf(RestaurantType.EUROPEAN),
             4,
-            mapOf(RestaurantType.EUROPEAN to eventDish.dishName),
+            mapOf(RestaurantType.EUROPEAN to eventDish.getDishName()),
         )
         val waiter = Waiter()
         val visit = seatedVisit(Visit(group), waiter)
@@ -99,7 +99,7 @@ class OrderingServiceOrderedTest {
 
         service.takeOrder(visit, sbu, 2)
 
-        assertEquals(eventDish, visit.order?.meals?.get(0)?.recipe)
+        assertEquals(eventDish, visit.order?.getMeals()?.get(0)?.recipe)
     }
 
     @Test
@@ -114,7 +114,7 @@ class OrderingServiceOrderedTest {
 
         service.takeOrder(visit, sbu, 2)
 
-        assertEquals(2, visit.order?.meals?.size)
+        assertEquals(2, visit.order?.getMeals()?.size)
         assertTrue(logLines(log).any { it.contains("FOH Ordering") && it.contains("waitstaff 1") })
     }
 
@@ -157,7 +157,7 @@ class OrderingServiceOrderedTest {
 
         service.takeOrder(visit, sbu, 2)
 
-        assertEquals(12, visit.order?.meals?.size)
+        assertEquals(12, visit.order?.getMeals()?.size)
         assertTrue(logLines(log).any { it.contains("FOH Ordering") && it.contains("waitstaff 1") })
     }
 
@@ -189,7 +189,7 @@ class OrderingServiceOrderedTest {
 
         assertTrue(logLines(log).any { it.contains("FOH Ordering") })
         assertTrue(logLines(log).any { it.contains("FOH No Ordering") && it.contains(" 1 ") })
-        assertEquals(1, visit.order?.meals?.size)
+        assertEquals(1, visit.order?.getMeals()?.size)
     }
 
     @Test
@@ -201,13 +201,13 @@ class OrderingServiceOrderedTest {
         val visitA = seatedVisit(Visit(casual(3, 1)), waiterA)
         val serviceA = OrderingService(WaiterAssignmentService(mutableListOf(waiterA)), RestaurantType.EUROPEAN)
         serviceA.takeOrder(visitA, sbu, 2)
-        val firstId = checkNotNull(visitA.order).id
+        val firstId = checkNotNull(visitA.order).getId()
 
         val waiterB = Waiter()
         val visitB = seatedVisit(Visit(casual(4, 1)), waiterB)
         val serviceB = OrderingService(WaiterAssignmentService(mutableListOf(waiterB)), RestaurantType.EUROPEAN)
         serviceB.takeOrder(visitB, sbu, 2)
-        val secondId = checkNotNull(visitB.order).id
+        val secondId = checkNotNull(visitB.order).getId()
 
         assertTrue(secondId > firstId)
     }

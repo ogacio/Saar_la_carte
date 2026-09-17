@@ -25,8 +25,9 @@ class DeliveryDriverTest {
     private lateinit var driver: DeliveryDriver
 
     private fun orderFor(group: CustomerGroup): Order {
-        val order = Order(group, RESTAURANT_ID, group.id(), 1, true, mutableListOf())
-        group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1))) }
+        val meals = group.members().map { Meal(null, it, recipe(1)) }.toMutableList()
+        val order = Order(group, RESTAURANT_ID, group.id(), 1, true, meals)
+        meals.forEach { it.orderId = order.getId() }
         return order
     }
 
@@ -67,7 +68,7 @@ class DeliveryDriverTest {
 
         assertEquals(
             listOf(
-                "[INFO] Delivery Preparation (R 1): Driver 1 prepares driving order ${order.id} to group 3, " +
+                "[INFO] Delivery Preparation (R 1): Driver 1 prepares driving order ${order.getId()} to group 3, " +
                     "which will take 2 ticks.",
             ),
             logLines(log),
@@ -91,8 +92,8 @@ class DeliveryDriverTest {
             listOf(
                 "[DEBUG] Delivery Driving (R 1): Driver 1 drove 5 km and needs 1 more ticks.",
                 "[DEBUG] Delivery Driving (R 1): Driver 1 drove 2 km and needs 0 more ticks.",
-                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order ${order.id}.",
-                "[IMPORTANT] Delivery Finished (R 1): Driver 1 gave delivery of order ${order.id} to group 3.",
+                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order ${order.getId()}.",
+                "[IMPORTANT] Delivery Finished (R 1): Driver 1 gave delivery of order ${order.getId()} to group 3.",
             ),
             logLines(log),
         )
@@ -145,8 +146,8 @@ class DeliveryDriverTest {
         assertEquals(
             listOf(
                 "[DEBUG] Delivery Driving (R 1): Driver 1 drove 5 km and needs 0 more ticks.",
-                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order ${order.id}.",
-                "[IMPORTANT] Delivery Failed (R 1): Driver 1 failed to deliver order ${order.id} to group 3.",
+                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order ${order.getId()}.",
+                "[IMPORTANT] Delivery Failed (R 1): Driver 1 failed to deliver order ${order.getId()} to group 3.",
             ),
             logLines(log),
         )

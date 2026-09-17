@@ -38,7 +38,7 @@ class RestaurantDataTest {
         assertEquals(3, snapshot.getOpeningTick())
         assertEquals(5, snapshot.getClosingTick())
         assertTrue(snapshot.getHostsEvents())
-        assertEquals(listOf(1), snapshot.getDishes().map { it.id })
+        assertEquals(listOf(1), snapshot.getDishes().map { it.getId() })
         assertEquals(1, snapshot.getFreeDrivers())
     }
 

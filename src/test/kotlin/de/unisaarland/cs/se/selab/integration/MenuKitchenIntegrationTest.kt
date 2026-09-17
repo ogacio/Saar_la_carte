@@ -10,9 +10,9 @@ import de.unisaarland.cs.se.selab.sharedPackage.Menu
 import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RecipeIngredient
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.UnitType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
-import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -30,8 +30,14 @@ class MenuKitchenIntegrationTest {
         Recipe(id, "dish$id", 10, cookTypes.toSet(), mutableListOf(RecipeIngredient(rice, riceAmount)), null)
 
     private fun kitchen(pantry: Pantry, staff: Map<CookType, Int>): Kitchen {
-        val roaster = CookRoaster(staff, clock = GlobalClock).also { it.initialiseCooks() }
-        return Kitchen(roaster, pantry, mutableListOf(), ReservationBook(TableAssignmentService(mutableListOf())))
+        val roaster = CookRoaster(staff).also { it.initialiseCooks() }
+        return Kitchen(
+            roaster,
+            pantry,
+            mutableListOf(),
+            ReservationBook(TableAssignmentService(mutableListOf())),
+            RestaurantType.EUROPEAN,
+        )
     }
 
     @Test

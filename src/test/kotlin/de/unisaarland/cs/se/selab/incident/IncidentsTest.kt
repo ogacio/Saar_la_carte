@@ -55,7 +55,7 @@ class IncidentsTest {
     @Test
     fun staffChangeDelegatesToTheRightRestaurant() {
         val restaurant = mock<Restaurant>()
-        whenever(restaurant.id).thenReturn(7)
+        whenever(restaurant.getId()).thenReturn(7)
         val sim = Simulator(
             1,
             mutableListOf(restaurant),
@@ -72,7 +72,7 @@ class IncidentsTest {
     @Test
     fun staffChangeOnAnUnknownRestaurantIdIsANoOpAndDoesNotCrash() {
         val restaurant = mock<Restaurant>()
-        whenever(restaurant.id).thenReturn(7)
+        whenever(restaurant.getId()).thenReturn(7)
         val sim = Simulator(
             1,
             mutableListOf(restaurant),

@@ -63,8 +63,9 @@ class DeliveryIntegrationTest {
 
         val driver = DeliveryDriver(811)
         val desk = DeliveryDesk(mutableListOf(driver), 811)
-        val order = Order(group, 811, group.id(), 5, true, mutableListOf())
-        group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1), status = MealStatus.COOKED)) }
+        val meals = group.members().map { Meal(null, it, recipe(1), status = MealStatus.COOKED) }.toMutableList()
+        val order = Order(group, 811, group.id(), 5, true, meals)
+        meals.forEach { it.orderId = order.getId() }
         desk.enqueue(order)
         desk.readyOrder(order)
         driver.setId(desk.grantDriverId())
@@ -79,12 +80,12 @@ class DeliveryIntegrationTest {
 
         assertEquals(
             listOf(
-                "[INFO] Delivery Preparation (R 811): Driver 1 prepares driving order ${order.id} to group 1, " +
+                "[INFO] Delivery Preparation (R 811): Driver 1 prepares driving order ${order.getId()} to group 1, " +
                     "which will take 2 ticks.",
                 "[DEBUG] Delivery Driving (R 811): Driver 1 drove 5 km and needs 1 more ticks.",
                 "[DEBUG] Delivery Driving (R 811): Driver 1 drove 2 km and needs 0 more ticks.",
-                "[INFO] Delivery Arrival (R 811): Driver 1 arrived at group 1 with order ${order.id}.",
-                "[IMPORTANT] Delivery Finished (R 811): Driver 1 gave delivery of order ${order.id} to group 1.",
+                "[INFO] Delivery Arrival (R 811): Driver 1 arrived at group 1 with order ${order.getId()}.",
+                "[IMPORTANT] Delivery Finished (R 811): Driver 1 gave delivery of order ${order.getId()} to group 1.",
                 "[INFO] Delivery Returned (R 811): Driver 1 has returned.",
             ),
             logLines(log),

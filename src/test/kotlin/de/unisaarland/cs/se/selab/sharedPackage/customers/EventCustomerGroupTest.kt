@@ -135,7 +135,7 @@ class EventCustomerGroupTest {
     fun expectedDishesImposesTheFavouriteOnTheWholeGroupCount() {
         val favourite = recipe(1)
         val other = recipe(2)
-        val group = eventGroup(size = 6, favourites = mapOf(RestaurantType.EUROPEAN to favourite.dishName))
+        val group = eventGroup(size = 6, favourites = mapOf(RestaurantType.EUROPEAN to favourite.getDishName()))
 
         val expected = group.expectedDishes(listOf(other, favourite))
 

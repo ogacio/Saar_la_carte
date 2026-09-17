@@ -46,7 +46,7 @@ class SimulatorTest {
 
     private fun mockRestaurant(id: Int, hostsEvents: Boolean = false): Restaurant {
         val restaurant = mock<Restaurant>()
-        whenever(restaurant.id).thenReturn(id)
+        whenever(restaurant.getId()).thenReturn(id)
         whenever(restaurant.snapshot()).thenReturn(restaurantData(id, hostsEvents))
         val menu = mock<Menu>()
         whenever(menu.getOrderables()).thenReturn(emptyList())
