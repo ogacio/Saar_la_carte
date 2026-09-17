@@ -95,7 +95,7 @@ class Restaurant(
      * returns if the restaurant is open or not
      */
     fun isOpen(): Boolean {
-        return clock.getCurrentTick() in openingTick..closingTick
+        return clock.getTickInEvening() in openingTick..closingTick
     }
 
     /**

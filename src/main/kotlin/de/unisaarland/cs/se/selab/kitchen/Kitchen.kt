@@ -44,14 +44,13 @@ class Kitchen(
         }
 
         val mealsToCookByRecipe: MutableMap<Recipe, MutableList<Meal>> =
-            mutableMapOf<Recipe, MutableList<Meal>>()
+            mutableMapOf()
         for (o in queue) {
-            for (m in o.meals) {
-                if (m.status == MealStatus.QUEUED && roaster.hasEligible(m.recipe)) {
-                    if (mealsToCookByRecipe.containsKey(m.recipe)) {
-                        mealsToCookByRecipe.getValue(m.recipe).add(m)
-                    } else { mealsToCookByRecipe[m.recipe] = mutableListOf(m) }
-                }
+            val filtered = o.meals.filter { it.status == MealStatus.QUEUED && roaster.hasEligible(it.recipe) }
+            for (m in filtered) {
+                if (mealsToCookByRecipe.containsKey(m.recipe)) {
+                    mealsToCookByRecipe.getValue(m.recipe).add(m)
+                } else { mealsToCookByRecipe[m.recipe] = mutableListOf(m) }
             }
         }
         for ((recipe, mealList) in mealsToCookByRecipe) {
@@ -64,7 +63,35 @@ class Kitchen(
 */
     fun planEvening(regulars: MutableList<CustomerGroup>, otherSeats: Int, menu: Menu) {
         pantry.checkDateAndCleanOut()
-        // get the expected recipes of the regulars and events
+        val expected = getExpectedRecipes(regulars, otherSeats, menu)
+        // builds a map how much exactly we will need from each ingredient
+        val totalRequired: MutableMap<Ingredient, Int> = mutableMapOf()
+        for ((recipe, count) in expected) {
+            for (ingredient in recipe.ingredients) {
+                val current = ingredient.ingredient
+                if (totalRequired.containsKey(current)) {
+                    totalRequired[current] = totalRequired.getValue(current) + count * ingredient.amount
+                } else {
+                    totalRequired[current] = count * ingredient.amount
+                }
+            }
+        }
+        // get needed ingredients by comparing pantry with totalRequired
+        val needed: MutableMap<Ingredient, Int> = mutableMapOf()
+        for ((ingredient, concreteAmount) in totalRequired) {
+            val inPantry = pantry.getTotalIngredients(ingredient)
+            if (concreteAmount > inPantry) {
+                needed[ingredient] = concreteAmount - inPantry
+            }
+        }
+        // calls supplier
+        resupply(pantry, needed)
+    }
+
+    // get the expected recipes of the regulars, events and casuals
+    private fun getExpectedRecipes(regulars: MutableList<CustomerGroup>, otherSeats: Int, menu: Menu):
+        MutableMap<Recipe, Int> {
+        // get the expected recipes of the regulars, events
         val reservers = regulars.toMutableList()
         reservers.addAll(reservationBook.expectedFor(GlobalClock.getEvening()))
         val expected: MutableMap<Recipe, Int> = mutableMapOf()
@@ -89,28 +116,7 @@ class Kitchen(
                 expected[recipe] = (otherSeats + SEATS_PER_ESTIMATE - 1) / SEATS_PER_ESTIMATE
             }
         }
-        // builds a map how much exactly we will need from each ingredient
-        val totalRequired: MutableMap<Ingredient, Int> = mutableMapOf()
-        for ((recipe, count) in expected) {
-            for (ingredient in recipe.ingredients) {
-                val current = ingredient.ingredient
-                if (totalRequired.containsKey(current)) {
-                    totalRequired[current] = totalRequired.getValue(current) + count * ingredient.amount
-                } else {
-                    totalRequired[current] = count * ingredient.amount
-                }
-            }
-        }
-        // get needed ingredients by comparing pantry with totalRequired
-        val needed: MutableMap<Ingredient, Int> = mutableMapOf()
-        for ((ingredient, concreteAmount) in totalRequired) {
-            val inPantry = pantry.getTotalIngredients(ingredient)
-            if (concreteAmount > inPantry) {
-                needed[ingredient] = concreteAmount - inPantry
-            }
-        }
-        // calls supplier
-        resupply(pantry, needed)
+        return expected
     }
 
     /**
