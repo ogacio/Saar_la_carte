@@ -7,19 +7,24 @@ import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 
+/**
+ * Handles delivery-related operations such as placing delivery
+ * orders, assigning available delivery drivers, calculating travel
+ * times, and managing the number of drivers for restaurants.
+ */
 object DeliveryService {
     private val allDrivers = mutableListOf<DeliveryDriver>()
     private var simulator: Simulator? = null
+    private const val DISTANCE_PER_TICK = 5
+    private const val BUFFER = 4
+
+    /**
+     * choose dishes according to customer preferences
+     */
     fun placeOrder(g: CustomerGroup, restaurant: Restaurant, tick: Int): Order? {
         var failed = 0
         val found = mutableListOf<Meal>()
-        val sortedCustomers = g.members().sortedWith(
-            compareByDescending<Customer> {
-                it.preference()?.excluded()?.size ?: 0
-            }.thenBy {
-                it.preference()?.favouriteDishNames()?.size ?: 0
-            }
-        )
+        val sortedCustomers = sortCustomers(g)
         for (i in sortedCustomers) {
             val tmpMenu: MutableList<Recipe> = restaurant.getMenu().getOrderables().toMutableList()
             tmpMenu.removeAll {
@@ -35,14 +40,11 @@ object DeliveryService {
                     it.getId()
                 }
             )
-            var chosen: Recipe? = null
-            for (p in i.preference()?.favouriteDishNames().orEmpty()) {
-                chosen = tmpMenu.firstOrNull { it.getDishName() == p }
-                if (chosen != null) { break }
-            }
-            if (chosen == null) {
-                chosen = tmpMenu.firstOrNull()
-            }
+            var chosen = i.preference()?.favouriteDishNames().orEmpty()
+                .firstNotNullOfOrNull { favourite ->
+                    tmpMenu.firstOrNull { it.getDishName() == favourite }
+                }
+                ?: tmpMenu.firstOrNull()
             if (chosen == null) {
                 failed++
             } else {
@@ -76,6 +78,20 @@ object DeliveryService {
         }
         return order
     }
+
+    private fun sortCustomers(g: CustomerGroup): List<Customer> {
+        return g.members().sortedWith(
+            compareByDescending<Customer> {
+                it.preference()?.excluded()?.size ?: 0
+            }.thenBy {
+                it.preference()?.favouriteDishNames()?.size ?: 0
+            }
+        )
+    }
+
+    /**
+     * chooses driver for order and sets id if it is null
+     */
     fun chooseDriverForOrder(restaurantId: Int): Int? {
         val driver = allDrivers.filter { it.getRestaurantId() == restaurantId }.firstOrNull { it.isFree() }
         if (driver == null) { return null }
@@ -84,18 +100,37 @@ object DeliveryService {
         }
         return driver.getId()
     }
+
+    /**
+     * returns travel ticks
+     */
     fun calculateTravelTicks(distance: Int): Int {
-        return (distance + 4) / 5
+        return (distance + BUFFER) / DISTANCE_PER_TICK
     }
+
+    /**
+     * removes driver from simulation
+     */
     fun rmDriver(restaurantId: Int) {
         val driver = allDrivers.firstOrNull { it.getRestaurantId() == restaurantId }
 
         if (driver != null) {
             allDrivers.remove(driver)
+            simulator!!.restaurantsById(restaurantId)!!.getFoh().getDeliveryDesk().removeDriver(driver)
         }
     }
+
+    /**
+     * adds driver to simulation
+     */
     fun addDriver(restaurantId: Int) {
-        allDrivers.add(DeliveryDriver(restaurantId))
+        val driver = DeliveryDriver(restaurantId)
+        allDrivers.add(driver)
+        simulator!!.restaurantsById(restaurantId)!!.getFoh().getDeliveryDesk().addDriver(driver)
     }
+
+    /**
+     * sets simulator: necessary
+     */
     fun setSimulator(s: Simulator) { simulator = s }
 }
