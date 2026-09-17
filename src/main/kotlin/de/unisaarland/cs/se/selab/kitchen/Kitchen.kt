@@ -11,6 +11,8 @@ import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Supplier.resupply
 
+private const val SEATS_PER_ESTIMATE = 10
+
 /**
  * the kitchen, responsible for calling every function that happens inside the package
  */
@@ -20,8 +22,6 @@ class Kitchen(
     var queue: MutableList<Order>,
     val reservationBook: ReservationBook
 ) {
-    private val SEATS_PER_ESTIMATE = 10
-
     /**
      * called by foh, puts the order into the queue
      */
@@ -36,7 +36,8 @@ class Kitchen(
      * 2. -> making MutableList<Meal> from the queue with the same meals inside,
      * then start calling roaster.startCooking on all and reserve ingredients for all
      */
-    fun cook() {
+    fun cook() { // forEach instead of the fors -> goes on any collection
+        // instead of if -> .filter { predicate }
         val cooked = roaster.finished()
         for (m in cooked) {
             pantry.deleteFromReserved(m.recipe)
