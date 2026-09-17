@@ -69,20 +69,20 @@ class CookRoaster(
      * triggered by incident, adds or removes cooks
      */
     fun changeStaff(type: CookType, delta: Int) {
-        var delta = delta
-        if (delta >= 0) {
-            while (delta != 0) {
+        var d = delta
+        if (d >= 0) {
+            while (d != 0) {
                 val cook = Cook(type, clock = GlobalClock)
                 cooks.add(cook)
-                delta--
+                d--
             }
         } else {
             val cookCopy = cooks.toMutableList()
             for (cook in cooks) {
-                if (delta == 0) break
+                if (d == 0) break
                 if (cook.getType() == type) {
                     cookCopy.remove(cook)
-                    delta++
+                    d++
                 }
             }
             cooks.clear()
