@@ -145,6 +145,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
                 val data = createData(rjd)
 
                 if (foh != null && kitchen != null && menu != null && data != null) {
+                    kitchen.roaster.initialiseCooks()
                     return Restaurant(
                         rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
                         rjd.event, rjd.positiveRatings, rjd.negativeRatings,
@@ -165,8 +166,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         val tables = serialiseTables(rjd)
         val recipes = resolveRecipes(rjd)
         if (recipes != null && tables != null) {
-            if (!(
-                    checkUniqueDishNames(recipes) && checkUniqueTableIds(tables) &&
+            if (!(checkUniqueDishNames(recipes) && checkUniqueTableIds(tables) &&
                         checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)
                     )
             ) {

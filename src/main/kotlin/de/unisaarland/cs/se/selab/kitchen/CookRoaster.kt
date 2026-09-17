@@ -12,8 +12,7 @@ class CookRoaster(
     var nextId: Int = 1,
 ) {
     /**
-     * has to be called early in simulator, makes the cooks field
-     * - might have to be moved into restaurant parser, since so far it never gets called
+     * called in parser, makes the cooks field
      */
     fun initialiseCooks() {
         for ((type, number) in kitchenStaff) {

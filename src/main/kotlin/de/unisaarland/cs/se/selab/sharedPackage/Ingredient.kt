@@ -35,13 +35,15 @@ class Ingredient(
         }
     }
 
-    // reduces the best until date to help pantry's check of the date
-    fun reduceBestUntil() : Boolean {
+    /**
+     * reduces the best until date to help pantry's check of the date
+     */
+    fun reduceBestUntil(): Boolean {
         if (bestUntil > 0) {
             bestUntil--
             return true
+        } else {
+            return false
         }
-        else return false
     }
-
 }

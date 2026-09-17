@@ -25,43 +25,56 @@ class Pantry(
 
     /**
      * we reserve the ingredients for a recipe (take the ingredients out of the stock)
-    */
+     */
     fun reserve(r: Recipe): Boolean {
         if (!canCover(r)) return false
         val ingredients = r.ingredients
-        val stockCopy = stock.toMutableList()
         for (i in ingredients) {
             reserved.add(Pair(i.ingredient, i.amount))
-            // remove from stock
-            var needed = i.amount
-            for ((index, entry) in stock.withIndex()) {
-                val (ingredient, amount) = entry
-                if (i.ingredient == ingredient) {
-                    if (needed < amount) {
-                        stockCopy[index] = Pair(ingredient, (amount - needed))
-                        needed = 0
-                    } else {
-                        needed -= amount
-                        stockCopy[index] = Pair(ingredient, 0)
-                    }
+            removeFromStock(i.ingredient, i.amount)
+        }
+
+        return true
+    }
+
+    /**
+     * removes the amount of ingredient from the stock to make reserve simpler
+     */
+    fun removeFromStock(i: Ingredient, amount: Int) {
+        var needed = amount
+        val stockCopy = stock.toMutableList()
+        for ((index, entry) in stock.withIndex()) {
+            val (ingredient, ingredientAmount) = entry
+            if (i == ingredient) {
+                if (needed < ingredientAmount) {
+                    stockCopy[index] = Pair(ingredient, ingredientAmount - needed)
+                    needed = 0
+                } else {
+                    needed -= ingredientAmount
+                    stockCopy[index] = Pair(ingredient, 0)
                 }
-                if (needed == 0) break
             }
+            if (needed == 0) break
         }
         stockCopy.removeIf { (_, amount) -> amount == 0 }
         stock = stockCopy
-        return true
+    }
+
+    /**
+     * returns for how much ingredient we have in the pantry
+     */
+    fun getTotalIngredients(i: Ingredient): Int {
+        val filtered = stock.filter { (ingredient, _) -> ingredient == i }
+        return filtered.sumOf { (_, amount) -> amount }
     }
 
     /**
      * we delete the cooked recipe from reserved
      */
-    fun deleteFromReserved(r: Recipe, cooked: Boolean) {
-        if (cooked) {
-            val ingredient = r.ingredients
-            for (i in ingredient) {
-                reserved.remove(Pair(i.ingredient, i.amount))
-            }
+    fun deleteFromReserved(r: Recipe) {
+        val ingredient = r.ingredients
+        for (i in ingredient) {
+            reserved.remove(Pair(i.ingredient, i.amount))
         }
     }
 
@@ -89,4 +102,9 @@ class Pantry(
     fun discardEvening() {
         reserved = mutableListOf()
     }
+
+    /**
+     * gets stock
+     */
+    fun getStock(): List<Pair<Ingredient, Int>> = stock
 }

@@ -21,7 +21,7 @@ object Supplier {
                         unavailableUntil[ingredient]!!.second <= evening
                     )
             ) {
-                p.restock(ingredient, amount)
+                p.restock(ingredient, ingredient.packagesFor(amount) * amount)
             }
         }
     }
@@ -30,6 +30,6 @@ object Supplier {
      * triggered by incident, an ingredient might become unavailable
      */
     fun markUnavailable(i: Ingredient, from: Int, duration: Int) {
-        unavailableUntil[i] = Pair(from, duration)
+        unavailableUntil[i] = Pair(from, from + duration - 1)
     }
 }
