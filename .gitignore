@@ -47,13 +47,3 @@ bin/
 
 ### Local scratch (not tracked) ###
 misc/
-
-### Stefan's own test files, untracked locally, not pushed ###
-src/test/kotlin/de/unisaarland/cs/se/selab/foh/TableAssignmentServiceTest.kt
-src/test/kotlin/de/unisaarland/cs/se/selab/foh/WaiterAssignmentServiceTest.kt
-src/test/kotlin/de/unisaarland/cs/se/selab/foh/services/OrderingServiceOrderedTest.kt
-src/test/kotlin/de/unisaarland/cs/se/selab/foh/services/ServingServiceTest.kt
-src/test/kotlin/de/unisaarland/cs/se/selab/incident/IncidentsTest.kt
-src/test/kotlin/de/unisaarland/cs/se/selab/integration/TableLifecycleIntegrationTest.kt
-src/test/kotlin/de/unisaarland/cs/se/selab/sharedPackage/customers/EventCustomerGroupTest.kt
-src/test/kotlin/de/unisaarland/cs/se/selab/simulation/SimulatorTest.kt
