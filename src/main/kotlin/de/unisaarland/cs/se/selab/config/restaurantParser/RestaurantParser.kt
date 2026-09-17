@@ -25,7 +25,6 @@ import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
-import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Restaurant
 import de.unisaarland.cs.se.selab.simulation.SubUnits
@@ -48,7 +47,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         val text = File(path).readText()
         val fileDto: RestaurantFileDto = try {
             Json.decodeFromString(text)
-        } catch (expected: SerializationException) {
+        } catch (_: SerializationException) {
             return false
         }
         for (restaurantDto in fileDto.restaurants) {
@@ -81,7 +80,6 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         try {
             val type = RestaurantType.valueOf(rjd.type)
             if (checkAtLeastOneOfEach(rjd)) {
-                val clock = GlobalClock
                 val foh: FrontOfTheHouse?
                 val pantry = Pantry()
                 val kitchen: Kitchen?
@@ -147,13 +145,12 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
                 if (foh != null && kitchen != null && menu != null && data != null) {
                     kitchen.roaster.initialiseCooks()
                     return Restaurant(
-                        rjd.id, rjd.name, type, rjd.openingTickStart, rjd.openingTickEnd,
-                        rjd.event, rjd.positiveRatings, rjd.negativeRatings,
-                        foh, kitchen, pantry, menu, clock, data
+                        rjd.name, rjd.event, rjd.positiveRatings,
+                        rjd.negativeRatings, foh, kitchen, pantry, menu, data
                     )
                 }
             }
-        } catch (expected: IllegalArgumentException) { }
+        } catch (_: IllegalArgumentException) { }
         return null
     }
 
@@ -166,7 +163,8 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         val tables = serialiseTables(rjd)
         val recipes = resolveRecipes(rjd)
         if (recipes != null && tables != null) {
-            if (!(checkUniqueDishNames(recipes) && checkUniqueTableIds(tables) &&
+            if (!(
+                    checkUniqueDishNames(recipes) && checkUniqueTableIds(tables) &&
                         checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)
                     )
             ) {
@@ -194,7 +192,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
                         recipes, seats, rjd.deliveryDrivers, rjd.event,
                         totalSeats, mutableMapOf<Int, Int>()
                     )
-                } catch (expected: IllegalArgumentException) { }
+                } catch (_: IllegalArgumentException) { }
             }
         }
         return null
@@ -218,7 +216,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             try {
                 if (key == "EXEC" && value != 0 && value != 1) { returnValue = false }
                 cooks[CookType.valueOf(key)] = value
-            } catch (expected: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 returnValue = false
             }
         }
@@ -233,7 +231,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             try {
                 val currentTable = Table(id, size, TableType.valueOf(type))
                 tables.add(currentTable)
-            } catch (expected: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 return null
             }
         }

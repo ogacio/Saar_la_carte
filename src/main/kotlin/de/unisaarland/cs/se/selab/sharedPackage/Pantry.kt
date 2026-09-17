@@ -102,9 +102,4 @@ class Pantry(
     fun discardEvening() {
         reserved = mutableListOf()
     }
-
-    /**
-     * gets stock
-     */
-    fun getStock(): List<Pair<Ingredient, Int>> = stock
 }

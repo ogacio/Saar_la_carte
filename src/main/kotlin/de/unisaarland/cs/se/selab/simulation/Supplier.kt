@@ -6,7 +6,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.Pantry
  * provides ingredients to the pantry
  */
 object Supplier {
-    private var unavailableUntil: MutableMap<Ingredient, Pair<Int, Int>> = mutableMapOf<Ingredient, Pair<Int, Int>>()
+    private var unavailableUntil: MutableMap<Ingredient, Pair<Int, Int>> = mutableMapOf()
     private var clock: GlobalClock = GlobalClock
 
     /**

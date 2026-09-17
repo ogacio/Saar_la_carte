@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TableDto(
-    public val id: Int,
-    public val type: String,
-    public val size: Int
+    val id: Int,
+    val type: String,
+    val size: Int
 )
