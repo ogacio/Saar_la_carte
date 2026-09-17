@@ -8,7 +8,6 @@ import de.unisaarland.cs.se.selab.testsupport.Fixtures.event
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.regular
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertSame
@@ -20,13 +19,31 @@ class ReservationBookTest {
     private fun bookWith(vararg tables: Table) = ReservationBook(TableAssignmentService(tables.toMutableList()))
 
     @Test
-    fun bookAheadAcceptsUntilTheRestaurantIsFullAndCountsPerEvening() {
+    fun bookAheadNotesEveryBookingPerEvening() {
         val book = bookWith(Table(1, 4, TableType.COMMON), Table(2, 4, TableType.COMMON))
 
+        // The browsing service checks the free event seats before a group books, so the book accepts.
         assertTrue(book.bookAhead(event(1, 5), evening = 4))
         assertTrue(book.bookAhead(event(2, 3), evening = 4))
-        assertFalse(book.bookAhead(event(3, 1), evening = 4))
         assertTrue(book.bookAhead(event(4, 8), evening = 5))
+
+        assertEquals(listOf(1, 2), book.expectedFor(4).map { it.id() })
+        assertEquals(listOf(4), book.expectedFor(5).map { it.id() })
+    }
+
+    @Test
+    fun dropBookingsForgetsOnlyTheEveningThatEnded() {
+        val book = bookWith(Table(1, 4, TableType.COMMON))
+        // dropBookings reads the evening that just ended from the global clock.
+        val ended = GlobalClock.getEvening()
+        book.bookAhead(event(1, 2), evening = ended)
+        book.bookAhead(event(2, 2), evening = ended + 1)
+
+        book.dropBookings()
+
+        assertTrue(book.expectedFor(ended).isEmpty())
+        assertEquals(listOf(2), book.expectedFor(ended + 1).map { it.id() })
+        assertTrue(book.getEventSeatsBooked().keys.none { it == ended })
     }
 
     @Test

@@ -138,6 +138,7 @@ class FrontOfTheHouse(
         turnedAway = emptyList()
         cancelledTonight.clear()
         reservations.clearTonight()
+        reservations.dropBookings()
         tables.splitAllMerged()
         waitstaff.resetEvening()
         deliveryDesk.resetForEvening()

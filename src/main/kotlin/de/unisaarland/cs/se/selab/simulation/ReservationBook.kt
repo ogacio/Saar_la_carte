@@ -24,13 +24,14 @@ class ReservationBook(
     private val upcoming: MutableMap<Int, MutableList<CustomerGroup>> = mutableMapOf()
 
     /**
-     * An EVENT [group] books this restaurant for [evening]. Refused if the groups already
-     * booked for that evening and this one together would need more seats than the restaurant has.
+     * An EVENT [group] books this restaurant for [evening]; the booking is noted here.
+     *
+     * Whether the restaurant still has seats for that evening is decided by the browsing service
+     * before the group books ("for EVENTS whether there are still available seats based on the group
+     * sizes of prior EVENT reservations"), so this book does not check the seats a second time.
      */
     fun bookAhead(group: CustomerGroup, evening: Int): Boolean {
-        val booked = upcoming.getOrPut(evening) { mutableListOf() }
-        if (booked.sumOf { it.groupSize() } + group.groupSize() > tables.totalSeats()) return false
-        booked += group
+        upcoming.getOrPut(evening) { mutableListOf() } += group
         return true
     }
 
@@ -73,6 +74,14 @@ class ReservationBook(
     fun clearTonight() {
         tonight.values.forEach { tables.release(it) }
         tonight.clear()
+    }
+
+    /**
+     * Forgets the event bookings of evening once it is over, so the book only holds future evenings
+     * and [getEventSeatsBooked] never reports an evening that has already been played.
+     */
+    fun dropBookings() {
+        upcoming.remove(GlobalClock.getEvening())
     }
 
     /** Marks [table] and every table it was merged from as reserved. */
