@@ -12,7 +12,7 @@ import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.SubUnits
 
 /**
- * Step 1, seating: gives an arriving group a waiter and a table (spec, "Front of house").
+ * Step 1a, seating: gives an arriving group a waiter and a table (spec, "Front of house").
  *
  * REGULAR and CASUAL groups get one permanent waiter first, then a table: the one
  * reserved in preparation, or for a CASUAL group one assigned now by rules 1 to 4.

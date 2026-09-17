@@ -6,7 +6,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 
 /**
  * Waiting for food. Served customers may already be eating: the table stays in this
- * phase until nobody is waiting for a meal any more.
+ * phase until nobody is waiting for a meal anymore.
  */
 class AwaitingMealState : VisitState() {
 
