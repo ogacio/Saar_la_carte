@@ -123,7 +123,7 @@ class Visit(val group: CustomerGroup) {
     fun anyoneServed(): Boolean = group.members().any { it.servedTick() != null }
 
     /** Cooked meals that have not been served yet, whether they may go out now or not. */
-    fun cookedMeals(): List<Meal> = order?.meals.orEmpty().filter { it.status == MealStatus.COOKED }
+    fun cookedMeals(): List<Meal> = order?.getMeals().orEmpty().filter { it.status == MealStatus.COOKED }
 
     /**
      * Cooked meals that may go out this tick. Empty while the table is held back:
@@ -133,7 +133,7 @@ class Visit(val group: CustomerGroup) {
     fun servableMeals(tick: Int): List<Meal> {
         val placed = order ?: return emptyList()
         if (firstMealTick == null) return emptyList()
-        val allCooked = placed.meals.none { it.status == MealStatus.QUEUED || it.status == MealStatus.COOKING }
+        val allCooked = placed.getMeals().none { it.status == MealStatus.QUEUED || it.status == MealStatus.COOKING }
         val heldBack = !allCooked && inHoldBackWindow(tick)
         return if (heldBack) emptyList() else cookedMeals()
     }
@@ -195,7 +195,7 @@ class Visit(val group: CustomerGroup) {
      * permanent waiter no longer waits on them.
      */
     fun leaveUnserved(customers: List<Customer>) {
-        order?.meals.orEmpty().filter { it.customer in customers }.forEach { it.status = MealStatus.ABORTED }
+        order?.getMeals().orEmpty().filter { it.customer in customers }.forEach { it.status = MealStatus.ABORTED }
         customers.forEach { it.leave() }
         if (group.groupType() != GroupType.EVENT) {
             waiters.forEach { it.adjustLoad(-customers.size) }
