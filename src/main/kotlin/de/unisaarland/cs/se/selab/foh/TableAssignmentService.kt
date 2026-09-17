@@ -33,11 +33,16 @@ class TableAssignmentService(
     }
 
     /**
-     * Marks [table] as free again; a merged table stays merged until [splitAllMerged] runs.
+     * Marks [table] as free again. A merged table is split back into its original tables right away,
+     * because the tables of a group that has left are restored immediately.
      */
     fun release(table: Table) {
         table.status = TableStatus.FREE
         table.originals().forEach { it.status = TableStatus.FREE }
+        if (table.isMerged) {
+            split(table)
+            tables.sortBy { it.id }
+        }
     }
 
     /**
@@ -57,17 +62,21 @@ class TableAssignmentService(
      * Dissolves every merged table back into the tables it was built from.
      */
     fun splitAllMerged() {
-        val merged = tables.filter { it.isMerged }
-        for (table in merged) {
-            tables.remove(table)
-            for (original in table.originals()) {
-                original.status = TableStatus.FREE
-                if (!tables.contains(original)) {
-                    tables.add(original)
-                }
+        tables.filter { it.isMerged }.forEach { split(it) }
+        tables.sortBy { it.id }
+    }
+
+    /**
+     * Replaces the merged [table] by the free original tables it was built from.
+     */
+    private fun split(table: Table) {
+        tables.remove(table)
+        for (original in table.originals()) {
+            original.status = TableStatus.FREE
+            if (!tables.contains(original)) {
+                tables.add(original)
             }
         }
-        tables.sortBy { it.id }
     }
 
     /**

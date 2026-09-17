@@ -1,6 +1,9 @@
 package de.unisaarland.cs.se.selab.foh
 
+<<<<<<< Updated upstream
 /** "all waiter with a current load below 10, as they do not have much to do yet" */
+=======
+>>>>>>> Stashed changes
 private const val BUSY_LOAD = 10
 
 /**

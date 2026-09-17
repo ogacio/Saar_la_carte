@@ -14,16 +14,13 @@ data class IngredientDto(
 )
 
 /**
- * One entry of the `ingredients` array of a recipe (specification, Figure 5).
- *
- * The schema only requires `name` and `amount`; `unit` is accepted as well and, when present, has to
- * agree with the unit of the referenced ingredient.
+ * One entry of the `ingredients` array of a recipe (specification, Figure 5, as adjusted): only the
+ * ingredient name and the amount, the unit comes from the referenced ingredient.
  */
 @Serializable
 data class RecipeIngredientDto(
     val name: String,
     val amount: Int,
-    val unit: String? = null,
 )
 
 /**

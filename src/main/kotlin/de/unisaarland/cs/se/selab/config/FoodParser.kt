@@ -121,9 +121,6 @@ class FoodParser(model: ParsedModel) : ConfigParser(model) {
             if (entry.amount <= 0) {
                 return null
             }
-            if (entry.unit != null && UnitType.from(entry.unit) != ingredient.unit) {
-                return null
-            }
             resolved.add(RecipeIngredient(ingredient, entry.amount))
         }
         return resolved
