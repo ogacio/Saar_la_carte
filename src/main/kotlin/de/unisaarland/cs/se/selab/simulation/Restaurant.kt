@@ -28,7 +28,7 @@ class Restaurant(
     val openingTick = data.getOpeningTick()
     val closingTick = data.getClosingTick()
     val type = data.getType()
-    val id = data.getId()
+    private val id = data.getId()
 
     /**
      prepares the kitchen and the front of the house at the preparation phase
