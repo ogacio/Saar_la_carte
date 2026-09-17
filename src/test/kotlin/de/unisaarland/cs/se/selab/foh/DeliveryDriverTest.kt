@@ -25,7 +25,7 @@ class DeliveryDriverTest {
     private lateinit var driver: DeliveryDriver
 
     private fun orderFor(group: CustomerGroup): Order {
-        val order = Order(5, group, RESTAURANT_ID, group.id(), 1, true, mutableListOf())
+        val order = Order(group, RESTAURANT_ID, group.id(), 1, true, mutableListOf())
         group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1))) }
         return order
     }
@@ -59,14 +59,15 @@ class DeliveryDriverTest {
 
     @Test
     fun receivingAnOrderLogsThePreparationAndDoesNotDriveInTheSameTick() {
+        val order = orderFor(casual(3, 2, deliveryDistance = 7))
         val log = captureLog()
 
-        driver.receiveOrder(orderFor(casual(3, 2, deliveryDistance = 7)))
+        driver.receiveOrder(order)
         driver.plusTick()
 
         assertEquals(
             listOf(
-                "[INFO] Delivery Preparation (R 1): Driver 1 prepares driving order 5 to group 3, " +
+                "[INFO] Delivery Preparation (R 1): Driver 1 prepares driving order ${order.id} to group 3, " +
                     "which will take 2 ticks.",
             ),
             logLines(log),
@@ -79,7 +80,8 @@ class DeliveryDriverTest {
     @Test
     fun deliveryDrivesFiveKilometresPerTickAndTheRestInTheLastTick() {
         val group = casual(3, 2, deliveryDistance = 7)
-        driver.receiveOrder(orderFor(group))
+        val order = orderFor(group)
+        driver.receiveOrder(order)
         val log = captureLog()
 
         nextTick()
@@ -89,8 +91,8 @@ class DeliveryDriverTest {
             listOf(
                 "[DEBUG] Delivery Driving (R 1): Driver 1 drove 5 km and needs 1 more ticks.",
                 "[DEBUG] Delivery Driving (R 1): Driver 1 drove 2 km and needs 0 more ticks.",
-                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order 5.",
-                "[IMPORTANT] Delivery Finished (R 1): Driver 1 gave delivery of order 5 to group 3.",
+                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order ${order.id}.",
+                "[IMPORTANT] Delivery Finished (R 1): Driver 1 gave delivery of order ${order.id} to group 3.",
             ),
             logLines(log),
         )
@@ -134,7 +136,8 @@ class DeliveryDriverTest {
             on { getDeliveryDistance() } doReturn 5
             on { members() } doReturn emptyList()
         }
-        driver.receiveOrder(Order(5, gaveUp, RESTAURANT_ID, 3, 1, true, mutableListOf()))
+        val order = Order(gaveUp, RESTAURANT_ID, 3, 1, true, mutableListOf())
+        driver.receiveOrder(order)
         val log = captureLog()
 
         nextTick()
@@ -142,8 +145,8 @@ class DeliveryDriverTest {
         assertEquals(
             listOf(
                 "[DEBUG] Delivery Driving (R 1): Driver 1 drove 5 km and needs 0 more ticks.",
-                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order 5.",
-                "[IMPORTANT] Delivery Failed (R 1): Driver 1 failed to deliver order 5 to group 3.",
+                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order ${order.id}.",
+                "[IMPORTANT] Delivery Failed (R 1): Driver 1 failed to deliver order ${order.id} to group 3.",
             ),
             logLines(log),
         )
