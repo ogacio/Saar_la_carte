@@ -40,7 +40,7 @@ object DeliveryService {
                     it.getId()
                 }
             )
-            var chosen = i.preference()?.favouriteDishNames().orEmpty()
+            val chosen = i.preference()?.favouriteDishNames().orEmpty()
                 .firstNotNullOfOrNull { favourite ->
                     tmpMenu.firstOrNull { it.getDishName() == favourite }
                 }

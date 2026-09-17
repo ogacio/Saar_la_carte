@@ -21,12 +21,12 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
      * choose Restaurant--casual
      */
     fun choose(g: CustomerGroup): Int? {
-        var candidates: MutableList<RestaurantData> = entries
+        var candidates: List<RestaurantData> = entries
         candidates = candidates.filter {
             it.getType() in g.restaurantTypes()
         }.filter {
             it.openAt(GlobalClock.getTickInEvening())
-        }.toMutableList()
+        }
         candidates = candidates.filter {
                 c ->
             g.preferences().all { preference ->
@@ -34,15 +34,15 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
                     it.getIngredients().none { it.getIngredient() in preference.excluded() }
                 }
             }
-        }.toMutableList()
+        }
         if (g.isDelivery()) {
-            candidates = candidates.filter { it.getFreeDrivers() > 0 }.toMutableList()
+            candidates = candidates.filter { it.getFreeDrivers() > 0 }
         } else {
             candidates = candidates.filter {
                 (it.getFreeSeats()[g.tableType()] ?: 0) >= g.groupSize()
-            }.toMutableList()
+            }
         }
-        val id = rank(candidates)
+        val id = rank(candidates.toMutableList())
         if (id != null) {
             candidates.first { it.getId() == id }.take(g)
         }
@@ -53,12 +53,12 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
      * choose restaurant--event
      */
     fun chooseForEvent(g: CustomerGroup, eventEvening: Int): Int? {
-        var candidates: MutableList<RestaurantData> = entries
+        var candidates: List<RestaurantData> = entries
         candidates = candidates.filter {
             it.getType() in g.restaurantTypes()
         }.filter { it.openAt(g.visitingTick()) }.filter {
             it.getHostsEvents()
-        }.toMutableList()
+        }
         candidates = candidates.filter { c ->
             g.preferences().all { preference ->
                 c.getDishes().any {
@@ -67,9 +67,9 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
                     }
                 }
             }
-        }.toMutableList()
-        candidates = candidates.filter { it.eventSeatsLeft(eventEvening) >= g.groupSize() }.toMutableList()
-        val id = rank(candidates)
+        }
+        candidates = candidates.filter { it.eventSeatsLeft(eventEvening) >= g.groupSize() }
+        val id = rank(candidates.toMutableList())
         if (id != null) {
             candidates.first { it.getId() == id }.takeForEvent(g)
         }
