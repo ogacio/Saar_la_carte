@@ -3,11 +3,23 @@ import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 
-
+/**
+ * Provides the information required for customer groups to browse
+ * available restaurants, evaluate whether a restaurant is suitable,
+ * and select a restaurant based on current restaurant data and ratings.
+ */
 class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: RatingBook) {
+
+    /**
+     * refreshes RestaurantData
+     */
     fun refresh(snapshots: MutableList<RestaurantData>) {
         entries = snapshots
     }
+
+    /**
+     * choose Restaurant--casual
+     */
     fun choose(g: CustomerGroup): Int? {
         var candidates: MutableList<RestaurantData> = entries
         candidates = candidates.filter {
@@ -36,6 +48,10 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
         }
         return id
     }
+
+    /**
+     * choose restaurant--event
+     */
     fun chooseForEvent(g: CustomerGroup, eventEvening: Int): Int? {
         var candidates: MutableList<RestaurantData> = entries
         candidates = candidates.filter {
@@ -52,7 +68,7 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
                 }
             }
         }.toMutableList()
-        candidates = candidates.filter { it.eventSeatsLeft(g.getEventEvening()) >= g.groupSize() }.toMutableList()
+        candidates = candidates.filter { it.eventSeatsLeft(eventEvening) >= g.groupSize() }.toMutableList()
         val id = rank(candidates)
         if (id != null) {
             candidates.first { it.getId() == id }.takeForEvent(g)
@@ -73,7 +89,7 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
                 ratings.getById(it.getId()).score() < highest
             }
             candidates.sortWith(compareBy { it.getId() })
-            return candidates.get(0).getId()
+            return candidates[0].getId()
         }
     }
 }
