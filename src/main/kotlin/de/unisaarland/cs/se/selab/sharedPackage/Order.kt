@@ -24,7 +24,7 @@ class Order(
          */
         fun grantId(): Int = nextId++
     }
-    val id = grantId()
+    private val id = grantId()
 
     /**
      * counts how many dishes are in the order
