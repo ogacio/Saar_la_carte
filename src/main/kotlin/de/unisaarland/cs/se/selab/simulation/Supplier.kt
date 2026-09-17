@@ -17,8 +17,9 @@ object Supplier {
             val evening = clock.getEvening()
             // if the ingredient is available, we supply it
             if (!(
-                    unavailableUntil.containsKey(ingredient) && evening >= unavailableUntil[ingredient]!!.first &&
-                        unavailableUntil[ingredient]!!.second <= evening
+                    unavailableUntil.containsKey(ingredient) &&
+                        evening >= checkNotNull(unavailableUntil[ingredient]).first &&
+                        checkNotNull(unavailableUntil[ingredient]).second <= evening
                     )
             ) {
                 p.restock(ingredient, ingredient.packagesFor(amount) * amount)

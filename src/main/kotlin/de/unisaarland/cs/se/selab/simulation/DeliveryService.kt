@@ -96,7 +96,9 @@ object DeliveryService {
         val driver = allDrivers.filter { it.getRestaurantId() == restaurantId }.firstOrNull { it.isFree() }
         if (driver == null) { return null }
         if (driver.getId() == null) {
-            driver.setId(simulator!!.restaurantsById(restaurantId)!!.getFoh().getDeliveryDesk().grantDriverId())
+            val currentSimulator = checkNotNull(simulator)
+            val restaurant = checkNotNull(currentSimulator.restaurantsById(restaurantId))
+            driver.setId(restaurant.getFoh().getDeliveryDesk().grantDriverId())
         }
         return driver.getId()
     }
@@ -116,7 +118,9 @@ object DeliveryService {
 
         if (driver != null) {
             allDrivers.remove(driver)
-            simulator!!.restaurantsById(restaurantId)!!.getFoh().getDeliveryDesk().removeDriver(driver)
+            val currentSimulator = checkNotNull(simulator)
+            val restaurant = checkNotNull(currentSimulator.restaurantsById(restaurantId))
+            restaurant.getFoh().getDeliveryDesk().removeDriver(driver)
         }
     }
 
@@ -126,7 +130,9 @@ object DeliveryService {
     fun addDriver(restaurantId: Int) {
         val driver = DeliveryDriver(restaurantId)
         allDrivers.add(driver)
-        simulator!!.restaurantsById(restaurantId)!!.getFoh().getDeliveryDesk().addDriver(driver)
+        val currentSimulator = checkNotNull(simulator)
+        val restaurant = checkNotNull(currentSimulator.restaurantsById(restaurantId))
+        restaurant.getFoh().getDeliveryDesk().addDriver(driver)
     }
 
     /**

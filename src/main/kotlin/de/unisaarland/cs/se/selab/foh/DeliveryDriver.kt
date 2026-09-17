@@ -29,13 +29,13 @@ class DeliveryDriver(private val restaurantId: Int) {
      */
     fun plusTick() {
         if (state == DriverState.WAITING || departureTick == GlobalClock.getTickInEvening())return
-        ticksLeft = ticksLeft!! - 1
+        ticksLeft = checkNotNull(ticksLeft) - 1
         if (state == DriverState.DELIVERING) {
             Logger.Delivery.deliveryDriving(
                 restaurantId,
-                id!!,
+                checkNotNull(id),
                 drivenDistance(),
-                ticksLeft!!
+                checkNotNull(ticksLeft)
             )
         }
         if (ticksLeft != 0) {
@@ -44,32 +44,32 @@ class DeliveryDriver(private val restaurantId: Int) {
         if (state == DriverState.DELIVERING) {
             Logger.Delivery.deliveryArrival(
                 restaurantId,
-                id!!,
-                order!!.getCustomerGroup().id(),
-                order!!.getId()
+                checkNotNull(id),
+                checkNotNull(order).getCustomerGroup().id(),
+                checkNotNull(order).getId()
             )
-            if (order!!.getCustomerGroup().hasGivenUp()) {
+            if (checkNotNull(order).getCustomerGroup().hasGivenUp()) {
                 Logger.Delivery.deliveryFailed(
                     restaurantId,
-                    id!!,
-                    order!!.getId(),
-                    order!!.getCustomerGroup().id()
+                    checkNotNull(id),
+                    checkNotNull(order).getId(),
+                    checkNotNull(order).getCustomerGroup().id()
                 )
             } else {
-                for (i in order!!.getMeals()) {
+                for (i in checkNotNull(order).getMeals()) {
                     i.customer.receive(i, GlobalClock.getTickInEvening())
                 }
                 Logger.Delivery.deliveryFinished(
                     restaurantId,
-                    id!!,
-                    order!!.getId(),
-                    order!!.getCustomerGroup().id()
+                    checkNotNull(id),
+                    checkNotNull(order).getId(),
+                    checkNotNull(order).getCustomerGroup().id()
                 )
             }
-            startReturn(travelTicks!!)
+            startReturn(checkNotNull(travelTicks))
             return
         }
-        Logger.Delivery.deliveryReturned(restaurantId, id!!)
+        Logger.Delivery.deliveryReturned(restaurantId, checkNotNull(id))
         if (switch) { abort() } else { clearDelivery() }
     }
 
@@ -80,15 +80,15 @@ class DeliveryDriver(private val restaurantId: Int) {
         order = o
         departureTick = GlobalClock.getTickInEvening()
         state = DriverState.DELIVERING
-        distance = order!!.getCustomerGroup().getDeliveryDistance()
-        ticksLeft = DeliveryService.calculateTravelTicks(distance!!)
-        travelTicks = ticksLeft!!
+        distance = o.getCustomerGroup().getDeliveryDistance()
+        ticksLeft = DeliveryService.calculateTravelTicks(checkNotNull(distance))
+        travelTicks = checkNotNull(ticksLeft)
         Logger.Delivery.deliveryPreparation(
             restaurantId,
-            id!!,
+            checkNotNull(id),
             o.getId(),
             o.getCustomerGroup().id(),
-            travelTicks!!
+            checkNotNull(travelTicks)
         )
     }
 
@@ -132,8 +132,8 @@ class DeliveryDriver(private val restaurantId: Int) {
      * calculates the drivenDistance for logging
      */
     private fun drivenDistance(): Int {
-        return if (ticksLeft == 0 && distance!! % TICK_DISTANCE != 0) {
-            distance!! % TICK_DISTANCE
+        return if (ticksLeft == 0 && checkNotNull(distance) % TICK_DISTANCE != 0) {
+            checkNotNull(distance) % TICK_DISTANCE
         } else {
             TICK_DISTANCE
         }
