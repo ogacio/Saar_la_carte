@@ -104,8 +104,13 @@ class Visit(val group: CustomerGroup) {
     fun sendOut() {
         if (state is GoneState) return
         sentOutFinished = customersInside().all { it.status() == CustomerStatus.DONE_EATING }
-        leaveUnserved(customersWaitingForFood())
-        customersInside().forEach { it.leave() }
+        val inside = customersInside()
+        leaveUnserved(customersWaitingForFood()) // aborts their meals and reduces the load
+        val remaining = inside.filter { it.status() != CustomerStatus.LEFT }
+        remaining.forEach { it.leave() }
+        if (group.groupType() != GroupType.EVENT) {
+            waiters.forEach { it.adjustLoad(-remaining.size) }
+        }
         state = GoneState()
     }
 

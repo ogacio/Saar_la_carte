@@ -101,18 +101,26 @@ class Restaurant(
     /**
      * One tick of this restaurant, steps 1 to 7 in the spec's order, between "Restaurant Start" and "Restaurant End".
      * [arrivals] are the groups arriving now. At the closing tick everyone still inside is sent out before rating.
+     *
+     * After the opening time "the kitchen stops working" and the front of house is cleaned, so only the
+     * drivers keep working: "only deliveries already given to a driver continue after the opening time".
      */
     fun runRestaurantTick(arrivals: List<CustomerGroup>, tick: Int) {
         Logger.restaurantStart(id)
-        foh.beginTick()
-        foh.callSeatingAndOrdering(arrivals)
-        kitchen.cook()
-        foh.callServingService()
+        val open = isOpen()
+        if (open) {
+            foh.beginTick()
+            foh.callSeatingAndOrdering(arrivals)
+            kitchen.cook()
+            foh.callServingService()
+        }
         foh.callDeliveryDesk()
-        foh.callDiningService()
-        foh.callEscortingService()
-        if (tick == closingTick) foh.closeOpeningTime()
-        foh.callRatingService()
+        if (open) {
+            foh.callDiningService()
+            foh.callEscortingService()
+            if (tick == closingTick) foh.closeOpeningTime()
+            foh.callRatingService()
+        }
         Logger.restaurantEnd(id)
     }
 

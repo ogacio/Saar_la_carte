@@ -19,12 +19,12 @@ class SeatedState : VisitState() {
     }
 
     /**
-     * Nobody found a dish, so the whole group leaves. Whether this counts as a
-     * failed attempt for a REGULAR group is still open (FOH services PDF, 8.3), so
-     * it is not marked as one here.
+     * Nobody found a dish, so the whole group leaves. This counts as a failed attempt for a REGULAR
+     * group: "the whole group leaving the restaurant because no one was served food".
      */
     override fun onOrderingFailed(visit: Visit, tick: Int) {
         visit.leaveUnserved(visit.customersInside())
+        visit.failedAttempt = true
         visit.state = GoneState()
     }
 }

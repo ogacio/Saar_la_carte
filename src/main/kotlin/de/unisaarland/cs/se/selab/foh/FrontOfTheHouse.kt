@@ -27,6 +27,7 @@ class FrontOfTheHouse(
     private val services: FohServices,
     private val deliveryDesk: DeliveryDesk,
 ) {
+    private var openingTimeOver = false
 
     /** Every group of this evening that has not left yet, in group order. */
     private val visits: MutableList<Visit> = mutableListOf()
@@ -124,13 +125,22 @@ class FrontOfTheHouse(
         turnedAway = emptyList()
         finished.forEach { finishVisit(it) }
         visits.removeAll(finished)
+
+        if (openingTimeOver) {
+            reservations.clearTonight() // "reservations of this evening are discarded"
+            tables.splitAllMerged() // "tables are separated"
+            openingTimeOver = false
+        }
     }
 
     /**
      * Opening time is over: everyone still inside is escorted out at once. Their visits
      * end here, so the Simulator must run [callRatingService] afterward in the same tick.
      */
-    fun closeOpeningTime() = visits.forEach { it.sendOut() }
+    fun closeOpeningTime() {
+        visits.forEach { it.sendOut() }
+        openingTimeOver = true
+    }
 
     /** After the last rating step of the evening: drop everything that belongs to tonight. */
     fun closeEvening() {

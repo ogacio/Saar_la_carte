@@ -149,6 +149,68 @@ class VisitTest {
         assertEquals(0, waiter.currentLoad)
     }
 
+    @Test
+    fun sendingOutEatingCustomersFreesTheWaiterOfTheirLoad() {
+        val waiter = Waiter()
+        waiter.adjustLoad(2)
+        val visit = orderedVisit(regular(1, 2), tick = 1, waiters = listOf(waiter))
+        cook(visit, 2)
+        visit.serve(visit.cookedMeals(), 2)
+
+        visit.sendOut()
+
+        // The load counts customers "before they are ESCORTED out", so it drops for the whole table.
+        assertEquals(0, waiter.currentLoad)
+        assertTrue(visit.customersInside().isEmpty())
+    }
+
+    @Test
+    fun sendingOutAMixedTableCountsEveryCustomerExactlyOnce() {
+        val waiter = Waiter()
+        waiter.adjustLoad(3)
+        val visit = orderedVisit(regular(1, 3), tick = 1, waiters = listOf(waiter))
+        cook(visit, 1)
+        // One customer eats, one has finished eating, one is still waiting for food.
+        visit.serve(visit.cookedMeals(), 2)
+        cook(visit, 1)
+        visit.serve(visit.cookedMeals(), 2)
+        visit.advance(2 + EATING_TICKS)
+
+        visit.sendOut()
+
+        assertEquals(0, waiter.currentLoad)
+        assertTrue(visit.customersInside().isEmpty())
+    }
+
+    @Test
+    fun sendingOutDoesNotTouchTheLoadOfAnEventGroup() {
+        val waiter = Waiter()
+        waiter.adjustLoad(4)
+        val visit = orderedVisit(event(3, 4), tick = 1, waiters = listOf(waiter))
+        cook(visit, 4)
+        visit.serve(visit.cookedMeals(), 2)
+
+        visit.sendOut()
+
+        // EVENT customers never counted towards the load, so the other customers of this waiter stay.
+        assertEquals(4, waiter.currentLoad)
+    }
+
+    @Test
+    fun sendingOutAnAlreadyFinishedVisitChangesNothing() {
+        val waiter = Waiter()
+        waiter.adjustLoad(2)
+        val visit = orderedVisit(regular(1, 2), tick = 1, waiters = listOf(waiter))
+        cook(visit, 2)
+        visit.serve(visit.cookedMeals(), 2)
+        visit.sendOut()
+
+        visit.sendOut()
+
+        assertEquals(0, waiter.currentLoad)
+        assertIs<GoneState>(visit.state)
+    }
+
     private companion object {
         /** "After ordering in a restaurant, customers expect food within 4 ticks." */
         const val EXPECTED = 4

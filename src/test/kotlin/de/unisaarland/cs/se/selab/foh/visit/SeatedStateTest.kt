@@ -59,6 +59,16 @@ class SeatedStateTest {
     }
 
     @Test
+    fun aGroupThatFindsNoDishCountsAsAFailedAttempt() {
+        val visit = seatedVisit(regular(1, 2))
+
+        visit.orderingFailed(3)
+
+        // "the whole group leaving the restaurant because no one was served food"
+        assertTrue(visit.failedAttempt)
+    }
+
+    @Test
     fun aSeatedGroupIgnoresServingAndEatingEvents() {
         val group = regular(1, 2)
         val visit = seatedVisit(group)
