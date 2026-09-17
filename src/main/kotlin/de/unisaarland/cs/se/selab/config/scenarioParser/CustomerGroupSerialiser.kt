@@ -6,6 +6,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CasualCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.DeliveryPreference
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.FoodPreference
 import de.unisaarland.cs.se.selab.sharedPackage.customers.RegularCustomerGroup
@@ -139,8 +140,10 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
             preferences = preferences,
             restaurantTypes = restaurantTypesOf(dto).orEmpty(),
             visitingEvenings = dto.visitingEvenings.orEmpty(),
-            deliveryDistance = dto.deliveryDistance ?: 0,
-            ratingLikelihood = ratingLikelihoodOf(dto) ?: RatingLikelihood.NEVER,
+            deliveryPreference = DeliveryPreference(
+                distance = dto.deliveryDistance ?: 0,
+                ratingLikelihood = ratingLikelihoodOf(dto) ?: RatingLikelihood.NEVER,
+            ),
         )
     }
 

@@ -12,6 +12,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CasualCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
+import de.unisaarland.cs.se.selab.sharedPackage.customers.DeliveryPreference
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.FoodPreference
 import de.unisaarland.cs.se.selab.sharedPackage.customers.RegularCustomerGroup
@@ -76,8 +77,7 @@ object Fixtures {
         listOfNotNull(preference),
         types,
         evenings,
-        deliveryDistance,
-        likelihood,
+        DeliveryPreference(deliveryDistance, likelihood),
     )
 
     fun event(

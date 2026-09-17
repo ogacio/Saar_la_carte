@@ -2,9 +2,9 @@ package de.unisaarland.cs.se.selab.config
 
 import com.github.erosb.jsonsKema.JsonParser
 import com.github.erosb.jsonsKema.SchemaLoader
-import com.github.erosb.jsonsKema.Validator as JsonSchemaValidator
 import java.io.File
 import java.io.IOException
+import com.github.erosb.jsonsKema.Validator as JsonSchemaValidator
 
 /** Validates a configuration file against its JSON schema before any parser reads it. */
 class Validator {

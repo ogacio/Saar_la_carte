@@ -7,6 +7,9 @@ import de.unisaarland.cs.se.selab.simulation.ratings.Experience
 import de.unisaarland.cs.se.selab.simulation.ratings.Rating
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingLikelihood
 
+/** How far a CASUAL group orders delivery from, and how readily it rates its experience. */
+data class DeliveryPreference(val distance: Int, val ratingLikelihood: RatingLikelihood)
+
 /** A group not bound to a restaurant that browses for one each evening it visits. */
 class CasualCustomerGroup(
     id: Int,
@@ -17,9 +20,17 @@ class CasualCustomerGroup(
     preferences: List<FoodPreference>,
     private val restaurantTypes: Set<RestaurantType>,
     private val visitingEvenings: List<Int>,
-    deliveryDistance: Int,
-    private val ratingLikelihood: RatingLikelihood,
-) : CustomerGroup(id, groupSize, GroupType.CASUAL, tableType, visitingTick, deliveryDistance, members, preferences) {
+    private val deliveryPreference: DeliveryPreference,
+) : CustomerGroup(
+    id,
+    groupSize,
+    GroupType.CASUAL,
+    tableType,
+    visitingTick,
+    deliveryPreference.distance,
+    members,
+    preferences,
+) {
 
     /** The restaurant types this group is willing to visit. */
     override fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
@@ -28,14 +39,14 @@ class CasualCustomerGroup(
     fun visitingEvenings(): List<Int> = visitingEvenings
 
     /** How readily this group leaves a rating after an experience. */
-    fun ratingLikelihood(): RatingLikelihood = ratingLikelihood
+    fun ratingLikelihood(): RatingLikelihood = deliveryPreference.ratingLikelihood
 
     override fun visitsOn(evening: Int): Boolean = visitingEvenings.contains(evening)
 
     override fun homeRestaurant(): Int? = null
 
     /** Rates per [ratingLikelihood]; a rated neutral experience is always positive. */
-    override fun ratingFor(experience: Experience): Rating? = when (ratingLikelihood) {
+    override fun ratingFor(experience: Experience): Rating? = when (deliveryPreference.ratingLikelihood) {
         RatingLikelihood.NEVER -> null
         RatingLikelihood.SOME -> when (experience) {
             Experience.POSITIVE -> Rating.POSITIVE
