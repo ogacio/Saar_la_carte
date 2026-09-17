@@ -79,7 +79,7 @@ abstract class CustomerGroup(
 
     /** Records the dishes of a completed order as this group's latest visit. */
     open fun recordVisit(evening: Int, o: Order) {
-        history.shiftAndPutNew(o.meals.map { it.recipe })
+        history.shiftAndPutNew(o.getMeals().map { it.recipe })
     }
 
     /** Records whether a visit succeeded or failed, for groups that track consecutive failures. */

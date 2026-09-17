@@ -32,5 +32,5 @@ class FoodPreference(
 
     /** The first dish of [from] that is a favourite of this preference, or null. */
     fun firstFavourite(from: List<Recipe>): Recipe? =
-        favouriteDishNames.firstNotNullOfOrNull { name -> from.firstOrNull { it.dishName == name } }
+        favouriteDishNames.firstNotNullOfOrNull { name -> from.firstOrNull { it.getDishName() == name } }
 }

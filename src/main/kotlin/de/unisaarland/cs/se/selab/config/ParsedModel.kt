@@ -50,7 +50,7 @@ class ParsedModel {
     fun registerIngredient(i: Ingredient): Boolean = register(ingredientsByName, i.name, i)
 
     /** Stores [r] under its id; false if a recipe with that id already exists. */
-    fun registerRecipe(r: Recipe): Boolean = register(recipesById, r.id, r)
+    fun registerRecipe(r: Recipe): Boolean = register(recipesById, r.getId(), r)
 
     /** Stores [r] under its id; false if a restaurant with that id already exists. */
     fun registerRestaurant(r: Restaurant): Boolean = register(restaurantsById, r.id, r)
@@ -64,13 +64,13 @@ class ParsedModel {
     // ------------------------------------------------------------ cross-checks
     /** The dish names of all recipes that are a basic dish for restaurants of [type]. */
     fun basicDishesFor(type: RestaurantType): Set<String> =
-        recipesById.values.filter { it.basicDishFor == type }.map { it.dishName }.toSet()
+        recipesById.values.filter { it.basicDishFor == type }.map { it.getDishName() }.toSet()
 
     /** The names of all ingredients read so far. */
     fun allIngredientNames(): Set<String> = ingredientsByName.keys.toSet()
 
     /** The dish names of all recipes read so far. */
-    fun allDishNames(): Set<String> = recipesById.values.map { it.dishName }.toSet()
+    fun allDishNames(): Set<String> = recipesById.values.map { it.getDishName() }.toSet()
 
     // ------------------------------------------------------------ hand-off
     /** All restaurants in ascending id, for the simulation. */
@@ -86,5 +86,5 @@ class ParsedModel {
         incidentsById.values.sortedBy { it.id }.toMutableList()
 
     /** All recipes in ascending id. */
-    fun allRecipes(): List<Recipe> = recipesById.values.sortedBy { it.id }
+    fun allRecipes(): List<Recipe> = recipesById.values.sortedBy { it.getId() }
 }
