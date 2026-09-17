@@ -2,6 +2,7 @@ package de.unisaarland.cs.se.selab.systemtest.selab26.f03
 
 import de.unisaarland.cs.se.selab.systemtest.selab26.utils.ExampleSystemTestExtension
 
+/** A well formed food file with ingredients and recipes parses. */
 class RootBaseline : ExampleSystemTestExtension() {
     override val name = "F03RootBaseline"
     override val description = "A well formed food file with ingredients and recipes parses."
@@ -15,6 +16,7 @@ class RootBaseline : ExampleSystemTestExtension() {
     }
 }
 
+/** The smallest possible valid food file, one ingredient and one recipe. */
 class RootSingleIngredientSingleRecipe : ExampleSystemTestExtension() {
     override val name = "F03RootSingleIngredientSingleRecipe"
     override val description = "The smallest possible valid food file, one ingredient and one recipe."
