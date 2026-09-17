@@ -73,14 +73,15 @@ class BrowsingServiceTest {
 
         assertNull(service.choose(casual(1, 2)))
     }
-//
-//    @Test
-//    fun restaurantDoesNotAcceptNewCustomersInTheLastThreeTicks() {
-//        val service = BrowsingService(mutableListOf(restaurant(1)), ratings)
-//        atTick(18)
-//
-//        assertNull(service.choose(casual(1, 2)))
-//    }
+    // BUG (BrowsingService.choose/chooseForEvent, Constantin): no last-3-ticks closing-window
+    // exclusion at all (Adjustment 15) — both only call openAt(tick). Uncomment once fixed.
+    // @Test
+    // fun restaurantDoesNotAcceptNewCustomersInTheLastThreeTicks() {
+    //     val service = BrowsingService(mutableListOf(restaurant(1)), ratings)
+    //     atTick(18)
+    //
+    //     assertNull(service.choose(casual(1, 2)))
+    // }
 
     @Test
     fun restaurantWithoutAnyEdibleDishIsNotChosen() {
