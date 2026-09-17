@@ -80,7 +80,7 @@ class EventCustomerGroup(
      */
     override fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int> {
         val favourites = favouriteDishes.values.toSet()
-        val dish = menu.firstOrNull { favourites.contains(it.dishName) } ?: return emptyMap()
+        val dish = menu.firstOrNull { favourites.contains(it.getDishName()) } ?: return emptyMap()
         return mapOf(dish to groupSize())
     }
 

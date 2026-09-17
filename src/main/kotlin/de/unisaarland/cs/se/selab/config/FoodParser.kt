@@ -136,7 +136,7 @@ class FoodParser(model: ParsedModel) : ConfigParser(model) {
      * Whether there is exactly one default recipe per basic dish name.
      */
     private fun checkBasicDishUniqueness(recipes: MutableList<Recipe>): Boolean {
-        val basicNames = recipes.filter { it.basicDishFor != null }.map { it.dishName }
+        val basicNames = recipes.filter { it.basicDishFor != null }.map { it.getDishName() }
         return basicNames.size == basicNames.toSet().size
     }
 
