@@ -198,7 +198,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
 
             for (t in tables) {
                 if (seats.containsKey(t.type)) {
-                    seats.replace(t.type, seats[t.type]!! + t.size)
+                    seats.replace(t.type, checkNotNull(seats[t.type]) + t.size)
                 } else {
                     seats[t.type] = t.size
                 }

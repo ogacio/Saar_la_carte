@@ -87,7 +87,7 @@ class Restaurant(
      implements the staff change incident IF it is cook or waitstaff
      */
     fun changeStaff(type: StaffType, cook: CookType?, delta: Int) {
-        if (type == StaffType.COOK) kitchen.changeStaff(cook!!, delta)
+        if (type == StaffType.COOK) kitchen.changeStaff(checkNotNull(cook), delta)
         if (type == StaffType.WAITSTAFF) foh.getWaitstaff().changeStaff(delta)
     }
 

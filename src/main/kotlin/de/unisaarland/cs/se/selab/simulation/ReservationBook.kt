@@ -84,8 +84,10 @@ class ReservationBook(
     /** returns mapping: evening to booked event seats **/
     fun getEventSeatsBooked(): Map<Int, Int> {
         val temporary = mutableMapOf<Int, Int>()
-        for (i in upcoming.keys) {
-            val number = upcoming[i]!!.filter { it.groupType() == GroupType.EVENT }.sumOf { it.groupSize() }
+        for ((i, reservations) in upcoming) {
+            val number = reservations
+                .filter { it.groupType() == GroupType.EVENT }
+                .sumOf { it.groupSize() }
             if (number > 0) {
                 temporary[i] = number
             }
