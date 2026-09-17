@@ -7,10 +7,7 @@ import de.unisaarland.cs.se.selab.simulation.GlobalClock
  */
 class Order(
     private var group: CustomerGroup,
-    private var restaurantId: Int,
-    private var customerGroupId: Int,
     private var placedTick: Int,
-    private var isDelivery: Boolean,
     private var meals: MutableList<Meal>
 ) {
     /**

@@ -42,6 +42,7 @@ class Recipe(
 
     /** gets id */
     fun getId(): Int = id
+
     /** gets dishName */
     fun getDishName(): String = dishName
 }
