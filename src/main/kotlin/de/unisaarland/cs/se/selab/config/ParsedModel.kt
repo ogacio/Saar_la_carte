@@ -53,7 +53,7 @@ class ParsedModel {
     fun registerRecipe(r: Recipe): Boolean = register(recipesById, r.getId(), r)
 
     /** Stores [r] under its id; false if a restaurant with that id already exists. */
-    fun registerRestaurant(r: Restaurant): Boolean = register(restaurantsById, r.id, r)
+    fun registerRestaurant(r: Restaurant): Boolean = register(restaurantsById, r.getId(), r)
 
     /** Stores [g] under its id; false if a customer group with that id already exists. */
     fun registerCustomerGroup(g: CustomerGroup): Boolean = register(customerGroupsById, g.id(), g)
@@ -75,7 +75,7 @@ class ParsedModel {
     // ------------------------------------------------------------ hand-off
     /** All restaurants in ascending id, for the simulation. */
     fun allRestaurants(): MutableList<Restaurant> =
-        restaurantsById.values.sortedBy { it.id }.toMutableList()
+        restaurantsById.values.sortedBy { it.getId() }.toMutableList()
 
     /** All customer groups in ascending id, for the simulation. */
     fun allCustomerGroups(): MutableList<CustomerGroup> =

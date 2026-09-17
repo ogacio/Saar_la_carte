@@ -69,11 +69,12 @@ class FohVisitIntegrationTest {
 
     /** Places an order for every member at [tick] and lets the kitchen finish it at once. */
     private fun orderAndCook(visit: Visit, group: CustomerGroup, restaurantId: Int, tick: Int): List<Meal> {
-        val order = Order(group, restaurantId, group.id(), tick, false, mutableListOf())
-        group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1))) }
+        val meals = group.members().map { Meal(null, it, recipe(1)) }.toMutableList()
+        val order = Order(group, restaurantId, group.id(), tick, false, meals)
+        meals.forEach { it.orderId = order.getId() }
         visit.ordered(order, tick)
-        order.meals.forEach { it.status = MealStatus.COOKED }
-        return order.meals
+        order.getMeals().forEach { it.status = MealStatus.COOKED }
+        return order.getMeals()
     }
 
     @Test
@@ -128,8 +129,9 @@ class FohVisitIntegrationTest {
         val visit = Visit(group)
         val start = newEvening()
         restaurant.seating.seat(visit, restaurant.sbu, start)
-        val order = Order(group, 802, group.id(), start, false, mutableListOf())
-        group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1))) }
+        val meals = group.members().map { Meal(null, it, recipe(1)) }.toMutableList()
+        val order = Order(group, 802, group.id(), start, false, meals)
+        meals.forEach { it.orderId = order.getId() }
         visit.ordered(order, start)
         val log = captureLog(LogLevel.INFO)
 
@@ -146,7 +148,7 @@ class FohVisitIntegrationTest {
             logLines(log),
         )
         assertTrue(visit.isFinished())
-        assertTrue(order.meals.all { it.status == MealStatus.ABORTED })
+        assertTrue(order.getMeals().all { it.status == MealStatus.ABORTED })
         assertEquals(1, group.failedAttempts())
     }
 

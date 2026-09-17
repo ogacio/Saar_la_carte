@@ -50,7 +50,7 @@ class ConfigurationLoader(
         val restaurants = model.allRestaurants()
         for (restaurant in restaurants) {
             RatingBook.initializeRatings(
-                restaurant.id,
+                restaurant.getId(),
                 restaurant.initialPositiveRatings,
                 restaurant.initialNegativeRatings
             )

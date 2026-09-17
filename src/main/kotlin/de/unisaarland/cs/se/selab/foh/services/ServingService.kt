@@ -31,7 +31,7 @@ class ServingService(
 ) {
 
     /** "They prioritize basic dishes, and in a tie sort by ascending recipe id." Tables and drivers alike. */
-    private val mealPriority = compareBy<Meal>({ !it.recipe.isBasicFor(restaurantType) }, { it.recipe.id })
+    private val mealPriority = compareBy<Meal>({ !it.recipe.isBasicFor(restaurantType) }, { it.recipe.getId() })
 
     /** Serves every table with meals ready, in group order, then the delivery orders, then the summary. */
     fun serve(visits: List<Visit>, sbu: SubUnits) {
@@ -129,8 +129,8 @@ class ServingService(
      * if the waitstaff can still carry all of its meals this tick; every meal is one SERVING action.
      */
     private fun serveDeliveryDesk(carried: MutableMap<Waiter, Int>, sbu: SubUnits) {
-        for (order in deliveryDesk.getReady().sortedBy { it.id }) {
-            val meals = order.meals.sortedWith(mealPriority)
+        for (order in deliveryDesk.getReady().sortedBy { it.getId() }) {
+            val meals = order.getMeals().sortedWith(mealPriority)
             if (waitstaff.capacity(ActionType.SERVING) < meals.size) return
             val driverId = deliveryDesk.sendForOrder(order) ?: return
             var next = 0
@@ -144,7 +144,7 @@ class ServingService(
                     checkNotNull(waiter.id),
                     dishCounts(batch),
                     driverId,
-                    order.id,
+                    order.getId(),
                 )
                 carried[waiter] = (carried[waiter] ?: 0) + batch.size
                 next += batch.size
@@ -176,5 +176,5 @@ class ServingService(
 
     /** Dish name to number of meals, as the serving log wants it. */
     private fun dishCounts(meals: List<Meal>): Map<String, Int> =
-        meals.groupingBy { it.recipe.dishName }.eachCount()
+        meals.groupingBy { it.recipe.getDishName() }.eachCount()
 }

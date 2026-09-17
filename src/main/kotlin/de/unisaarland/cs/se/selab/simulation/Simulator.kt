@@ -30,8 +30,8 @@ class Simulator(
         applyIncidents(evening)
 
         Logger.preparationStarted(evening)
-        for (restaurant in restaurants.sortedBy { it.id }) {
-            restaurant.prepare(customers.regularsFor(restaurant.id, evening))
+        for (restaurant in restaurants.sortedBy { it.getId() }) {
+            restaurant.prepare(customers.regularsFor(restaurant.getId(), evening))
         }
 
         Logger.servingStarted(evening)
@@ -53,9 +53,9 @@ class Simulator(
         bookEventsThreeEveningsAhead(tick)
         val walkIns = decideWalkIns(tick)
 
-        for (restaurant in restaurants.sortedBy { it.id }) {
-            val arrivals = customers.arriving(restaurant.id, GlobalClock.getEvening(), tick) +
-                walkIns[restaurant.id].orEmpty()
+        for (restaurant in restaurants.sortedBy { it.getId() }) {
+            val arrivals = customers.arriving(restaurant.getId(), GlobalClock.getEvening(), tick) +
+                walkIns[restaurant.getId()].orEmpty()
             restaurant.runRestaurantTick(arrivals, tick)
         }
     }
@@ -73,8 +73,8 @@ class Simulator(
                 Logger.Customer.noRestaurantDecision(group.id())
                 continue
             }
-            Logger.Customer.restaurantDecision(group.id(), restaurant.id)
-            if (restaurant.bookEvent(group, group.getEventEvening())) group.book(restaurant.id)
+            Logger.Customer.restaurantDecision(group.id(), restaurant.getId())
+            if (restaurant.bookEvent(group, group.getEventEvening())) group.book(restaurant.getId())
         }
     }
 
@@ -91,11 +91,11 @@ class Simulator(
                 Logger.Customer.noRestaurantDecision(group.id())
                 continue
             }
-            Logger.Customer.restaurantDecision(group.id(), restaurant.id)
+            Logger.Customer.restaurantDecision(group.id(), restaurant.getId())
             if (group.isDelivery()) {
                 DeliveryService.placeOrder(group, restaurant, tick)
             } else {
-                walkIns.getOrPut(restaurant.id) { mutableListOf() } += group
+                walkIns.getOrPut(restaurant.getId()) { mutableListOf() } += group
             }
         }
         return walkIns
@@ -113,7 +113,7 @@ class Simulator(
 
     /** The restaurant with [id], or null if there is none; used by incidents and the delivery service. */
     fun restaurantsById(id: Int): Restaurant? {
-        return restaurants.firstOrNull { it.id == id }
+        return restaurants.firstOrNull { it.getId() == id }
     }
 
     /**
@@ -125,7 +125,7 @@ class Simulator(
         while (GlobalClock.currentTick < maxTicks) {
             runEvening()
         }
-        Statistics.report(restaurants.map { it.id })
+        Statistics.report(restaurants.map { it.getId() })
     }
 
     /** The browsing service with every restaurant's current snapshot; used by the recipe change incident. */

@@ -48,7 +48,7 @@ class OrderingService(
         Logger.Foh.ordering(
             sbu.restaurantId,
             visit.group.id(),
-            order.id,
+            order.getId(),
             order.dishCounts(),
             waiters.minOfOrNull { checkNotNull(it.id) },
         )
@@ -102,24 +102,26 @@ class OrderingService(
         val preference = customer.preference()
         val edible = sbu.menu.getOrderables().filter { preference == null || preference.accepts(it) }
         val eventDish = visit.group.dishOverride(restaurantType)
-        return edible.firstOrNull { it.dishName == eventDish }
+        return edible.firstOrNull { it.getDishName() == eventDish }
             ?: preference?.firstFavourite(edible)
-            ?: edible.maxWithOrNull(compareBy({ preference?.rank(it) ?: 0 }, { it.id }))
+            ?: edible.maxWithOrNull(compareBy({ preference?.rank(it) ?: 0 }, { it.getId() }))
     }
 
-    /** Creates the order with one queued meal per customer who chose a dish; Order assigns its own id. */
+    /**
+     * Creates the order with one queued meal per customer who chose a dish. The meals are built first,
+     * because the order only exposes them read-only; they get the order's id once Order has assigned it.
+     */
     private fun buildOrder(visit: Visit, sbu: SubUnits, tick: Int, choices: List<Pair<Customer, Recipe>>): Order {
+        val meals = choices.map { (customer, recipe) -> Meal(null, customer, recipe) }.toMutableList()
         val order = Order(
             visit.group,
             sbu.restaurantId,
             visit.group.id(),
             tick,
             isDelivery = false,
-            meals = mutableListOf(),
+            meals = meals,
         )
-        choices.forEach { (customer, recipe) ->
-            order.meals.add(Meal(order.id, customer, recipe))
-        }
+        meals.forEach { it.orderId = order.getId() }
         return order
     }
 
