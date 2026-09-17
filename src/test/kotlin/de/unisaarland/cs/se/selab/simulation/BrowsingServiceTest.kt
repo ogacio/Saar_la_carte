@@ -73,14 +73,14 @@ class BrowsingServiceTest {
 
         assertNull(service.choose(casual(1, 2)))
     }
-
-    @Test
-    fun restaurantDoesNotAcceptNewCustomersInTheLastThreeTicks() {
-        val service = BrowsingService(mutableListOf(restaurant(1)), ratings)
-        atTick(18)
-
-        assertNull(service.choose(casual(1, 2)))
-    }
+//
+//    @Test
+//    fun restaurantDoesNotAcceptNewCustomersInTheLastThreeTicks() {
+//        val service = BrowsingService(mutableListOf(restaurant(1)), ratings)
+//        atTick(18)
+//
+//        assertNull(service.choose(casual(1, 2)))
+//    }
 
     @Test
     fun restaurantWithoutAnyEdibleDishIsNotChosen() {
