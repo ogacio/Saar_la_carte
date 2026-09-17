@@ -86,8 +86,8 @@ class WaiterAssignmentService(
     fun nextServingWaiter(): Waiter? {
         val waiter = waitstaff
             .filter { it.remaining(ActionType.SERVING) > 0 }
-            .minByOrNull { idOrLast(it) } ?: return null
-        grantId(waiter)
+            .minByOrNull { idOrLast(it) }
+        waiter?.let { grantId(waiter) }
         return waiter
     }
 
@@ -146,10 +146,10 @@ class WaiterAssignmentService(
         val first = when (action) {
             // "the manager prioritizes the waiters in descending order of the current load to perform the SEATING"
             // ORDERING has no rule of its own in the spec; it follows SEATING (open point).
-            ActionType.SEATING, ActionType.ORDERING -> compareByDescending<Waiter> { it.currentLoad }
+            ActionType.SEATING, ActionType.ORDERING -> compareByDescending { it.currentLoad }
             // "the manager prioritizes the waiters in descending number of cooked meals in the kitchen
             // that belong to their assigned tables"
-            ActionType.SERVING -> compareByDescending<Waiter> { cookedMeals[it] ?: 0 }
+            ActionType.SERVING -> compareByDescending { cookedMeals[it] ?: 0 }
             // "For EVENT groups, the waitstaff manager prioritizes waiters with the lowest current load."
             ActionType.ESCORTING -> compareBy<Waiter> { it.currentLoad }
         }
