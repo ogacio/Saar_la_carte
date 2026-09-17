@@ -22,11 +22,11 @@ class RestaurantDataTest {
         openingTick = 3,
         closingTick = 5,
         dishes = mutableListOf(recipe(1)),
-        freeSeats = freeSeats,
+        freeSeatsStatic = freeSeats,
         freeDrivers = freeDrivers,
         hostsEvents = true,
         totalSeats = totalSeats,
-        eventSeatsBooked = mutableMapOf(),
+        eventSeatsBookedStatic = mutableMapOf(),
     )
 
     @Test
