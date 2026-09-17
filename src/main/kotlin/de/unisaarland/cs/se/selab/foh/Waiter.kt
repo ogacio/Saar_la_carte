@@ -1,16 +1,6 @@
 package de.unisaarland.cs.se.selab.foh
 
 /**
- * One member of the waitstaff.
- *
- * Waiters are interchangeable and only receive an id when they perform their first action of an
- * evening, which is why [id] is null until then and is dropped again by [resetEvening]. The current
- * load counts the customers the waiter is waiting on, the tick load counts the actions of one type
- * performed in the running tick.
- */
-
-
-/**
  * The kind of action a waiter performs; the action limit is counted per type and tick.
  */
 enum class ActionType {
@@ -20,7 +10,14 @@ enum class ActionType {
     ESCORTING,
 }
 
-
+/**
+ * One member of the waitstaff.
+ *
+ * Waiters are interchangeable and only receive an id when they perform their first action of an
+ * evening, which is why [id] is null until then and is dropped again by [resetEvening]. The current
+ * load counts the customers the waiter is waiting on, the tick load counts the actions of one type
+ * performed in the running tick.
+ */
 class Waiter {
     /** The id granted at the first action of the evening, null before that. */
     var id: Int? = null

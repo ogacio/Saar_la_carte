@@ -15,7 +15,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 import de.unisaarland.cs.se.selab.simulation.SubUnits
 
 /**
- * Step 1, ordering: takes the order of a group right after it was seated (spec, "Ordering").
+ * Step 1b, ordering: takes the order of a group right after it was seated (spec, "Ordering").
  *
  * Customers order one by one; each picks a dish by the spec's preference rules, and
  * its ingredients are reserved before the next customer chooses. Customers who find

@@ -21,7 +21,7 @@ class Cook(
         for (meal in meals) {
             meal.status = MealStatus.COOKING
         }
-        busyUntil = clock.getCurrentTick() + meals[0].recipe.durationInTicks()
+        busyUntil = clock.getTickInEvening() + meals[0].recipe.durationInTicks()
         batch = meals
     }
 
@@ -29,7 +29,7 @@ class Cook(
      * checks if the meals are ready in this tick, if so -> cooked
      */
     fun cookingFinished(): MutableList<Meal>? {
-        if (busyUntil <= clock.getCurrentTick()) {
+        if (busyUntil <= clock.getTickInEvening()) {
             for (meal in batch) {
                 meal.status = MealStatus.COOKED
             }

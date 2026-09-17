@@ -46,6 +46,7 @@ class RecipeChange(
 
     override fun apply(sim: Simulator) {
         // Restaurants may share the same Recipe objects, so every occurrence is adapted only once.
+        val adapted = mutableSetOf<RecipeIngredient>()
         for (restaurant in sim.getBrowsingService().entries) {
             for (recipe in restaurant.getDishes()) {
                 recipe.getIngredients()

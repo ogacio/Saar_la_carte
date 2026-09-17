@@ -6,7 +6,6 @@ import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.Menu
 import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
-import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.StaffType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 
@@ -15,11 +14,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
  * before the evening starts, run every tick, then to close the evening, take care of staff change incident
  */
 class Restaurant(
-    val id: Int,
     val name: String,
-    val type: RestaurantType,
-    val openingTick: Int,
-    val closingTick: Int,
     val hostsEvents: Boolean,
     val initialPositiveRatings: Int,
     val initialNegativeRatings: Int,
@@ -27,14 +22,19 @@ class Restaurant(
     val kitchen: Kitchen,
     val pantry: Pantry,
     val menu: Menu,
-    val clock: GlobalClock = GlobalClock,
     val data: RestaurantData
 ) {
+    val clock = GlobalClock
+    val openingTick = data.getOpeningTick()
+    val closingTick = data.getClosingTick()
+    val type = data.getType()
+    val id = data.getId()
+
     /**
      prepares the kitchen and the front of the house at the preparation phase
      */
     fun prepare(regulars: MutableList<CustomerGroup>) {
-        var regularsSeats: Int = 0
+        var regularsSeats = 0
         for (r in regulars) {
             regularsSeats += r.getGroupSize()
         }
@@ -95,7 +95,7 @@ class Restaurant(
      * returns if the restaurant is open or not
      */
     fun isOpen(): Boolean {
-        return clock.getCurrentTick() in openingTick..closingTick
+        return clock.getTickInEvening() in openingTick..closingTick
     }
 
     /**
