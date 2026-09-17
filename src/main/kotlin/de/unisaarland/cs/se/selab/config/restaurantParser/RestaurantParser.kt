@@ -101,7 +101,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
 
                 // create kitchen
                 val roaster = CookRoaster(kitchenStaff)
-                kitchen = Kitchen(roaster, pantry, mutableListOf(), reservationBook)
+                kitchen = Kitchen(roaster, pantry, mutableListOf(), reservationBook, type)
 
                 // create menu
                 menu = Menu(recipes, pantry, kitchen)
@@ -285,7 +285,8 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
     }
 
     private fun checkAtLeastOneOfEach(rjd: RestaurantJsonDto): Boolean {
-        return rjd.recipes.isNotEmpty() && rjd.kitchenStaff.isNotEmpty() && rjd.waitstaff > 0 && rjd.tables.isNotEmpty()
+        return rjd.recipes.isNotEmpty() && rjd.kitchenStaff.values.sum() > 0 &&
+            rjd.waitstaff > 0 && rjd.tables.isNotEmpty()
     }
 
 // helper functions for validateFileScope
