@@ -69,7 +69,7 @@ class FohVisitIntegrationTest {
 
     /** Places an order for every member at [tick] and lets the kitchen finish it at once. */
     private fun orderAndCook(visit: Visit, group: CustomerGroup, restaurantId: Int, tick: Int): List<Meal> {
-        val order = Order(1, group, restaurantId, group.id(), tick, false, mutableListOf())
+        val order = Order(group, restaurantId, group.id(), tick, false, mutableListOf())
         group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1))) }
         visit.ordered(order, tick)
         order.meals.forEach { it.status = MealStatus.COOKED }
@@ -128,7 +128,7 @@ class FohVisitIntegrationTest {
         val visit = Visit(group)
         val start = newEvening()
         restaurant.seating.seat(visit, restaurant.sbu, start)
-        val order = Order(2, group, 802, group.id(), start, false, mutableListOf())
+        val order = Order(group, 802, group.id(), start, false, mutableListOf())
         group.members().forEach { order.meals.add(Meal(order.id, it, recipe(1))) }
         visit.ordered(order, start)
         val log = captureLog(LogLevel.INFO)
