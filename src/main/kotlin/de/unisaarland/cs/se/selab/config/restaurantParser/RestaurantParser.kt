@@ -87,6 +87,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             val pantry = Pantry()
             val kitchen: Kitchen?
             val menu: Menu?
+            val data: RestaurantData?
 
             // create kitchen, foh and menu
             val kitchenStaff = serialiseCookCounts(rjd)
@@ -107,13 +108,15 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
 
                 // create foh
                 foh = createFoh(rjd, tableAssignmentService, type, menu, pantry, kitchen, reservationBook)
+
+                // create restaurant data
+                data = createData(rjd, tables, recipes, type)
             } else {
                 kitchen = null
                 foh = null
                 menu = null
+                data = null
             }
-
-            val data = createData(rjd)
 
             if (foh != null && kitchen != null) {
                 if (menu != null && data != null) {
@@ -181,43 +184,32 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         )
     }
 
-    private fun createData(rjd: RestaurantJsonDto): RestaurantData? {
-        var returnValue = true
+    private fun createData(
+        rjd: RestaurantJsonDto,
+        tables: MutableList<Table>,
+        recipes: MutableList<Recipe>,
+        type: RestaurantType
+    ): RestaurantData? {
+        if (checkUniqueDishNames(recipes) && checkUniqueTableIds(tables) &&
+            checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)
+        ) {
+            val seats: MutableMap<TableType, Int> = mutableMapOf<TableType, Int>()
+            var totalSeats = 0
 
-        val tables = serialiseTables(rjd)
-        val recipes = resolveRecipes(rjd)
-        if (recipes != null && tables != null) {
-            if (!(
-                    checkUniqueDishNames(recipes) && checkUniqueTableIds(tables) &&
-                        checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)
-                    )
-            ) {
-                returnValue = false
+            for (t in tables) {
+                if (seats.containsKey(t.type)) {
+                    seats.replace(t.type, seats[t.type]!! + t.size)
+                } else {
+                    seats[t.type] = t.size
+                }
+                totalSeats += t.size
             }
 
-            if (returnValue) {
-                try {
-                    val type = RestaurantType.valueOf(rjd.type)
-
-                    val seats: MutableMap<TableType, Int> = mutableMapOf<TableType, Int>()
-                    var totalSeats = 0
-
-                    for (t in tables) {
-                        if (seats.containsKey(t.type)) {
-                            seats.replace(t.type, seats[ t.type ]!! + t.size)
-                        } else {
-                            seats[ t.type ] = t.size
-                        }
-                        totalSeats += t.size
-                    }
-
-                    return RestaurantData(
-                        rjd.id, type, rjd.openingTickStart, rjd.openingTickEnd,
-                        recipes, seats, rjd.deliveryDrivers, rjd.event,
-                        totalSeats, mutableMapOf<Int, Int>()
-                    )
-                } catch (_: IllegalArgumentException) { }
-            }
+            return RestaurantData(
+                rjd.id, type, rjd.openingTickStart, rjd.openingTickEnd,
+                recipes, seats, rjd.deliveryDrivers, rjd.event,
+                totalSeats, mutableMapOf<Int, Int>()
+            )
         }
         return null
     }
@@ -267,9 +259,9 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
     private fun checkUniqueDishNames(recipes: MutableList<Recipe>): Boolean {
         for (recipe in recipes) {
             var count = 0
-            val name: String = recipe.dishName
+            val name: String = recipe.getDishName()
             for (r in recipes) {
-                if (name == r.dishName) count++
+                if (name == r.getDishName()) count++
             }
             if (count > 1) return false
         }

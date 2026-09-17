@@ -6,12 +6,12 @@ import de.unisaarland.cs.se.selab.simulation.GlobalClock
  * this is how an order looks
  */
 class Order(
-    var group: CustomerGroup,
-    var restaurantId: Int,
-    var customerGroupId: Int,
-    var placedTick: Int,
-    var isDelivery: Boolean,
-    var meals: MutableList<Meal>
+    private var group: CustomerGroup,
+    private var restaurantId: Int,
+    private var customerGroupId: Int,
+    private var placedTick: Int,
+    private var isDelivery: Boolean,
+    private var meals: MutableList<Meal>
 ) {
     /**
      * provides the next id
@@ -32,7 +32,7 @@ class Order(
     fun dishCounts(): Map<String, Int> {
         val out = mutableMapOf<String, Int>()
         for (meal in meals) {
-            val dishName = meal.recipe.dishName
+            val dishName = meal.recipe.getDishName()
             if (out.containsKey(dishName)) {
                 val put = out.getValue(dishName) + 1
                 out.replace(dishName, out.getValue(dishName), put)

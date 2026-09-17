@@ -18,11 +18,11 @@ class Restaurant(
     val hostsEvents: Boolean,
     val initialPositiveRatings: Int,
     val initialNegativeRatings: Int,
-    val foh: FrontOfTheHouse,
-    val kitchen: Kitchen,
-    val pantry: Pantry,
-    val menu: Menu,
-    val data: RestaurantData
+    private val foh: FrontOfTheHouse,
+    private val kitchen: Kitchen,
+    private val pantry: Pantry,
+    private val menu: Menu,
+    private val data: RestaurantData
 ) {
     val clock = GlobalClock
     val openingTick = data.getOpeningTick()

@@ -6,8 +6,8 @@ import de.unisaarland.cs.se.selab.kitchen.CookType
  * The recipe for one dish: what it needs, how long it takes and who may cook it.
  */
 class Recipe(
-    val id: Int,
-    val dishName: String,
+    private val id: Int,
+    private val dishName: String,
     val minuteDuration: Int,
     val cookTypes: Set<CookType>,
     val ingredients: MutableList<RecipeIngredient>,
@@ -39,6 +39,9 @@ class Recipe(
     private companion object {
         const val MINUTES_PER_TICK = 10
     }
+
+    /** gets id */
     fun getId(): Int = id
+    /** gets dishName */
     fun getDishName(): String = dishName
 }

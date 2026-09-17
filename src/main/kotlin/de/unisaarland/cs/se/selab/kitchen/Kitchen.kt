@@ -19,7 +19,7 @@ private const val SEATS_PER_ESTIMATE = 10
 class Kitchen(
     val roaster: CookRoaster,
     val pantry: Pantry,
-    var queue: MutableList<Order>,
+    val queue: MutableList<Order>,
     val reservationBook: ReservationBook
 ) {
     /**
@@ -36,8 +36,7 @@ class Kitchen(
      * 2. -> making MutableList<Meal> from the queue with the same meals inside,
      * then start calling roaster.startCooking on all and reserve ingredients for all
      */
-    fun cook() { // forEach instead of the fors -> goes on any collection
-        // instead of if -> .filter { predicate }
+    fun cook() {
         val cooked = roaster.finished()
         for (m in cooked) {
             pantry.deleteFromReserved(m.recipe)
@@ -46,14 +45,16 @@ class Kitchen(
         val mealsToCookByRecipe: MutableMap<Recipe, MutableList<Meal>> =
             mutableMapOf()
         for (o in queue) {
-            val filtered = o.meals.filter { it.status == MealStatus.QUEUED && roaster.hasEligible(it.recipe) }
+            val filtered = o.getMeals().filter { it.status == MealStatus.QUEUED && roaster.hasEligible(it.recipe) }
             for (m in filtered) {
                 if (mealsToCookByRecipe.containsKey(m.recipe)) {
                     mealsToCookByRecipe.getValue(m.recipe).add(m)
                 } else { mealsToCookByRecipe[m.recipe] = mutableListOf(m) }
             }
         }
+
         for ((recipe, mealList) in mealsToCookByRecipe) {
+            mealList.sortByDescending { it.orderId }
             roaster.startCooking(mealList)
         }
     }
