@@ -37,7 +37,7 @@ class Waiter {
      * Books [count] actions of type [action] against the limit of this tick.
      */
     fun consume(action: ActionType, count: Int) {
-        tickLoad[action] = tickLoad.getOrDefault(action, 0) + count
+        tickLoad[action] = minOf(tickLoad.getOrDefault(action, 0) + count, ACTION_LIMIT)
     }
 
     /**
