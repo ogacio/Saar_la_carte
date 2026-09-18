@@ -2,7 +2,6 @@ package de.unisaarland.cs.se.selab.incident
 
 import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
-import de.unisaarland.cs.se.selab.sharedPackage.RecipeIngredient
 import de.unisaarland.cs.se.selab.sharedPackage.StaffType
 import de.unisaarland.cs.se.selab.simulation.Simulator
 import de.unisaarland.cs.se.selab.simulation.Supplier
@@ -34,7 +33,10 @@ class StaffChange(
  * Change").
  *
  * The change is global and permanent: every recipe of every restaurant is adapted, and each
- * occurrence is adapted relative to its own current amount.
+ * occurrence is adapted relative to its own current amount. The occurrences are taken from the
+ * shared [Ingredient], so the change does not depend on which restaurants have been browsed yet and
+ * also works before the first tick of evening 1. Restaurants share their Recipe objects, and every
+ * occurrence is registered exactly once, so no occurrence is adapted twice.
  */
 class RecipeChange(
     id: Int,
@@ -45,15 +47,7 @@ class RecipeChange(
     override val type: IncidentType = IncidentType.RECIPE
 
     override fun apply(sim: Simulator) {
-        // Restaurants may share the same Recipe objects, so every occurrence is adapted only once.
-        val adapted = mutableSetOf<RecipeIngredient>()
-        for (restaurant in sim.getBrowsingService().entries) {
-            for (recipe in restaurant.getDishes()) {
-                recipe.getIngredients()
-                    .filter { it.getIngredient().name == ingredient.name && adapted.add(it) }
-                    .forEach { it.adaptBy(adaptation) }
-            }
-        }
+        ingredient.usages().forEach { it.adaptBy(adaptation) }
     }
 }
 

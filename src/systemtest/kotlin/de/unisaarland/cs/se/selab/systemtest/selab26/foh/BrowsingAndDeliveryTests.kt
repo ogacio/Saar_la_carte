@@ -95,9 +95,10 @@ class F20DeliveryOverSevenKilometres : LogSkippingSystemTest() {
             DRIVING_PREFIX,
             "[DEBUG] Delivery Driving (R 1): Driver 1 drove 5 km and needs 1 more ticks.",
         )
+        // The driving log shows the cumulative distance (forum thread 126): 5 km, then all 7 km.
         skipToAndAssert(
             DRIVING_PREFIX,
-            "[DEBUG] Delivery Driving (R 1): Driver 1 drove 2 km and needs 0 more ticks.",
+            "[DEBUG] Delivery Driving (R 1): Driver 1 drove 7 km and needs 0 more ticks.",
         )
         assertNextLine("[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 1 with order 1.")
         assertNextLine("[IMPORTANT] Delivery Finished (R 1): Driver 1 gave delivery of order 1 to group 1.")
