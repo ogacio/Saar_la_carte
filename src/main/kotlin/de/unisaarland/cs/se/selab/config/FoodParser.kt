@@ -20,7 +20,7 @@ import java.io.IOException
  */
 class FoodParser(model: ParsedModel) : ConfigParser(model) {
     override val schemaPath: String = SCHEMA_PATH
-    private val json = Json { ignoreUnknownKeys = false }
+    private val json = Json { ignoreUnknownKeys = true }
     private var ingredientCount = 0
     private val recipes = mutableListOf<Recipe>()
 

@@ -1,4 +1,5 @@
 package de.unisaarland.cs.se.selab.kitchen
+import de.unisaarland.cs.se.selab.logging.Logger.Kitchen.mealCooked
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
@@ -36,20 +37,12 @@ class Kitchen(
      * responsible for 1.updating the queue with the cooked meals 2. starting the cooking from the queue
      * 1. -> calling finished() on roaster
      * 2. -> making MutableList<Meal> from the queue with the same meals inside,
-     * then start calling roaster.startCooking on all and reserve ingredients for all.
-     * Returns how many meals finished cooking this tick.
+     * then start calling roaster.startCooking on all and reserve ingredients for all
      */
     fun cook(): Int {
-        val mealsToCookByRecipe: MutableMap<Recipe, MutableList<Meal>> =
-            mutableMapOf()
-        for (o in queue) {
-            val filtered = o.getMeals().filter { it.status == MealStatus.QUEUED && roaster.hasEligible(it.recipe) }
-            for (m in filtered) {
-                if (mealsToCookByRecipe.containsKey(m.recipe)) {
-                    mealsToCookByRecipe.getValue(m.recipe).add(m)
-                } else { mealsToCookByRecipe[m.recipe] = mutableListOf(m) }
-            }
-        }
+        val finishedCount = handleFinishedMeals()
+
+        val mealsToCookByRecipe = groupQueuedMealsByRecipe()
 
         val sortedEntries = mealsToCookByRecipe.entries.sortedWith(
             compareBy({ !it.key.isBasicFor(restaurantType) }, { it.key.getId() })
@@ -58,11 +51,47 @@ class Kitchen(
             roaster.startCooking(entry.value)
         }
 
-        val cooked = roaster.finished()
-        for (m in cooked) {
-            pantry.deleteFromReserved(m.recipe)
+        return finishedCount
+    }
+
+    private fun handleFinishedMeals(): Int {
+        val ordersById = queue.associateBy { it.getId() }
+        val cookedByCook = roaster.finished()
+        var count = 0
+        for ((cook, meals) in cookedByCook) {
+            for (m in meals) {
+                pantry.deleteFromReserved(m.recipe)
+                val order = ordersById[m.orderId]
+                if (order != null) {
+                    mealCooked(
+                        pantry.getRestaurantId(),
+                        requireNotNull(cook.getId()),
+                        1,
+                        m.recipe.getDishName(),
+                        order.ticksSince()
+                    )
+                }
+                count++
+            }
         }
-        return cooked.size
+        return count
+    }
+
+    private fun groupQueuedMealsByRecipe(): MutableMap<Recipe, MutableList<Meal>> {
+        val mealsToCookByRecipe: MutableMap<Recipe, MutableList<Meal>> = mutableMapOf()
+        for (o in queue) {
+            val filtered = o.getMeals().filter {
+                it.status == MealStatus.QUEUED && roaster.hasEligibleAndFree(it.recipe)
+            }
+            for (m in filtered) {
+                if (mealsToCookByRecipe.containsKey(m.recipe)) {
+                    mealsToCookByRecipe.getValue(m.recipe).add(m)
+                } else {
+                    mealsToCookByRecipe[m.recipe] = mutableListOf(m)
+                }
+            }
+        }
+        return mealsToCookByRecipe
     }
 
 /**

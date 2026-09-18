@@ -84,7 +84,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
 
         if (type != null && checkAtLeastOneOfEach(rjd)) {
             val foh: FrontOfTheHouse?
-            val pantry = Pantry()
+            val pantry = Pantry(restaurantId = rjd.id)
             val kitchen: Kitchen?
             val menu: Menu?
             val data: RestaurantData?
@@ -100,7 +100,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
                 val reservationBook = ReservationBook(tableAssignmentService)
 
                 // create kitchen
-                val roaster = CookRoaster(kitchenStaff)
+                val roaster = CookRoaster(kitchenStaff, restaurantId = rjd.id)
                 kitchen = Kitchen(roaster, pantry, mutableListOf(), reservationBook, type)
 
                 // create menu
