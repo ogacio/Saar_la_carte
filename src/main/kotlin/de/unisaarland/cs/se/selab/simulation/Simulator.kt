@@ -47,7 +47,7 @@ class Simulator(
     private fun runTick() {
         GlobalClock.advanceTick()
         val tick = GlobalClock.getTickInEvening()
-        Logger.tickStarted(GlobalClock.currentTick, tick)
+        Logger.tickStarted(tick, GlobalClock.getEvening())
 
         browsingService.refresh(restaurants.map { it.snapshot() }.toMutableList())
         bookEventsThreeEveningsAhead(tick)
