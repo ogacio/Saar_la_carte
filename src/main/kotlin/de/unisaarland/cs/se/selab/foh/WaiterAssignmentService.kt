@@ -149,7 +149,8 @@ class WaiterAssignmentService(
     private fun eventPriority(action: ActionType, cookedMeals: Map<Waiter, Int>): Comparator<Waiter> {
         val first = when (action) {
             // "the manager prioritizes the waiters in descending order of the current load to perform the SEATING"
-            // ORDERING has no rule of its own in the spec; it follows SEATING (open point).
+            // ORDERING uses the same order: the waiters who seated an EVENT group take its orders, in the
+            // order they seated it (forum thread 266).
             ActionType.SEATING, ActionType.ORDERING -> compareByDescending { it.currentLoad }
             // "the manager prioritizes the waiters in descending number of cooked meals in the kitchen
             // that belong to their assigned tables"

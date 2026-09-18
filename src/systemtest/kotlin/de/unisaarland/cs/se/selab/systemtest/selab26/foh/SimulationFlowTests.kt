@@ -45,16 +45,19 @@ class F01StopsAfterFullEvening : LogSkippingSystemTest() {
     override val maxTicks = 24
 
     override suspend fun run() {
-        skipToAndAssert("[IMPORTANT] Simulation: Tick 24", "[IMPORTANT] Simulation: Tick 24 (24) started.")
+        skipToAndAssert("[IMPORTANT] Simulation: Tick 24", "[IMPORTANT] Simulation: Tick 24 (1) started.")
         assertNextLine(EVENING_1_ENDS)
         assertNextLine(STATISTICS_CALCULATED)
     }
 }
 
-/** F01: tick 25 is the first tick of evening 2, after the preparation of evening 2. */
-class F01SecondEveningStartsAtTick25 : LogSkippingSystemTest() {
-    override val name = "F01SecondEveningStartsAtTick25"
-    override val description = "Evening 1 ends, evening 2 is prepared and tick 25 is tick 1 of the evening."
+/**
+ * F01: the 25th tick of the run is logged as tick 1 of evening 2, after the preparation of evening 2
+ * (specification adjustment #23: "Tick $tick ($evening) started", ticks counted within the evening).
+ */
+class F01SecondEveningRestartsTickCount : LogSkippingSystemTest() {
+    override val name = "F01SecondEveningRestartsTickCount"
+    override val description = "Evening 1 ends, evening 2 is prepared and its first tick is logged as Tick 1 (2)."
     override val food = FOOD_RICE
     override val restaurants = F01_RESTAURANTS
     override val scenario = EMPTY_SCENARIO
@@ -65,7 +68,7 @@ class F01SecondEveningStartsAtTick25 : LogSkippingSystemTest() {
         skipToAndAssert("[IMPORTANT] Serving: Serving of evening 1 ends", EVENING_1_ENDS)
         assertNextLine("[IMPORTANT] Preparation: Preparation for evening 2 starts.")
         assertNextLine("[IMPORTANT] Serving: Serving of evening 2 starts.")
-        assertNextLine("[IMPORTANT] Simulation: Tick 25 (1) started.")
+        assertNextLine("[IMPORTANT] Simulation: Tick 1 (2) started.")
         assertNextLine(STATISTICS_CALCULATED)
     }
 }

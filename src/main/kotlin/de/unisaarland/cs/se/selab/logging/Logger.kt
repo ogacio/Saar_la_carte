@@ -66,10 +66,11 @@ object Logger {
         LogSink.write(LogLevel.IMPORTANT, "Serving: Serving of evening $evening starts.")
 
     /**
-     * Reports the start of the continuous tick [tick], which is tick [tickInEvening] of its evening.
+     * Reports the start of tick [tickInEvening] (1 to 24) of [evening]; for example `Tick 2 (1)` is the
+     * second tick of the first evening (specification adjustment #23, forum thread 217).
      */
-    fun tickStarted(tick: Int, tickInEvening: Int) =
-        LogSink.write(LogLevel.IMPORTANT, "Simulation: Tick $tick ($tickInEvening) started.")
+    fun tickStarted(tickInEvening: Int, evening: Int) =
+        LogSink.write(LogLevel.IMPORTANT, "Simulation: Tick $tickInEvening ($evening) started.")
 
     /**
      * Reports the end of the serving phase of [evening].
@@ -253,13 +254,21 @@ object Logger {
         )
 
         /**
-         * Reports the order [orderId] of group [groupId]; [waiterId] is null for a delivery order.
+         * Reports the order [orderId] of group [groupId], taken by the waitstaff [waiterIds]. An EVENT
+         * order can be taken by several waiters; a delivery order has none, so [waiterIds] is empty and
+         * the waitstaff part is left out.
          */
-        fun ordering(restaurantId: Int, groupId: Int, orderId: Int, dishes: Map<String, Int>, waiterId: Int?) {
+        fun ordering(
+            restaurantId: Int,
+            groupId: Int,
+            orderId: Int,
+            dishes: Map<String, Int>,
+            waiterIds: Collection<Int>,
+        ) {
             val head = "FOH Ordering ${tag(restaurantId)}: Group $groupId placed order $orderId of ${
                 LogFormat.mapping(dishes)
             }"
-            val tail = if (waiterId == null) "." else " with waitstaff $waiterId."
+            val tail = if (waiterIds.isEmpty()) "." else " with waitstaff ${LogFormat.ids(waiterIds)}."
             LogSink.write(LogLevel.IMPORTANT, head + tail)
         }
 

@@ -54,9 +54,11 @@ class TableAssignmentService(
         .mapValues { entry -> entry.value.sumOf { it.size } }
 
     /**
-     * The number of seats the front of the house has in total, merges not counted twice.
+     * The number of seats the front of the house has in total. A merge replaces its originals in the
+     * table list by one table of their summed size, so summing the list counts every seat once, whether
+     * tables are currently merged or not.
      */
-    fun totalSeats(): Int = tables.filterNot { it.isMerged }.sumOf { it.size }
+    fun totalSeats(): Int = tables.sumOf { it.size }
 
     /**
      * Dissolves every merged table back into the tables it was built from.

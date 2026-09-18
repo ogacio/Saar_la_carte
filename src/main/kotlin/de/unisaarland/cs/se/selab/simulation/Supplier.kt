@@ -21,7 +21,7 @@ object Supplier {
                         checkNotNull(unavailableUntil[ingredient]).second <= evening
                     )
             ) {
-                p.restock(ingredient, ingredient.packagesFor(amount) * amount)
+                p.restock(ingredient, ingredient.packagesFor(amount) * ingredient.packagingVolume)
             }
         }
     }

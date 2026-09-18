@@ -16,6 +16,21 @@ class Ingredient(
     var packagingVolume: Int = packagingVolume
         private set
 
+    private val usages = mutableListOf<RecipeIngredient>()
+
+    /**
+     * Every recipe entry of the simulation that requires this ingredient, across all recipes of all
+     * restaurants. A RECIPE incident adapts exactly these entries.
+     */
+    fun usages(): List<RecipeIngredient> = usages
+
+    /**
+     * Records that [usage] requires this ingredient; every [RecipeIngredient] registers itself here.
+     */
+    internal fun addUsage(usage: RecipeIngredient) {
+        usages.add(usage)
+    }
+
     /**
      * The number of whole packages needed to cover [amount] of this ingredient.
      */
