@@ -65,7 +65,7 @@ object DeliveryService {
                 g.id(),
                 order.getId(),
                 order.dishCounts(),
-                null
+                listOf()
             )
             restaurant.getKitchen().enqueue(order)
             restaurant.getFoh().getDeliveryDesk().enqueue(order)

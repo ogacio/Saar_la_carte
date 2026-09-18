@@ -106,16 +106,25 @@ class SimulatorTest {
         assertTrue(logLines(log).any { it.contains("Serving") && it.contains("ends") })
     }
 
+    // Specification adjustment #23 and forum thread 217: "Tick $tick ($evening) started", where $tick is
+    // counted within the evening (1 to 24), e.g. "Tick 2 (1)" is the second tick of evening 1.
     @Test
-    fun tickStartedLogsTheTickWithinTheEveningInParentheses() {
+    fun tickStartedLogsTheTickWithinTheEveningAndTheEveningInParentheses() {
         val startTick = GlobalClock.currentTick
         val restaurant = mockRestaurant(107)
         val log = captureLog(LogLevel.IMPORTANT)
 
-        simulator(startTick + 1, mutableListOf(restaurant)).run()
+        simulator(startTick + 2, mutableListOf(restaurant)).run()
 
-        val tickInEvening = GlobalClock.getTickInEvening()
-        assertTrue(logLines(log).any { it.contains("Tick") && it.contains("($tickInEvening) started") })
+        val evening = GlobalClock.getEvening()
+        val ticks = logLines(log).filter { it.startsWith("[IMPORTANT] Simulation: Tick") }
+        assertEquals(
+            listOf(
+                "[IMPORTANT] Simulation: Tick 1 ($evening) started.",
+                "[IMPORTANT] Simulation: Tick 2 ($evening) started.",
+            ),
+            ticks,
+        )
     }
 
     @Test

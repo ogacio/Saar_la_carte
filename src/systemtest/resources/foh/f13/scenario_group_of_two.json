@@ -3,7 +3,7 @@
     {
       "id": 1,
       "type": "CASUAL",
-      "size": 1,
+      "size": 2,
       "visitingTick": 3,
       "foodPreferences": [],
       "restaurantTypes": [

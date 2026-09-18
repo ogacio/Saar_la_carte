@@ -7,7 +7,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.TableType
  *
  * The assignment follows the four criteria of the specification in order: an exact fit, a larger
  * table the group fills to at least three quarters, and otherwise a merge of smaller tables. For
- * REGULAR and EVENT groups the three quarter rule is lifted in a second pass, which is what
+ * REGULAR and EVENT groups the three-quarter rule is lifted in a second pass, which is what
  * [liftRule] switches on. Among equally suitable tables the smallest and then the lowest id wins.
  */
 class TableAssignmentService(
@@ -54,9 +54,11 @@ class TableAssignmentService(
         .mapValues { entry -> entry.value.sumOf { it.size } }
 
     /**
-     * The number of seats the front of the house has in total, merges not counted twice.
+     * The number of seats the front of the house has in total. A merge replaces its originals in the
+     * table list by one table of their summed size, so summing the list counts every seat once, whether
+     * tables are currently merged or not.
      */
-    fun totalSeats(): Int = tables.filterNot { it.isMerged }.sumOf { it.size }
+    fun totalSeats(): Int = tables.sumOf { it.size }
 
     /**
      * Dissolves every merged table back into the tables it was built from.

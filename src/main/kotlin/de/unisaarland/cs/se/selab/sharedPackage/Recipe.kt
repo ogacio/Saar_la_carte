@@ -16,7 +16,7 @@ class Recipe(
     /**
      * The cooking duration in whole ticks; a tick covers ten minutes, partial ticks are rounded up.
      */
-    fun durationInTicks(): Int = (minuteDuration + MINUTES_PER_TICK - 1) / MINUTES_PER_TICK
+    fun durationInTicks(): Int = (minuteDuration + MINUTES_PER_TICK - 1) / MINUTES_PER_TICK - 1
 
     /**
      * Whether this recipe is the default recipe of a basic dish of restaurant type [type].

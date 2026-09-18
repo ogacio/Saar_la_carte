@@ -87,13 +87,13 @@ class ServingService(
             )
             carried[waiter] = meals.size
         }
-
         // Cooked but not carried: held back for the rest of the table, or the action limit was reached.
         val notServed = visit.cookedMeals().size
-        val reporterId = (plan.keys.lastOrNull() ?: firstWaiterFor(visit, cookedMeals))?.id
-        if (notServed > 0 && reporterId != null) {
-            Logger.Foh.noServing(sbu.restaurantId, reporterId, notServed, table.id)
+        if (notServed > 0) {
+            val reporter = plan.keys.lastOrNull() ?: firstWaiterFor(visit, cookedMeals)
+            reporter?.id?.let { Logger.Foh.noServing(sbu.restaurantId, it, notServed, table.id) }
         }
+
         return carried
     }
 

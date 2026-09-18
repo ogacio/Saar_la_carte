@@ -73,10 +73,14 @@ class WaiterAssignmentService(
 
     /**
      * The waiter the event manager would pick first for [action], ignoring capacity. Nothing is
-     * planned and no id is granted; used to name "the first that would have served" in a log.
+     * planned, but the waiter receives its id: the specification demands that the No Serving line of
+     * an EVENT table names "the first that would have served", which is only possible with an id.
      */
-    fun currentEventWaiter(action: ActionType, cookedMeals: Map<Waiter, Int> = emptyMap()): Waiter? =
-        waitstaff.sortedWith(eventPriority(action, cookedMeals)).firstOrNull()
+    fun currentEventWaiter(action: ActionType, cookedMeals: Map<Waiter, Int> = emptyMap()): Waiter? {
+        val waiter = waitstaff.sortedWith(eventPriority(action, cookedMeals)).firstOrNull()
+        waiter?.let { grantId(it) }
+        return waiter
+    }
 
     /**
      * The waiter who carries the next meals to a delivery driver: "The waiters with the lowest id
@@ -145,7 +149,8 @@ class WaiterAssignmentService(
     private fun eventPriority(action: ActionType, cookedMeals: Map<Waiter, Int>): Comparator<Waiter> {
         val first = when (action) {
             // "the manager prioritizes the waiters in descending order of the current load to perform the SEATING"
-            // ORDERING has no rule of its own in the spec; it follows SEATING (open point).
+            // ORDERING uses the same order: the waiters who seated an EVENT group take its orders, in the
+            // order they seated it (forum thread 266).
             ActionType.SEATING, ActionType.ORDERING -> compareByDescending { it.currentLoad }
             // "the manager prioritizes the waiters in descending number of cooked meals in the kitchen
             // that belong to their assigned tables"
