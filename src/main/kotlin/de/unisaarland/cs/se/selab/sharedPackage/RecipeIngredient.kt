@@ -13,6 +13,10 @@ class RecipeIngredient(
     var amount: Int = amount
         private set
 
+    init {
+        ingredient.addUsage(this)
+    }
+
     /**
      * Adapts the required amount by [percent], rounded down and never below one.
      */

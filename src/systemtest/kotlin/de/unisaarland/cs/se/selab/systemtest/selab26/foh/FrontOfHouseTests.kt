@@ -95,7 +95,7 @@ class F16NoFreeWaiterThenSeatedNextTick : LogSkippingSystemTest() {
         )
         skipToAndAssert(
             "[IMPORTANT] Simulation: Tick 4",
-            "[IMPORTANT] Simulation: Tick 4 (4) started.",
+            "[IMPORTANT] Simulation: Tick 4 (1) started.",
         )
         skipToAndAssert(
             SEATING_PREFIX,
@@ -164,20 +164,24 @@ class F18FavouriteDishAndHighestRecipeId : LogSkippingSystemTest() {
     }
 }
 
-/** F13: a dish no cook of the restaurant can cook is not on the menu. */
+/**
+ * F13: a dish no cook of the restaurant can cook is not on the menu. The group has two customers,
+ * because a single customer fills only half of the smallest possible table (two seats) and would be
+ * sent away by the three quarter rule before ordering.
+ */
 class F13DishWithoutEligibleCookIsNotOrdered : LogSkippingSystemTest() {
     override val name = "F13DishWithoutEligibleCookIsNotOrdered"
-    override val description = "Tofu Salad (id 3, VEGETABLE only) is skipped; the customer orders Rice Bowl."
+    override val description = "Tofu Salad (id 3, VEGETABLE only) is skipped; both customers order Rice Bowl."
     override val food = FOOD_MENU
     override val restaurants = "foh/f13/restaurants_no_vegetable_cook.json"
-    override val scenario = "foh/f13/scenario_one_customer.json"
+    override val scenario = "foh/f13/scenario_group_of_two.json"
     override val logLevel = IMPORTANT
     override val maxTicks = 3
 
     override suspend fun run() {
         skipToAndAssert(
             ORDERING_PREFIX,
-            "[IMPORTANT] FOH Ordering (R 1): Group 1 placed order 1 of Rice Bowl:1 with waitstaff 1.",
+            "[IMPORTANT] FOH Ordering (R 1): Group 1 placed order 1 of Rice Bowl:2 with waitstaff 1.",
         )
     }
 }
