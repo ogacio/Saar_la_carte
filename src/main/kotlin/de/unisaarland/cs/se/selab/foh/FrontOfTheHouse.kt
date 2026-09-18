@@ -3,6 +3,7 @@ package de.unisaarland.cs.se.selab.foh
 import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
@@ -109,6 +110,7 @@ class FrontOfTheHouse(
 
     /** Step 4: the drivers prepare, drive, deliver and return; resolved orders join the eating/rating flow. */
     fun callDeliveryDesk() {
+        dropGivenUpOrders()
         for (driver in deliveryDesk.getDrivers()) {
             driver.plusTick()
             val resolved = driver.takeResolvedOrder() ?: continue
@@ -237,4 +239,19 @@ class FrontOfTheHouse(
 
     /** The reservations of this restaurant; the restaurant's snapshot reads the booked event seats from it. */
     fun getReservationBook(): ReservationBook = reservations
+
+    /**
+     * "in case they didn't get food at the end of the 3rd tick after the tick where their food should
+     * have arrived": an order still waiting at the desk is dropped, its meals are aborted so the kitchen
+     * stops cooking them, and the group rates in this tick.
+     */
+    private fun dropGivenUpOrders() {
+        val waiting = (deliveryDesk.getNewOrders() + deliveryDesk.getReady()).sortedBy { it.getId() }
+        for (order in waiting.filter { it.getCustomerGroup().hasGivenUp() }) {
+            Logger.Delivery.deliveryGivenUp(sbu.restaurantId, order.getCustomerGroup().id(), order.getId())
+            order.getMeals().forEach { if (it.status != MealStatus.SERVED) it.status = MealStatus.ABORTED }
+            deliveryDesk.drop(order)
+            gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
+        }
+    }
 }

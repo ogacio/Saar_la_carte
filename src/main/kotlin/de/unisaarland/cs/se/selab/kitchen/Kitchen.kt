@@ -33,7 +33,7 @@ class Kitchen(
     }
 
     /**
-     * called by foh, at the end of the ordering service
+     * called by the restaurant, at the end of the ordering service
      * responsible for 1.updating the queue with the cooked meals 2. starting the cooking from the queue
      * 1. -> calling finished() on roaster
      * 2. -> making MutableList<Meal> from the queue with the same meals inside,
