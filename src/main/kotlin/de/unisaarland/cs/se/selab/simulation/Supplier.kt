@@ -1,4 +1,6 @@
 package de.unisaarland.cs.se.selab.simulation
+import de.unisaarland.cs.se.selab.logging.Logger.Kitchen.procured
+import de.unisaarland.cs.se.selab.logging.Logger.Kitchen.restocked
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
 import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 
@@ -21,9 +23,16 @@ object Supplier {
                         checkNotNull(unavailableUntil[ingredient]).second <= evening
                     )
             ) {
-                p.restock(ingredient, ingredient.packagesFor(amount) * amount)
+                p.restock(ingredient, ingredient.packagesFor(amount) * ingredient.packagingVolume)
+                procured(
+                    p.getRestaurantId(),
+                    ingredient.packagesFor(amount) * ingredient.packagingVolume,
+                    ingredient.unit,
+                    ingredient.name
+                )
             }
         }
+        restocked(p.getRestaurantId())
     }
 
     /**

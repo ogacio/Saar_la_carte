@@ -34,7 +34,7 @@ class Cook(
                 meal.status = MealStatus.COOKED
             }
             busyUntil = 0
-            val b = batch
+            val b = batch.toMutableList()
             batch.clear()
             return b
         } else {

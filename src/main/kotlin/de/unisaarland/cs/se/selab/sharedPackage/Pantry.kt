@@ -1,11 +1,14 @@
 package de.unisaarland.cs.se.selab.sharedPackage
 
+import de.unisaarland.cs.se.selab.logging.Logger.Kitchen.pantryRemoved
+
 /**
  * pantry, stores the ingredients of the kitchen and updates every time somebody orders
  */
 class Pantry(
     private var stock: MutableList<Pair<Ingredient, Int>> = mutableListOf(), // (ingredient, amount)
     private var reserved: MutableList<Pair<Ingredient, Int>> = mutableListOf(),
+    private val restaurantId: Int
 ) {
 
     /**
@@ -20,7 +23,11 @@ class Pantry(
      * if they expired, we remove / "throw them out" them from the stock
      */
     fun checkDateAndCleanOut() {
-        stock.removeIf { (ingredient, _) -> !ingredient.reduceBestUntil() }
+        stock.removeIf { (ingredient, amount) ->
+            val expired = !ingredient.reduceBestUntil()
+            if (expired) pantryRemoved(restaurantId, amount, ingredient.unit, ingredient.name)
+            expired
+        }
     }
 
     /**
@@ -102,4 +109,9 @@ class Pantry(
     fun discardEvening() {
         reserved = mutableListOf()
     }
+
+    /**
+     * returns the restaurantId
+     */
+    fun getRestaurantId() = restaurantId
 }
