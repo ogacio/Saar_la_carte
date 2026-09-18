@@ -21,7 +21,7 @@ class Cook(
         for (meal in meals) {
             meal.status = MealStatus.COOKING
         }
-        busyUntil = clock.getTickInEvening() + meals[0].recipe.durationInTicks()
+        busyUntil = clock.getTickInEvening() + meals[0].recipe.durationInTicks() - 1
         batch = meals
     }
 

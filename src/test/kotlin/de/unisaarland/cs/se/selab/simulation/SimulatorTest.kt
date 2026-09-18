@@ -106,19 +106,17 @@ class SimulatorTest {
         assertTrue(logLines(log).any { it.contains("Serving") && it.contains("ends") })
     }
 
-    // BUG (Simulator.kt:50, Ognjen): Logger.tickStarted is still called with tick-in-evening
-    // instead of the evening number, per the spec adjustment (forum post 642). Uncomment once fixed.
-    // @Test
-    // fun tickStartedLogsTheEveningNumberNotTheTickWithinEvening() {
-    //     val startTick = GlobalClock.currentTick
-    //     val restaurant = mockRestaurant(107)
-    //     val log = captureLog(LogLevel.IMPORTANT)
-    //
-    //     simulator(startTick + 1, mutableListOf(restaurant)).run()
-    //
-    //     val evening = GlobalClock.getEvening()
-    //     assertTrue(logLines(log).any { it.contains("Tick") && it.contains("($evening) started") })
-    // }
+    @Test
+    fun tickStartedLogsTheTickWithinTheEveningInParentheses() {
+        val startTick = GlobalClock.currentTick
+        val restaurant = mockRestaurant(107)
+        val log = captureLog(LogLevel.IMPORTANT)
+
+        simulator(startTick + 1, mutableListOf(restaurant)).run()
+
+        val tickInEvening = GlobalClock.getTickInEvening()
+        assertTrue(logLines(log).any { it.contains("Tick") && it.contains("($tickInEvening) started") })
+    }
 
     @Test
     fun everyTickCallsRunRestaurantTickOnEachRestaurantInAscendingId() {

@@ -47,6 +47,7 @@ class ServingService(
                 carried[waiter] = (carried[waiter] ?: 0) + meals
             }
         }
+        promoteCookedDeliveryOrders()
         // "the total number of meals served or delivered to a driver"
         serveDeliveryDesk(carried, sbu)
 
@@ -118,6 +119,13 @@ class ServingService(
         if (isEvent) return waitstaff.assignEvent(count, ActionType.SERVING, cookedMeals).orEmpty()
         val waiter = visit.waiters.firstOrNull() ?: return emptyMap()
         return mapOf(waiter to count)
+    }
+
+    /** Moves every delivery order whose meals have all finished cooking from new to ready. */
+    private fun promoteCookedDeliveryOrders() {
+        for (order in deliveryDesk.getNewOrders().toList()) {
+            if (order.allCooked()) deliveryDesk.readyOrder(order)
+        }
     }
 
     /**

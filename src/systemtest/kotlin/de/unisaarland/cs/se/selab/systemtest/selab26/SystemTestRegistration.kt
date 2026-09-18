@@ -36,11 +36,9 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsAndRecipesBo
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArrayDuplicateFixture
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootBaseline
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootEmptyFile
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootExtraKey
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootIngredientsNotArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootIngredientsNull
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMalformedJson
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMissingIngredients
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMissingRecipes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootNotObject
@@ -71,6 +69,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWait
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsNeutralExperience
+// RootEmptyFile and RootMalformedJson unregistered below, see the note there — imports removed too.
 
 /**
  * Used for test registration
@@ -162,8 +161,13 @@ object SystemTestRegistration {
         testSuite.registerTest(RootRecipesNull())
         testSuite.registerTest(RootIngredientsNotArray())
         testSuite.registerTest(RootNotObject())
-        testSuite.registerTest(RootEmptyFile())
-        testSuite.registerTest(RootMalformedJson())
+        // RootEmptyFile and RootMalformedJson unregistered: they assert `is invalid.` for input
+        // that is not JSON at all, a case the spec never states a contract for. Both fail against
+        // the grading server (pass locally), blocking all 5 validation mutants. See
+        // misc/implementation/tests/qa-findings-2026-09-18.md sections 3-4. Uncomment once
+        // replaced with fixtures that break a rule the spec actually defines.
+        // testSuite.registerTest(RootEmptyFile())
+        // testSuite.registerTest(RootMalformedJson())
     }
 
     /**

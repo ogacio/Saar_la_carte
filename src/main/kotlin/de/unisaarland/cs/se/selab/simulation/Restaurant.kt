@@ -111,7 +111,8 @@ class Restaurant(
         if (open) {
             foh.beginTick()
             foh.callSeatingAndOrdering(arrivals)
-            kitchen.cook()
+            val cookedThisTick = kitchen.cook()
+            if (cookedThisTick > 0) Statistics.recordCooked(id, cookedThisTick)
             foh.callServingService()
         }
         foh.callDeliveryDesk()
