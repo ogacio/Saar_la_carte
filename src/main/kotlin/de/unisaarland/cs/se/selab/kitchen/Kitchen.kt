@@ -36,14 +36,10 @@ class Kitchen(
      * responsible for 1.updating the queue with the cooked meals 2. starting the cooking from the queue
      * 1. -> calling finished() on roaster
      * 2. -> making MutableList<Meal> from the queue with the same meals inside,
-     * then start calling roaster.startCooking on all and reserve ingredients for all
+     * then start calling roaster.startCooking on all and reserve ingredients for all.
+     * Returns how many meals finished cooking this tick.
      */
-    fun cook() {
-        val cooked = roaster.finished()
-        for (m in cooked) {
-            pantry.deleteFromReserved(m.recipe)
-        }
-
+    fun cook(): Int {
         val mealsToCookByRecipe: MutableMap<Recipe, MutableList<Meal>> =
             mutableMapOf()
         for (o in queue) {
@@ -61,6 +57,12 @@ class Kitchen(
         for (entry in sortedEntries) {
             roaster.startCooking(entry.value)
         }
+
+        val cooked = roaster.finished()
+        for (m in cooked) {
+            pantry.deleteFromReserved(m.recipe)
+        }
+        return cooked.size
     }
 
 /**
