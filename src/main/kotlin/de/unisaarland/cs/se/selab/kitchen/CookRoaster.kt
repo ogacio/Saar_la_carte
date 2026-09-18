@@ -38,17 +38,19 @@ class CookRoaster(
                     cook.setId(nextId)
                     nextId++
                 }
+                val m = meals[0]
                 val cookId = cook.getId()
-                if (cookId != null) {
-                    val m = meals[0]
+                val orderId = m.orderId
+                val allOrderIds = meals.map { it.orderId }.toSet().filterNotNull()
+                if (cookId != null && orderId != null) {
                     dishAssignment(
                         restaurantId,
                         cookId,
                         cook.getType(),
                         meals.size,
                         m.recipe.getDishName(),
-                        m.orderId,
-                        meals.map { it.orderId }.toSet()
+                        orderId,
+                        allOrderIds
                     )
                     cook.startCooking(meals)
                     return cook
