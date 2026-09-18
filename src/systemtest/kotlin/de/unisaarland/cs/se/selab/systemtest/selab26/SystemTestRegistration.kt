@@ -45,7 +45,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootNotObject
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootRecipesNull
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootSingleIngredientSingleRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01FirstTickLogOrder
-import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01SecondEveningStartsAtTick25
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01SecondEveningRestartsTickCount
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01StopsAfterFullEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07ServedAndDeliveredCountedSeparately
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07StatisticsInAscendingRestaurantId
@@ -113,7 +113,7 @@ object SystemTestRegistration {
     private fun registerFrontOfHouseTests(testSuite: SELab26TestSuite) {
         testSuite.registerTest(F01FirstTickLogOrder())
         testSuite.registerTest(F01StopsAfterFullEvening())
-        testSuite.registerTest(F01SecondEveningStartsAtTick25())
+        testSuite.registerTest(F01SecondEveningRestartsTickCount())
         testSuite.registerTest(F07StatisticsInAscendingRestaurantId())
         testSuite.registerTest(F14RegularWithoutTableIsNotReserved())
         testSuite.registerTest(F14EventReservedBeforeRegular())
