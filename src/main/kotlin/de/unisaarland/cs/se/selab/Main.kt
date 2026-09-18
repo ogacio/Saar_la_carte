@@ -3,6 +3,7 @@ package de.unisaarland.cs.se.selab
 import de.unisaarland.cs.se.selab.config.ConfigurationLoader
 import de.unisaarland.cs.se.selab.logging.LogLevel
 import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.simulation.DeliveryService
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.required
@@ -28,7 +29,10 @@ private fun run(
     writer.use {
         Logger.configure(logLevel, writer)
         val simulator = ConfigurationLoader(food, restaurants, scenario, maxTicks).load()
-        simulator?.run()
+        if (simulator != null) {
+            DeliveryService.setSimulator(simulator)
+            simulator.run()
+        }
     }
 }
 
