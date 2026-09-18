@@ -17,8 +17,8 @@ class CookRoaster(
      * called in parser, makes the cooks field
      */
     fun initialiseCooks() {
-        for ((type, number) in kitchenStaff) {
-            var remaining = number
+        for (type in CookType.entries) {
+            var remaining = kitchenStaff[type] ?: 0
             while (remaining != 0) {
                 val cook = Cook(type, clock = GlobalClock)
                 cooks.add(cook)

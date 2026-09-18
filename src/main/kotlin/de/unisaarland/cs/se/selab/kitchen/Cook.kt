@@ -31,9 +31,8 @@ class Cook(
     fun cookingFinished(): MutableList<Meal>? {
         if (busyUntil <= clock.getTickInEvening()) {
             for (meal in batch) {
-                meal.status = MealStatus.COOKED
+                if (meal.status == MealStatus.COOKING) meal.status = MealStatus.COOKED
             }
-            busyUntil = 0
             val b = batch.toMutableList()
             batch.clear()
             return b
@@ -46,7 +45,7 @@ class Cook(
      * returns if the cook is free or is currently cooking
      */
     fun isFree(): Boolean {
-        return busyUntil == 0
+        return busyUntil < clock.getTickInEvening()
     }
 
     /**
