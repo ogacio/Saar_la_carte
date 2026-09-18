@@ -16,8 +16,12 @@ import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.StaffType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import de.unisaarland.cs.se.selab.testsupport.Fixtures.captureLog
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.casual
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.event
+import de.unisaarland.cs.se.selab.testsupport.Fixtures.logLines
+import de.unisaarland.cs.se.selab.testsupport.Fixtures.regular
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -193,6 +197,37 @@ class RestaurantTest {
 
         assertTrue(restaurant().bookEvent(group, EVENT_EVENING))
         verify(foh).bookEvent(group, EVENT_EVENING)
+    }
+
+    @Test
+    fun preparationPlansTheKitchenForTheSeatsTheRegularsLeaveFree() {
+        val regulars = mutableListOf<CustomerGroup>(regular(1, 3), regular(2, 2))
+        val restaurant = restaurant()
+
+        restaurant.prepare(regulars)
+
+        verify(foh).prepareEvening(GlobalClock.getEvening(), regulars)
+        verify(kitchen).planEvening(regulars, TOTAL_SEATS - 5, menu)
+    }
+
+    @Test
+    fun mealsCookedInAnOpenTickCountTowardsTheStatistics() {
+        val restaurant = restaurant(openingTick = 1, closingTick = 10)
+        whenever(kitchen.cook()).thenReturn(3)
+        atTick(2)
+        val before = mealsCookedSoFar()
+
+        restaurant.runRestaurantTick(emptyList(), 2)
+
+        assertEquals(before + 3, mealsCookedSoFar())
+    }
+
+    /** The cooked meals the statistics hold for this restaurant, read from its statistics log line. */
+    private fun mealsCookedSoFar(): Int {
+        val log = captureLog()
+        Statistics.report(listOf(RESTAURANT))
+        val line = logLines(log).single { it.contains("cooked") }
+        return line.substringAfter("cooked ").substringBefore(" meals").toInt()
     }
 
     /** Values shared by the tests; the restaurant id is used by no other test. */

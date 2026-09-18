@@ -65,4 +65,33 @@ class CustomerRegistryTest {
         assertEquals(listOf(visiting.id()), registry.regularsFor(1, 4).map { it.id() })
         assertTrue(registry.regularsFor(1, 3).isEmpty())
     }
+
+    @Test
+    fun regularArrivesAtItsHomeRestaurantInItsVisitingTickOnly() {
+        val group = regular(1, 2, restaurantId = 1, visitingStart = 2, visitingPeriod = 2)
+        val registry = CustomerRegistry(mutableListOf(group))
+
+        assertEquals(listOf(group.id()), registry.arriving(1, 4, group.visitingTick()).map { it.id() })
+        assertTrue(registry.arriving(1, 4, group.visitingTick() + 1).isEmpty())
+        assertTrue(registry.arriving(1, 3, group.visitingTick()).isEmpty())
+        assertTrue(registry.arriving(2, 4, group.visitingTick()).isEmpty())
+    }
+
+    @Test
+    fun bookedEventGroupArrivesAtItsBookedRestaurantOnItsEventEvening() {
+        val booked = event(1, 4, eventEvening = 7, visitingTick = 3).also { it.book(2) }
+        val unbooked = event(2, 4, eventEvening = 7, visitingTick = 3)
+        val registry = CustomerRegistry(mutableListOf(booked, unbooked))
+
+        assertEquals(listOf(booked.id()), registry.arriving(2, 7, 3).map { it.id() })
+        assertTrue(registry.arriving(2, 6, 3).isEmpty())
+        assertTrue(registry.arriving(1, 7, 3).isEmpty())
+    }
+
+    @Test
+    fun casualGroupsNeverArriveOnTheirOwnBecauseTheyDecideFirst() {
+        val registry = CustomerRegistry(mutableListOf(casual(1, 2, evenings = listOf(4), visitingTick = 1)))
+
+        assertTrue(registry.arriving(1, 4, 1).isEmpty())
+    }
 }
