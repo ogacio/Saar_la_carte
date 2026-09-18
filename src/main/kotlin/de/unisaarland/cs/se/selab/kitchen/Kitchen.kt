@@ -39,8 +39,8 @@ class Kitchen(
      * 2. -> making MutableList<Meal> from the queue with the same meals inside,
      * then start calling roaster.startCooking on all and reserve ingredients for all
      */
-    fun cook() {
-        handleFinishedMeals()
+    fun cook(): Int {
+        val finishedCount = handleFinishedMeals()
 
         val mealsToCookByRecipe = groupQueuedMealsByRecipe()
 
@@ -50,11 +50,14 @@ class Kitchen(
         for (entry in sortedEntries) {
             roaster.startCooking(entry.value)
         }
+
+        return finishedCount
     }
 
-    private fun handleFinishedMeals() {
+    private fun handleFinishedMeals(): Int {
         val ordersById = queue.associateBy { it.getId() }
         val cookedByCook = roaster.finished()
+        var count = 0
         for ((cook, meals) in cookedByCook) {
             for (m in meals) {
                 pantry.deleteFromReserved(m.recipe)
@@ -68,8 +71,10 @@ class Kitchen(
                         order.ticksSince()
                     )
                 }
+                count++
             }
         }
+        return count
     }
 
     private fun groupQueuedMealsByRecipe(): MutableMap<Recipe, MutableList<Meal>> {
