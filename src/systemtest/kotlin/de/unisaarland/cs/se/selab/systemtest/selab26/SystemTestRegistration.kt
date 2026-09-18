@@ -64,6 +64,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28HighestRatingDiffere
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28NoNewCustomersInLastThreeTicks
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TieGoesToLowestId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F30GroupStillEatingAtClosingRatesNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P02FohFlowThroughEveryStep
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventOrdersFavouriteDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWaiters
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
@@ -136,6 +137,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F30GroupStillEatingAtClosingRatesNegative())
         testSuite.registerTest(F07ServedAndDeliveredCountedSeparately())
         testSuite.registerTest(P03EventSeatedByTwoWaiters())
+        testSuite.registerTest(P02FohFlowThroughEveryStep())
     }
 
     /**
