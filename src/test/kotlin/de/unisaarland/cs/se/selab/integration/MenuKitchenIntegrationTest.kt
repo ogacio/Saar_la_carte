@@ -30,7 +30,7 @@ class MenuKitchenIntegrationTest {
         Recipe(id, "dish$id", 10, cookTypes.toSet(), mutableListOf(RecipeIngredient(rice, riceAmount)), null)
 
     private fun kitchen(pantry: Pantry, staff: Map<CookType, Int>): Kitchen {
-        val roaster = CookRoaster(staff).also { it.initialiseCooks() }
+        val roaster = CookRoaster(staff, restaurantId = 1).also { it.initialiseCooks() }
         return Kitchen(
             roaster,
             pantry,
@@ -42,7 +42,7 @@ class MenuKitchenIntegrationTest {
 
     @Test
     fun dishWithoutAnyEligibleCookIsNotOrderable() {
-        val pantry = Pantry(mutableListOf(rice to 500))
+        val pantry = Pantry(mutableListOf(rice to 500), restaurantId = 1)
         val execDish = dish(1, 100, CookType.EXEC)
         val pastryDish = dish(2, 100, CookType.PASTRY)
         val menu = Menu(mutableListOf(execDish, pastryDish), pantry, kitchen(pantry, mapOf(CookType.EXEC to 1)))
@@ -54,7 +54,7 @@ class MenuKitchenIntegrationTest {
 
     @Test
     fun reservingIngredientsForAnOrderRemovesDishesThePantryCanNoLongerCover() {
-        val pantry = Pantry(mutableListOf(rice to 150))
+        val pantry = Pantry(mutableListOf(rice to 150), restaurantId = 1)
         val small = dish(1, 50, CookType.EXEC)
         val large = dish(2, 120, CookType.EXEC)
         val menu = Menu(mutableListOf(small, large), pantry, kitchen(pantry, mapOf(CookType.EXEC to 1)))
@@ -69,7 +69,7 @@ class MenuKitchenIntegrationTest {
 
     @Test
     fun staffChangeAddingAnEligibleCookMakesTheDishOrderable() {
-        val pantry = Pantry(mutableListOf(rice to 500))
+        val pantry = Pantry(mutableListOf(rice to 500), restaurantId = 1)
         val pastryDish = dish(1, 100, CookType.PASTRY)
         val kitchen = kitchen(pantry, mapOf(CookType.EXEC to 1))
         val menu = Menu(mutableListOf(pastryDish), pantry, kitchen)
@@ -88,7 +88,7 @@ class MenuKitchenIntegrationTest {
      */
     @Test
     fun dishStaysOrderableWhileItsOnlyCookIsBusy() {
-        val pantry = Pantry(mutableListOf(rice to 500))
+        val pantry = Pantry(mutableListOf(rice to 500), restaurantId = 1)
         val execDish = dish(1, 100, CookType.EXEC)
         val kitchen = kitchen(pantry, mapOf(CookType.EXEC to 1))
         val menu = Menu(mutableListOf(execDish), pantry, kitchen)

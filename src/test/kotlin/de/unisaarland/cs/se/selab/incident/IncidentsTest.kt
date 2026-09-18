@@ -175,7 +175,7 @@ class IncidentsTest {
     @Test
     fun packagingChangeLeavesExistingPantryStockUntouched() {
         val ing = ingredient("rice")
-        val pantry = Pantry()
+        val pantry = Pantry(restaurantId = 1)
         pantry.restock(ing, 250)
 
         PackagingChange(1, 1, ing, 40).apply(emptySim())
@@ -189,7 +189,7 @@ class IncidentsTest {
     // @Test
     // fun ingredientUnavailabilityBlocksPurchasingDuringTheWindowIncludingTheOccurringEvening() {
     //     val ing = ingredient("rice")
-    //     val pantry = Pantry()
+    //     val pantry = Pantry(restaurantId = 1)
     //     val evening = GlobalClock.getEvening()
     //
     //     IngredientUnavailability(1, evening, ing, 3).apply(emptySim())
@@ -201,7 +201,7 @@ class IncidentsTest {
     @Test
     fun ingredientUnavailabilityBlocksThroughTheLastEveningOfItsDuration() {
         val ing = ingredient("rice")
-        val pantry = Pantry()
+        val pantry = Pantry(restaurantId = 1)
         val evening = GlobalClock.getEvening()
 
         IngredientUnavailability(1, evening, ing, 3).apply(emptySim())
@@ -217,7 +217,7 @@ class IncidentsTest {
     // @Test
     // fun ingredientUnavailabilityResumesPurchasingTheEveningAfterTheWindow() {
     //     val ing = ingredient("rice")
-    //     val pantry = Pantry()
+    //     val pantry = Pantry(restaurantId = 1)
     //     val evening = GlobalClock.getEvening()
     //
     //     IngredientUnavailability(1, evening, ing, 3).apply(emptySim())
@@ -232,7 +232,7 @@ class IncidentsTest {
     @Test
     fun ingredientUnavailabilityLeavesExistingStockUsable() {
         val ing = ingredient("rice")
-        val pantry = Pantry()
+        val pantry = Pantry(restaurantId = 1)
         pantry.restock(ing, 200)
         val evening = GlobalClock.getEvening()
 
