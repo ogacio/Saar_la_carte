@@ -71,7 +71,7 @@ class FohLoggerTest {
             groupId = 3,
             orderId = 9,
             dishes = mapOf("Pasta" to 2, "Salad" to 1),
-            waiterId = 4,
+            waiterIds = listOf(4),
         )
         assertEquals(
             "[IMPORTANT] FOH Ordering (R 1): Group 3 placed order 9 of Pasta:2,Salad:1 with waitstaff 4.",
@@ -87,7 +87,7 @@ class FohLoggerTest {
             groupId = 3,
             orderId = 9,
             dishes = mapOf("Pasta" to 2),
-            waiterId = null,
+            waiterIds = emptyList(),
         )
         assertEquals(
             "[IMPORTANT] FOH Ordering (R 1): Group 3 placed order 9 of Pasta:2.",

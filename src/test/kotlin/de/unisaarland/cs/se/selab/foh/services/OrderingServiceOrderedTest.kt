@@ -133,7 +133,7 @@ class OrderingServiceOrderedTest {
     }
 
     @Test
-    fun eventGroupOrdersThroughTheManagersPlanNamingTheLowestIdWaiter() {
+    fun eventGroupOrderNamesEveryWaiterThatTookIt() {
         val dish = recipe(1)
         whenever(pantry.reserve(dish)).thenReturn(true)
         whenever(menu.getOrderables()).thenReturn(listOf(dish))
@@ -158,7 +158,9 @@ class OrderingServiceOrderedTest {
         service.takeOrder(visit, sbu, 2)
 
         assertEquals(12, visit.order?.getMeals()?.size)
-        assertTrue(logLines(log).any { it.contains("FOH Ordering") && it.contains("waitstaff 1") })
+        // "the orders are logged ... based on the id of the group, the waiter (one or more) and the order":
+        // twelve customers need two waiters, so both of them appear, in ascending id
+        assertTrue(logLines(log).any { it.contains("FOH Ordering") && it.endsWith("with waitstaff 1,2.") })
     }
 
     @Test

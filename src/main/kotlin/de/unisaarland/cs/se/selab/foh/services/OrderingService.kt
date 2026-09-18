@@ -50,7 +50,8 @@ class OrderingService(
             visit.group.id(),
             order.getId(),
             order.dishCounts(),
-            waiters.minOfOrNull { checkNotNull(it.id) },
+            // "the orders are logged ... based on the id of the group, the waiter (one or more) and the order"
+            waiters.map { checkNotNull(it.id) },
         )
         if (choices.size < atTable) {
             Logger.Foh.noOrdering(sbu.restaurantId, visit.group.id(), atTable - choices.size)

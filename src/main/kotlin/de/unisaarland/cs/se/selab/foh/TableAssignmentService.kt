@@ -7,7 +7,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.TableType
  *
  * The assignment follows the four criteria of the specification in order: an exact fit, a larger
  * table the group fills to at least three quarters, and otherwise a merge of smaller tables. For
- * REGULAR and EVENT groups the three quarter rule is lifted in a second pass, which is what
+ * REGULAR and EVENT groups the three-quarter rule is lifted in a second pass, which is what
  * [liftRule] switches on. Among equally suitable tables the smallest and then the lowest id wins.
  */
 class TableAssignmentService(
