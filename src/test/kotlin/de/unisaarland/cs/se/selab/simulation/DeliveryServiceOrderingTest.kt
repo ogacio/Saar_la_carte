@@ -231,6 +231,22 @@ class DeliveryServiceOrderingTest {
 
     @Test
     fun noDriverIsChosenForARestaurantWithoutRegisteredDrivers() {
+        val realDesk = DeliveryDesk(mutableListOf(), EMPTY_RESTAURANT)
+        val owner = mock<Restaurant>()
+        val foh = mock<FrontOfTheHouse>()
+        whenever(owner.getId()).thenReturn(EMPTY_RESTAURANT)
+        whenever(owner.getFoh()).thenReturn(foh)
+        whenever(foh.getDeliveryDesk()).thenReturn(realDesk)
+        DeliveryService.setSimulator(
+            Simulator(
+                0,
+                mutableListOf(owner),
+                CustomerRegistry(mutableListOf()),
+                mutableListOf(),
+                BrowsingService(mutableListOf(), RatingBook),
+            ),
+        )
+
         assertNull(DeliveryService.chooseDriverForOrder(EMPTY_RESTAURANT))
     }
 

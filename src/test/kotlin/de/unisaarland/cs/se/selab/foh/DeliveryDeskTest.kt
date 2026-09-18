@@ -108,6 +108,7 @@ class DeliveryDeskTest {
     @Test
     fun aReadyOrderStaysReadyWhenNoDriverIsFree() {
         val desk = DeliveryDesk(mutableListOf(), NO_DRIVER_RESTAURANT)
+        registerWithDeliveryService(desk)
         val order = mock<Order>()
         desk.enqueue(order)
         desk.readyOrder(order)
