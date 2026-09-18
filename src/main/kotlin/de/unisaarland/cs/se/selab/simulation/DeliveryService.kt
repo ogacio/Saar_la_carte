@@ -22,6 +22,7 @@ object DeliveryService {
      * choose dishes according to customer preferences
      */
     fun placeOrder(g: CustomerGroup, restaurant: Restaurant, tick: Int): Order? {
+        restaurant.getMenu().refresh()
         var failed = 0
         val found = mutableListOf<Meal>()
         val sortedCustomers = sortCustomers(g)
@@ -93,11 +94,11 @@ object DeliveryService {
      * chooses driver for order and sets id if it is null
      */
     fun chooseDriverForOrder(restaurantId: Int): Int? {
-        val driver = allDrivers.filter { it.getRestaurantId() == restaurantId }.firstOrNull { it.isFree() }
+        val currentSimulator = checkNotNull(simulator)
+        val restaurant = checkNotNull(currentSimulator.restaurantsById(restaurantId))
+        val driver = restaurant.getFoh().getDeliveryDesk().getDrivers().firstOrNull { it.isFree() }
         if (driver == null) { return null }
         if (driver.getId() == null) {
-            val currentSimulator = checkNotNull(simulator)
-            val restaurant = checkNotNull(currentSimulator.restaurantsById(restaurantId))
             driver.setId(restaurant.getFoh().getDeliveryDesk().grantDriverId())
         }
         return driver.getId()
