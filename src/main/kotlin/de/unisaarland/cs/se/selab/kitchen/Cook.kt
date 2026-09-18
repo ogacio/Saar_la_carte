@@ -21,7 +21,7 @@ class Cook(
         for (meal in meals) {
             meal.status = MealStatus.COOKING
         }
-        busyUntil = clock.getTickInEvening() + meals[0].recipe.durationInTicks()
+        busyUntil = clock.getTickInEvening() + meals[0].recipe.durationInTicks() - 1
         batch = meals
     }
 
@@ -34,7 +34,7 @@ class Cook(
                 meal.status = MealStatus.COOKED
             }
             busyUntil = 0
-            val b = batch
+            val b = batch.toMutableList()
             batch.clear()
             return b
         } else {
