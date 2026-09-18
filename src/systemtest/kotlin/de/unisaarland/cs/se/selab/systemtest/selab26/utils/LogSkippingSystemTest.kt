@@ -17,6 +17,12 @@ abstract class LogSkippingSystemTest : ExampleSystemTestExtension() {
     }
 
     /**
+     * Reads lines until one starts with [prefix], without looking at the rest of the line. Used by
+     * flow tests, which pin the order of the steps of a tick rather than the wording of each line.
+     */
+    suspend fun skipToPrefix(prefix: String) = skipUntilPrefix(prefix)
+
+    /**
      * Skips to the statistics block and asserts the four lines of restaurant [restaurantId]
      * against [cooked], [served], [delivered] and [ratings].
      */
