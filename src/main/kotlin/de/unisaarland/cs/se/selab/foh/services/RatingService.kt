@@ -36,6 +36,17 @@ class RatingService {
         leaveRating(group, Experience.NEGATIVE, sbu)
     }
 
+    /**
+     * Rating for a delivery group, which never has a [Visit]: it judges [experience] once it has
+     * either finished eating its delivered meal or given up waiting for it. Delivery outcomes are
+     * not among REGULAR's three churn causes (failed reservation, failed seating, whole group
+     * unserved) — and REGULAR groups never order delivery in the first place — so unlike [rate]
+     * and [rateFailedReservation], this does not call [recordAttempt].
+     */
+    fun rateDelivery(group: CustomerGroup, experience: Experience, sbu: SubUnits) {
+        leaveRating(group, experience, sbu)
+    }
+
     /** Writes how many groups rated this tick and starts counting afresh. */
     fun logStatus(sbu: SubUnits) {
         Logger.Customer.ratingStatus(sbu.restaurantId, rated)

@@ -103,7 +103,9 @@ class Restaurant(
      * [arrivals] are the groups arriving now. At the closing tick everyone still inside is sent out before rating.
      *
      * After the opening time "the kitchen stops working" and the front of house is cleaned, so only the
-     * drivers keep working: "only deliveries already given to a driver continue after the opening time".
+     * drivers keep working: "only deliveries already given to a driver continue after the opening time" —
+     * so delivery hand-off (step 4) and rating (step 7, which a delivery resolving this tick needs) both
+     * run regardless of [open]; dine-in eating/escorting do not, since no dine-in visit survives past closing.
      */
     fun runRestaurantTick(arrivals: List<CustomerGroup>, tick: Int) {
         Logger.restaurantStart(id)
@@ -120,8 +122,8 @@ class Restaurant(
             foh.callDiningService()
             foh.callEscortingService()
             if (tick == closingTick) foh.closeOpeningTime()
-            foh.callRatingService()
         }
+        foh.callRatingService()
         Logger.restaurantEnd(id)
     }
 

@@ -75,7 +75,7 @@ class RestaurantTickTest {
     }
 
     @Test
-    fun afterTheOpeningTimeOnlyTheDriversKeepWorking() {
+    fun afterTheOpeningTimeOnlyTheDriversAndRatingKeepWorking() {
         val foh = mock<FrontOfTheHouse>()
         val kitchen = mock<Kitchen>()
         val restaurant = restaurant(foh, kitchen, closingTick = 2)
@@ -84,12 +84,12 @@ class RestaurantTickTest {
         restaurant.runRestaurantTick(emptyList(), 5)
 
         verify(foh).callDeliveryDesk()
+        verify(foh).callRatingService()
         verify(foh, never()).beginTick()
         verify(foh, never()).callSeatingAndOrdering(any())
         verify(kitchen, never()).cook()
         verify(foh, never()).callServingService()
         verify(foh, never()).callDiningService()
         verify(foh, never()).callEscortingService()
-        verify(foh, never()).callRatingService()
     }
 }

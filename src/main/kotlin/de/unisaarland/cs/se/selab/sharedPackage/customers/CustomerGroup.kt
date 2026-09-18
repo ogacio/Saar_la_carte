@@ -81,6 +81,12 @@ abstract class CustomerGroup(
     /** Whether the group has stopped visiting restaurants for good. */
     open fun hasGivenUp(): Boolean = false
 
+    /** Marks that a delivery order was placed this evening and is now awaited. */
+    open fun orderPlaced() = Unit
+
+    /** Marks a placed delivery order as resolved, whether delivered or given up on. */
+    open fun orderResolved() = Unit
+
     /** Records the dishes of a completed order as this group's latest visit. */
     open fun recordVisit(evening: Int, o: Order) {
         history.shiftAndPutNew(o.getMeals().map { it.recipe })

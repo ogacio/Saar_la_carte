@@ -4,12 +4,14 @@ import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Statistics
 import de.unisaarland.cs.se.selab.simulation.SubUnits
+import de.unisaarland.cs.se.selab.simulation.ratings.Experience
 
 /**
  * Facade for the front of the house.
@@ -37,6 +39,12 @@ class FrontOfTheHouse(
 
     /** Ids of the groups turned away tonight; they never get a visit, even if they are handed in as arrivals. */
     private val cancelledTonight = mutableSetOf<Int>()
+
+    /** Delivery groups whose meal has arrived and are eating it; rated once every member is done. */
+    private val eatingDeliveries: MutableList<CustomerGroup> = mutableListOf()
+
+    /** Delivery groups that gave up waiting this tick; rated in the next rating step. */
+    private var gaveUpDeliveries: List<CustomerGroup> = emptyList()
 
     /**
      * Preparation, before the doors open. The floor is reset first, then tables are
@@ -99,8 +107,19 @@ class FrontOfTheHouse(
     /** Step 3: serving, including the hand-over of complete delivery orders to drivers. */
     fun callServingService() = services.serving.serve(visits, sbu)
 
-    /** Step 4: the drivers prepare, drive, deliver and return. */
-    fun callDeliveryDesk() = deliveryDesk.getDrivers().forEach { it.plusTick() }
+    /** Step 4: the drivers prepare, drive, deliver and return; resolved orders join the eating/rating flow. */
+    fun callDeliveryDesk() {
+        for (driver in deliveryDesk.getDrivers()) {
+            driver.plusTick()
+            val resolved = driver.takeResolvedOrder() ?: continue
+            val (order, gaveUp) = resolved
+            if (gaveUp) {
+                gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
+            } else {
+                eatingDeliveries += order.getCustomerGroup()
+            }
+        }
+    }
 
     /** Step 5: eating; waiting deadlines and finished eaters. */
     fun callDiningService() = services.dining.eat(visits, sbu)
@@ -111,18 +130,47 @@ class FrontOfTheHouse(
     /**
      * Step 7: rating, then the sweep. Every visit that ended this tick is booked into the
      * statistics and the group's history, a CASUAL table is freed, and the visit is dropped.
+     * Delivery groups that finished eating or gave up this tick rate alongside them.
      */
     fun callRatingService() {
         val finished = visits.filter { it.isFinished() }
         val visitOf = finished.associateBy { it.group.id() }
-        val raters: List<CustomerGroup> = (finished.map { it.group } + turnedAway)
-            .sortedWith(compareBy({ it.groupType().ordinal }, { it.id() }))
+        val tick = GlobalClock.getTickInEvening()
+        for (group in eatingDeliveries) {
+            for (customer in group.members()) {
+                if (customer.status() == CustomerStatus.SERVED && customer.isDoneEating(tick)) customer.doneEating()
+            }
+        }
+        val doneEatingDeliveries = eatingDeliveries.filter { group ->
+            group.members().all { it.status() == CustomerStatus.DONE_EATING }
+        }
+        val allRaters = finished.map { it.group } + turnedAway + doneEatingDeliveries + gaveUpDeliveries
+        val raters: List<CustomerGroup> = allRaters.sortedWith(compareBy({ it.groupType().ordinal }, { it.id() }))
         for (group in raters) {
             val visit = visitOf[group.id()]
-            if (visit != null) services.rating.rate(visit, sbu) else services.rating.rateFailedReservation(group, sbu)
+            when {
+                visit != null -> {
+                    services.rating.rate(visit, sbu)
+                }
+                group in gaveUpDeliveries -> {
+                    group.orderResolved()
+                    services.rating.rateDelivery(group, Experience.NEGATIVE, sbu)
+                }
+                group in doneEatingDeliveries -> {
+                    group.orderResolved()
+                    Logger.Delivery.deliveryFinishedEating(sbu.restaurantId, group.id())
+                    Statistics.record(sbu.restaurantId, group.groupSize(), delivered = true)
+                    services.rating.rateDelivery(group, deliveryExperience(group), sbu)
+                }
+                else -> {
+                    services.rating.rateFailedReservation(group, sbu)
+                }
+            }
         }
         services.rating.logStatus(sbu)
         turnedAway = emptyList()
+        gaveUpDeliveries = emptyList()
+        eatingDeliveries.removeAll(doneEatingDeliveries)
         finished.forEach { finishVisit(it) }
         visits.removeAll(finished)
 
@@ -147,6 +195,8 @@ class FrontOfTheHouse(
         visits.clear()
         turnedAway = emptyList()
         cancelledTonight.clear()
+        eatingDeliveries.clear()
+        gaveUpDeliveries = emptyList()
         reservations.clearTonight()
         reservations.dropBookings()
         tables.splitAllMerged()
@@ -161,6 +211,19 @@ class FrontOfTheHouse(
         val table = visit.table
         // REGULAR and EVENT tables stay reserved for the whole evening, "even after the group has left".
         if (table != null && visit.group.groupType() == GroupType.CASUAL) tables.release(table)
+    }
+
+    /**
+     * A delivery's experience (spec, "Rating"): positive if the meal arrived before the group's
+     * [CustomerGroup.visitingTick], neutral at it, negative after.
+     */
+    private fun deliveryExperience(group: CustomerGroup): Experience {
+        val arrivedTick = group.members().maxOf { checkNotNull(it.servedTick()) }
+        return when {
+            arrivedTick < group.visitingTick() -> Experience.POSITIVE
+            arrivedTick == group.visitingTick() -> Experience.NEUTRAL
+            else -> Experience.NEGATIVE
+        }
     }
 
     /** The waiter assignment of this restaurant; the restaurant applies staff changes to it. */

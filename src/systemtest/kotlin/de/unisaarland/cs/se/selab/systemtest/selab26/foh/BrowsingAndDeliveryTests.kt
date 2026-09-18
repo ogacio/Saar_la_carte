@@ -101,6 +101,15 @@ class F20DeliveryOverSevenKilometres : LogSkippingSystemTest() {
         )
         assertNextLine("[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 1 with order 1.")
         assertNextLine("[IMPORTANT] Delivery Finished (R 1): Driver 1 gave delivery of order 1 to group 1.")
+        skipToAndAssert(
+            "[INFO] Delivery Finished Eating",
+            "[INFO] Delivery Finished Eating (R 1): Group 1 has finished eating.",
+        )
+        skipToAndAssert(
+            "[INFO] Rating",
+            "[INFO] Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, " +
+                "leading to 1 positive ratings and 0 negative ratings.",
+        )
         assertStatistics(1, cooked = 2, served = 0, delivered = 2, ratings = 1)
     }
 }

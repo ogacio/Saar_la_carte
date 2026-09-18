@@ -19,6 +19,8 @@ class DeliveryDriver(private val restaurantId: Int) {
     private var travelTicks: Int? = null
     private var distance: Int? = null
     private var switch: Boolean = false
+    private var resolvedOrder: Order? = null
+    private var resolvedAsGivenUp: Boolean = false
 
     private companion object {
         const val TICK_DISTANCE = 5
@@ -55,6 +57,7 @@ class DeliveryDriver(private val restaurantId: Int) {
                     checkNotNull(order).getId(),
                     checkNotNull(order).getCustomerGroup().id()
                 )
+                resolvedAsGivenUp = true
             } else {
                 for (i in checkNotNull(order).getMeals()) {
                     i.customer.receive(i, GlobalClock.getTickInEvening())
@@ -65,7 +68,9 @@ class DeliveryDriver(private val restaurantId: Int) {
                     checkNotNull(order).getId(),
                     checkNotNull(order).getCustomerGroup().id()
                 )
+                resolvedAsGivenUp = false
             }
+            resolvedOrder = order
             startReturn(checkNotNull(travelTicks))
             return
         }
@@ -83,6 +88,7 @@ class DeliveryDriver(private val restaurantId: Int) {
         distance = o.getCustomerGroup().getDeliveryDistance()
         ticksLeft = DeliveryService.calculateTravelTicks(checkNotNull(distance))
         travelTicks = checkNotNull(ticksLeft)
+        o.getCustomerGroup().orderPlaced()
         Logger.Delivery.deliveryPreparation(
             restaurantId,
             checkNotNull(id),
@@ -118,6 +124,8 @@ class DeliveryDriver(private val restaurantId: Int) {
         travelTicks = null
         distance = null
         switch = false
+        resolvedOrder = null
+        resolvedAsGivenUp = false
     }
 
     /**
@@ -173,6 +181,16 @@ class DeliveryDriver(private val restaurantId: Int) {
      * getter
      */
     fun getDepartureTick() = departureTick
+
+    /**
+     * the order this driver resolved (delivered or given up on) this tick, consumed on read
+     */
+    fun takeResolvedOrder(): Pair<Order, Boolean>? {
+        val order = resolvedOrder ?: return null
+        val gaveUp = resolvedAsGivenUp
+        resolvedOrder = null
+        return order to gaveUp
+    }
 
     /**
      * getter
