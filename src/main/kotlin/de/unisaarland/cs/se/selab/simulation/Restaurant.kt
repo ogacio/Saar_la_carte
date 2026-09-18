@@ -38,8 +38,8 @@ class Restaurant(
         for (r in regulars) {
             regularsSeats += r.getGroupSize()
         }
-        kitchen.planEvening(regulars, data.getTotalSeats() - regularsSeats, menu)
         foh.prepareEvening(clock.getEvening(), regulars)
+        kitchen.planEvening(regulars, data.getTotalSeats() - regularsSeats, menu)
     }
 
     /**

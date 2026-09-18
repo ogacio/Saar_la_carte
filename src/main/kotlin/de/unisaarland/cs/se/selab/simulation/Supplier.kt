@@ -20,7 +20,7 @@ object Supplier {
             if (!(
                     unavailableUntil.containsKey(ingredient) &&
                         evening >= checkNotNull(unavailableUntil[ingredient]).first &&
-                        checkNotNull(unavailableUntil[ingredient]).second <= evening
+                        evening <= checkNotNull(unavailableUntil[ingredient]).second
                     )
             ) {
                 p.restock(ingredient, ingredient.packagesFor(amount) * ingredient.packagingVolume)
