@@ -1,0 +1,55 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 1000,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Sous Dish",
+      "duration": 10,
+      "cookType": [
+        "SOUS"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "dishName": "Sous Extra",
+      "duration": 10,
+      "cookType": [
+        "SOUS"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "dishName": "Exec Basic",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 10
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    }
+  ]
+}

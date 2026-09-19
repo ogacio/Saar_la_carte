@@ -1,0 +1,41 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 3,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 3,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        2
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "type": "UNAVAILABLE",
+      "evening": 1,
+      "ingredient": "rice",
+      "duration": 1
+    }
+  ]
+}
