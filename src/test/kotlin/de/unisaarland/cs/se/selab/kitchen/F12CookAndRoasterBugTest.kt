@@ -46,13 +46,16 @@ class F12CookAndRoasterBugTest {
         assertTrue(finished.orEmpty().all { it.status == MealStatus.COOKED })
     }
 
-    /** A cook with an empty pan reports nothing. */
+    /** A cook with an empty pan hands back no meals. */
     @Test
     fun anIdleCookReportsNothing() {
         startEvening()
         val cook = Cook(CookType.EXEC)
 
-        assertNull(cook.cookingFinished(), "a cook with an empty pan has nothing to report")
+        assertTrue(
+            cook.cookingFinished().isNullOrEmpty(),
+            "a cook with an empty pan has nothing to report",
+        )
     }
 
     /** No meal is left cooking with nobody cooking it when a COOK incident fires a cook. */
@@ -85,10 +88,9 @@ class F12CookAndRoasterBugTest {
         GlobalClock.advanceTick()
         assertNull(cook.cookingFinished(), "still cooking in tick 2")
         GlobalClock.advanceTick()
-        assertNull(cook.cookingFinished(), "still cooking in tick 3")
-        GlobalClock.advanceTick()
 
-        // only "is it done", not "what came out" - the second question is the failing test above
-        assertNotNull(cook.cookingFinished(), "ready in tick 4")
+        // thirty minutes are three ticks of cooking, which the specification counts as two ticks
+        // of waiting: started in tick 1, so finished in tick 3
+        assertNotNull(cook.cookingFinished(), "ready in tick 3")
     }
 }

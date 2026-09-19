@@ -9,6 +9,9 @@ import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.StaffType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 
+/** "A restaurant does not accept new customers in the last 3 ticks of their opening time." */
+private const val LAST_TICKS_CLOSED = 3
+
 /**
  * the restaurant class controls the foh, kitchen, pantry... and it is responsible to prepare everything
  * before the evening starts, run every tick, then to close the evening, take care of staff change incident
@@ -109,21 +112,26 @@ class Restaurant(
      */
     fun runRestaurantTick(arrivals: List<CustomerGroup>, tick: Int) {
         Logger.restaurantStart(id)
-        val open = isOpen()
-        if (open) {
-            foh.beginTick()
-            foh.callSeatingAndOrdering(arrivals)
-            val cookedThisTick = kitchen.cook()
-            if (cookedThisTick > 0) Statistics.recordCooked(id, cookedThisTick)
-            foh.callServingService()
-        }
-        foh.callDeliveryDesk()
-        if (open) {
+        // "In the ticks before a restaurant's openingTickStart, the simulation will not log any
+        // action or action status messages." Afterwards the deliveries, the eating and the ratings
+        // keep being logged every tick, even when the doors are already closed.
+        if (tick >= openingTick) {
+            val open = isOpen()
+            if (open) {
+                foh.beginTick()
+                foh.callSeatingAndOrdering(arrivals, acceptsCustomers = tick <= closingTick - LAST_TICKS_CLOSED)
+                val cookedThisTick = kitchen.cook()
+                if (cookedThisTick > 0) Statistics.recordCooked(id, cookedThisTick)
+                foh.callServingService()
+            }
+            foh.callDeliveryDesk()
             foh.callDiningService()
-            foh.callEscortingService()
-            if (tick == closingTick) foh.closeOpeningTime()
+            if (open) {
+                foh.callEscortingService()
+                if (tick == closingTick) foh.closeOpeningTime()
+            }
+            foh.callRatingService()
         }
-        foh.callRatingService()
         Logger.restaurantEnd(id)
     }
 

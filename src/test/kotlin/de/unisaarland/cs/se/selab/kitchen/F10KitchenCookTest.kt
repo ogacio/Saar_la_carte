@@ -123,18 +123,21 @@ class F10KitchenCookTest {
         assertEquals(listOf(MealStatus.COOKING), statusesOf(cookable))
     }
 
-    /** Aborted meals of a group that left are never cooked. */
+    /**
+     * "there is no synchronization to the kitchen, so the kitchen simply continues to try and cook
+     * their meals": a group leaving the restaurant does not stop its dish.
+     */
     @Test
-    fun mealsOfAGroupThatLeftAreNotCooked() {
+    fun mealsOfAGroupThatLeftAreStillCooked() {
         startEvening()
         val kitchen = kitchen(execCooks = 1)
         val gone = order(1, dish(1), 2)
-        gone.getMeals().forEach { it.status = MealStatus.ABORTED }
+        gone.getCustomerGroup().members().forEach { it.leave() }
         kitchen.enqueue(gone)
 
         kitchen.cook()
 
-        assertEquals(List(2) { MealStatus.ABORTED }, statusesOf(gone))
+        assertEquals(List(2) { MealStatus.COOKING }, statusesOf(gone))
     }
 
     /** A dish without a free cook waits and starts once one is free. */
@@ -160,7 +163,7 @@ class F10KitchenCookTest {
     @Test
     fun anEmptyQueueDoesNothing() {
         startEvening()
-        val kitchen = kitchen(sousCooks = 2)
+        val kitchen = kitchen(execCooks = 0, sousCooks = 2)
 
         kitchen.cook()
 

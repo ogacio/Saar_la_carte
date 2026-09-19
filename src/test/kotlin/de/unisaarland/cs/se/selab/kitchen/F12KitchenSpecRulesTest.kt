@@ -65,8 +65,10 @@ class F12KitchenSpecRulesTest {
 
         cook.startCooking(batch)
 
-        assertEquals(1, cook.cookingFinished()?.size, "ten minutes is a duration of 0 ticks")
-        assertEquals(listOf(MealStatus.COOKED), batch.map { it.status })
+        // cookingFinished() empties the list it was given, so the returned batch is the one to read
+        val finished = cook.cookingFinished()
+        assertEquals(1, finished?.size, "ten minutes is a duration of 0 ticks")
+        assertEquals(listOf(MealStatus.COOKED), finished.orEmpty().map { it.status })
     }
 
     /** A thirty minute dish is finished two ticks after it was started. */
@@ -155,8 +157,8 @@ class F12KitchenSpecRulesTest {
         kitchen.cook()
 
         val lines = Fixtures.logLines(log)
-        val assignment = lines.indexOfFirst { it.startsWith("Kitchen Dish Assignment") }
-        val cooked = lines.indexOfFirst { it.startsWith("Kitchen Meal Cooked") }
+        val assignment = lines.indexOfFirst { it.contains("Kitchen Dish Assignment") }
+        val cooked = lines.indexOfFirst { it.contains("Kitchen Meal Cooked") }
         assertTrue(assignment >= 0 && cooked >= 0, "both lines have to be written: $lines")
         assertTrue(assignment < cooked, "the assignment comes first: $lines")
     }
@@ -174,7 +176,7 @@ class F12KitchenSpecRulesTest {
         kitchen.cook()
 
         val cookIds = Fixtures.logLines(log)
-            .filter { it.startsWith("Kitchen Meal Cooked") }
+            .filter { it.contains("Kitchen Meal Cooked") }
             .map { it.substringAfter("Cook ").substringBefore(" ").toInt() }
         assertEquals(listOf(1, 2), cookIds, "the finished meals are reported in ascending cook id")
     }
@@ -191,7 +193,7 @@ class F12KitchenSpecRulesTest {
 
         assertTrue(
             Fixtures.logLines(log).contains(
-                "Kitchen Status (R $RESTAURANT_ID): 1 cooks were active cooking 1 and finishing 1 meals. " +
+                "[DEBUG] Kitchen Status (R $RESTAURANT_ID): 1 cooks were active cooking 1 and finishing 1 meals. " +
                     "1 meals can be served by the waitstaff.",
             ),
             "the finished meal was not counted as cooking: ${Fixtures.logLines(log)}",

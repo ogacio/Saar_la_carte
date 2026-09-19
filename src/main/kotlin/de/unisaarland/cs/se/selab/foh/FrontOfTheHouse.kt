@@ -3,7 +3,6 @@ package de.unisaarland.cs.se.selab.foh
 import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
-import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
@@ -89,7 +88,7 @@ class FrontOfTheHouse(
      * then seating, then ordering, before the next group. Groups that found no waiter
      * last tick try again here without arriving again. The two status lines come last.
      */
-    fun callSeatingAndOrdering(arrivals: List<CustomerGroup>) {
+    fun callSeatingAndOrdering(arrivals: List<CustomerGroup>, acceptsCustomers: Boolean = true) {
         val tick = GlobalClock.currentTick
         val arrived = arrivals.filter { it.id() !in cancelledTonight }.map { Visit(it) }
         visits += arrived
@@ -98,6 +97,10 @@ class FrontOfTheHouse(
         for (visit in visits) {
             if (visit.state !is AwaitingSeatState) continue
             if (visit in arrived) Logger.Customer.arrival(sbu.restaurantId, visit.group.id())
+            // "A restaurant does not accept new customers in the last 3 ticks of their opening
+            // time. This includes customers that arrived in the previous tick but could not be
+            // seated." They keep waiting and are sent out when the opening time ends.
+            if (!acceptsCustomers) continue
             services.seating.seat(visit, sbu, tick)
             services.ordering.takeOrder(visit, sbu, tick)
         }
@@ -249,7 +252,9 @@ class FrontOfTheHouse(
         val waiting = (deliveryDesk.getNewOrders() + deliveryDesk.getReady()).sortedBy { it.getId() }
         for (order in waiting.filter { it.getCustomerGroup().hasGivenUp() }) {
             Logger.Delivery.deliveryGivenUp(sbu.restaurantId, order.getCustomerGroup().id(), order.getId())
-            order.getMeals().forEach { if (it.status != MealStatus.SERVED) it.status = MealStatus.ABORTED }
+            // "It can happen that a customer leaves the restaurant or aborts a delivery. However,
+            // for this there is no synchronization to the kitchen": the meals keep being cooked,
+            // only no driver takes them out any more.
             deliveryDesk.drop(order)
             gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
         }

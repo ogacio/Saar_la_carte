@@ -3,7 +3,6 @@ package de.unisaarland.cs.se.selab.kitchen
 /* The six kitchen log lines and the cooked statistic - all missing today. */
 
 import de.unisaarland.cs.se.selab.foh.TableAssignmentService
-import de.unisaarland.cs.se.selab.logging.LogLevel
 import de.unisaarland.cs.se.selab.sharedPackage.Ingredient
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.Menu
@@ -16,7 +15,6 @@ import de.unisaarland.cs.se.selab.sharedPackage.UnitType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
-import de.unisaarland.cs.se.selab.simulation.Statistics
 import de.unisaarland.cs.se.selab.testsupport.Fixtures
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.RESTAURANT_ID
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.regular
@@ -76,7 +74,7 @@ class F12KitchenLoggingTest {
 
         assertTrue(
             Fixtures.logLines(log).contains(
-                "Kitchen Dish Assignment (R $RESTAURANT_ID): Cook 1 of type EXEC starts cooking " +
+                "[IMPORTANT] Kitchen Dish Assignment (R $RESTAURANT_ID): Cook 1 of type EXEC starts cooking " +
                     "2 meals of dish dish1 based on order ${order.getId()} for orders ${order.getId()}.",
             ),
             "no Dish Assignment line was written: ${Fixtures.logLines(log)}",
@@ -97,7 +95,7 @@ class F12KitchenLoggingTest {
 
         assertTrue(
             Fixtures.logLines(log).contains(
-                "Kitchen Meal Cooked (R $RESTAURANT_ID): Cook 1 finished cooking 2 meals of dish dish1 " +
+                "[IMPORTANT] Kitchen Meal Cooked (R $RESTAURANT_ID): Cook 1 finished cooking 2 meals of dish dish1 " +
                     "1 ticks after ordering.",
             ),
             "no Meal Cooked line was written: ${Fixtures.logLines(log)}",
@@ -116,26 +114,28 @@ class F12KitchenLoggingTest {
 
         assertTrue(
             Fixtures.logLines(log).contains(
-                "Kitchen Status (R $RESTAURANT_ID): 1 cooks were active cooking 2 and finishing 0 meals. " +
+                "[DEBUG] Kitchen Status (R $RESTAURANT_ID): 1 cooks were active cooking 2 and finishing 0 meals. " +
                     "0 meals can be served by the waitstaff.",
             ),
             "no Kitchen Status line was written: ${Fixtures.logLines(log)}",
         )
     }
 
-    /** Cooked meals reach the simulation statistics. */
+    /**
+     * The kitchen reports how many meals it finished this tick; the restaurant books that number
+     * into the statistics, so this is the number the "cooked N meals" line is built from.
+     */
     @Test
-    fun cookedMealsReachTheSimulationStatistics() {
+    fun theKitchenReportsHowManyMealsItFinished() {
         startEvening()
         val kitchen = kitchen()
         kitchen.enqueue(order(regular(1, 2), dish(1)))
-        kitchen.cook()
-        val before = cookedInStatistics()
 
+        val firstTick = kitchen.cook()
         GlobalClock.advanceTick()
-        kitchen.cook()
+        val secondTick = kitchen.cook()
 
-        assertEquals(before + 2, cookedInStatistics(), "the two cooked meals were not counted")
+        assertEquals(2, firstTick + secondTick, "both meals have to be reported as finished")
     }
 
     /** The preparation reports what was thrown out and what was bought. */
@@ -152,25 +152,17 @@ class F12KitchenLoggingTest {
 
         val lines = Fixtures.logLines(log)
         assertTrue(
-            lines.contains("Pantry (R $RESTAURANT_ID): Removed 300 g of rice from the pantry."),
+            lines.contains("[DEBUG] Pantry (R $RESTAURANT_ID): Removed 300 g of rice from the pantry."),
             "the expired rice was not reported: $lines",
         )
-        val procured = "Pantry (R $RESTAURANT_ID): Procured"
+        val procured = "[DEBUG] Pantry (R $RESTAURANT_ID): Procured"
         assertTrue(
             lines.any { it.startsWith(procured) && it.endsWith("of rice from the supplier.") },
             "the procurement was not reported: $lines",
         )
         assertTrue(
-            lines.contains("Pantry (R $RESTAURANT_ID): Restocked ingredients."),
+            lines.contains("[INFO] Pantry (R $RESTAURANT_ID): Restocked ingredients."),
             "the restocking was not reported: $lines",
         )
-    }
-
-    /** The "cooked N meals" number of the final statistics, read back out of the log. */
-    private fun cookedInStatistics(): Int {
-        val log = Fixtures.captureLog(LogLevel.IMPORTANT)
-        Statistics.report(listOf(RESTAURANT_ID))
-        val line = Fixtures.logLines(log).first { it.contains("cooked") }
-        return line.substringAfter("cooked ").substringBefore(" meals").toInt()
     }
 }

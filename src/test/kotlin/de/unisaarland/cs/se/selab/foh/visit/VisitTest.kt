@@ -136,7 +136,9 @@ class VisitTest {
         visit.leaveUnserved(visit.customersInside())
 
         assertEquals(0, waiter.currentLoad)
-        assertTrue(visit.order?.getMeals().orEmpty().all { it.status == MealStatus.ABORTED })
+        // the kitchen is not told, so the meals stay queued; they are simply never served
+        assertTrue(visit.order?.getMeals().orEmpty().all { it.status == MealStatus.QUEUED })
+        assertTrue(visit.cookedMeals().isEmpty(), "nothing is waiting for a waiter any more")
     }
 
     @Test

@@ -95,13 +95,21 @@ class AwaitingMealStateTest {
         assertTrue(!visit.isFinished())
     }
 
+    /**
+     * "for this there is no synchronization to the kitchen, so the kitchen simply continues to try
+     * and cook their meals": the meals of the customers who left stay in the queue, they are only
+     * never carried to a table.
+     */
     @Test
-    fun customersWhoLeaveWithoutFoodHaveTheirMealsAborted() {
+    fun theMealsOfCustomersWhoLeftStayInTheKitchen() {
         val visit = waitingVisit(regular(1, 2), tick = 1)
 
         visit.advance(1 + PATIENCE)
 
-        assertTrue(visit.order?.getMeals().orEmpty().all { it.status == MealStatus.ABORTED })
+        // the kitchen was never told, so the meals keep the status it gave them ...
+        assertTrue(visit.order?.getMeals().orEmpty().all { it.status == MealStatus.COOKED })
+        // ... they are simply no longer waiting for a waiter
+        assertTrue(visit.cookedMeals().isEmpty())
     }
 
     private companion object {

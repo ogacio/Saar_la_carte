@@ -39,9 +39,9 @@ class F11CookLifecycleTest {
 
         // far beyond any reading of the duration, so this test says nothing about the timing
         repeat(5) { GlobalClock.advanceTick() }
-        cook.cookingFinished()
+        val finished = cook.cookingFinished()
 
-        assertEquals(List(3) { MealStatus.COOKED }, batch.map { it.status })
+        assertEquals(List(3) { MealStatus.COOKED }, finished.orEmpty().map { it.status })
         assertTrue(cook.isFree(), "the cook is free again")
     }
 

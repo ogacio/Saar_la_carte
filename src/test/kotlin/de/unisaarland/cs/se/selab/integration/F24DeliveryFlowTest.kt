@@ -138,21 +138,30 @@ class F24DeliveryFlowTest {
     }
 
     /**
-     * The group gives up at the end of the 3rd tick after the food should have arrived, so in tick
-     * visitingTick + 3.
+     * "Customers with a delivery order wait until 3 ticks after the tick when they wanted it to
+     * arrive, afterward they reject the delivery" (forum update 11): the group waits through tick
+     * visitingTick + 3 and rejects in the tick after it. So in tick 6 it is still waiting, and the
+     * Delivery Given Up line belongs to tick 7.
      */
     @Test
-    fun theGroupGivesUpThreeTicksAfterTheFoodShouldHaveArrived() {
+    fun theGroupWaitsThreeTicksAndRejectsTheDeliveryAfterThat() {
         startEveningAt(2)
         val group = casual(1, 2, deliveryDistance = 5, visitingTick = 3)
         queuedOrderOf(group)
 
-        val log = captureLog()
+        val waiting = captureLog()
         repeat(GIVE_UP_DELAY_TICKS + 1) { tick() } // ticks 3, 4, 5 and 6 = visitingTick + 3
+        assertTrue(
+            logLines(waiting).none { it.contains("Delivery Given Up") },
+            "the group still waits in tick 6: ${logLines(waiting)}",
+        )
+
+        val rejecting = captureLog()
+        tick() // tick 7
 
         assertTrue(
-            logLines(log).any { it.contains("Delivery Given Up") },
-            "the group is still waiting in tick 6: ${logLines(log)}",
+            logLines(rejecting).any { it.contains("Delivery Given Up") },
+            "the group never rejected the delivery: ${logLines(rejecting)}",
         )
     }
 
