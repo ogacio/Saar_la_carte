@@ -13,6 +13,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Supplier.resupply
+import kotlin.comparisons.compareBy
 
 private const val SEATS_PER_ESTIMATE = 10
 
@@ -31,14 +32,14 @@ class Kitchen(
 
     /** One tick: assign the queued dishes, then finish what is done, then the summary line. */
     fun cook(): Int {
-        // ISSUE 1: assigning first is what lets a 10 minute dish finish in the tick it was ordered.
+        // assigning first is what lets a 10 minute dish finish in the tick it was ordered.
         assignQueuedMeals()
 
-        // ISSUE 5: already in ascending cook id, so the Meal Cooked lines come out in that order.
+        // already in ascending cook id, so the Meal Cooked lines come out in that order.
         val finishedBatches = roaster.finished()
         val finishedCount = reportFinishedBatches(finishedBatches)
 
-        // ISSUE 2: the summary the kitchen never wrote.
+        // the summary the kitchen
         Logger.Kitchen.kitchenStatus(
             pantry.getRestaurantId(),
             roaster.cooksWithAFullPan() + finishedBatches.size,
@@ -49,17 +50,22 @@ class Kitchen(
         return finishedCount
     }
 
-    /** Basic dishes first, then the lower recipe id; a dish without a free cook stays queued. */
+    /** Dishes with smaller orderIds first, basic dishes first, then the lower recipe id;
+     * a dish without a free cook stays queued. */
     private fun assignQueuedMeals() {
-        val sorted = groupQueuedMealsByRecipe().entries.sortedWith(
-            compareBy({ !it.key.isBasicFor(restaurantType) }, { it.key.getId() }),
+        val grouped = groupQueuedMealsByRecipe()
+        val sorted = grouped.entries.sortedWith(
+            compareBy(
+                { !it.key.isBasicFor(restaurantType) },
+                { it.value.mapNotNull { m -> m.orderId }.minOrNull() ?: Int.MAX_VALUE }
+            )
         )
         for (entry in sorted) {
             roaster.startCooking(entry.value)
         }
     }
 
-    /** ISSUE 3: one line per batch, with the ticks since the order the assignment named. */
+    /** one line per batch, with the ticks since the order the assignment named. */
     private fun reportFinishedBatches(finishedBatches: Map<Cook, List<Meal>>): Int {
         val ordersById = queue.associateBy { it.getId() }
         var count = 0

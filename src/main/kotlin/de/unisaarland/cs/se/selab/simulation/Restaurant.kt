@@ -41,8 +41,13 @@ class Restaurant(
         for (r in regulars) {
             regularsSeats += r.getGroupSize()
         }
+        var eventSeats = 0
+        val events = foh.getReservationBook().expectedFor(clock.getEvening())
+        for (e in events) {
+            eventSeats += e.getGroupSize()
+        }
         foh.prepareEvening(clock.getEvening(), regulars)
-        kitchen.planEvening(regulars, data.getTotalSeats() - regularsSeats, menu)
+        kitchen.planEvening(regulars, data.getTotalSeats() - regularsSeats - eventSeats, menu)
     }
 
     /**
