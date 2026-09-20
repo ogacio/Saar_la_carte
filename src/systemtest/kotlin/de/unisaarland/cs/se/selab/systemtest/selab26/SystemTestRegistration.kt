@@ -214,14 +214,11 @@ object SystemTestRegistration {
         // has no last-3-ticks closing exclusion at all (Adjustment 15, documented known bug #2 in
         // qa-findings-2026-09-18.md §6). Not Stefan's file to fix.
         // testSuite.registerTest(F28NoNewCustomersInLastThreeTicks())
-        // F20DeliveryOverSevenKilometres unregistered 2026-09-18: NOT a code defect. Manually running
-        // this exact scenario against libs/selab.jar produces the fully correct log end to end
-        // (Delivery Finished -> 2-tick eating clock -> Delivery Finished Eating -> Rating POSITIVE ->
-        // delivered=2, ratings=1). The systemtest runner itself reports
-        // "End of log reached before '[INFO] Delivery Preparation'" even though that line is present
-        // in the captured output — reproduced identically on the pre-fix code by stashing all local
-        // changes, so this is a runner-level flake, not something in src/main. Re-register once the
-        // runner issue is understood; no application code change should be needed.
+        // F20DeliveryOverSevenKilometres still unregistered 2026-09-20: the "runner flake" of the old
+        // note was real, the hand-over and the preparation line were swapped, and that half is fixed.
+        // What is left is the Delivery Driving distance: we log the kilometres of this tick (5, then
+        // 2), the test expects the cumulative distance (5, then 7) citing forum thread 126.
+        // DeliveryDriver.drivenDistance() is the only place to change.
         // testSuite.registerTest(F20DeliveryOverSevenKilometres())
         testSuite.registerTest(F18SecondCustomerFindsNoDishAndLeaves())
         testSuite.registerTest(F19TableHeldBackUntilAllMealsAreCooked())

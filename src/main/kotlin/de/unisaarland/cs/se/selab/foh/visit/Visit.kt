@@ -19,6 +19,12 @@ import de.unisaarland.cs.se.selab.simulation.ratings.Experience
  */
 class Visit(val group: CustomerGroup) {
 
+    init {
+        // A group can visit on several evenings, and its Customer objects are the same ones every
+        // time, so a visit starts by clearing what the previous evening left on them.
+        group.members().forEach { it.resetForVisit() }
+    }
+
     /** The phase this visit is in. Services read it; the states assign the next one. */
     internal var state: VisitState = AwaitingSeatState()
 

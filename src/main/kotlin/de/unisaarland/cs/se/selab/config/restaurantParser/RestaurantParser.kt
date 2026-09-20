@@ -69,6 +69,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
                 break
             }
         }
+        if (!checkEveryRestaurantOffersItsBasicDishes()) returnValue = false
         return returnValue
     }
 
@@ -292,6 +293,20 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
 // helper functions for validateFileScope
     private fun checkBasicDishCoverage(dishes: Set<String>): Boolean {
         return dishes.isNotEmpty()
+    }
+
+    /**
+     * "All restaurants with the same restaurant type offer the same basic dishes." The check is by
+     * dish name, because a restaurant may replace the default recipe of a basic dish with its own.
+     */
+    private fun checkEveryRestaurantOffersItsBasicDishes(): Boolean {
+        for (restaurant in model.allRestaurants()) {
+            val offered = restaurant.getMenu().getRecipes().map { it.getDishName() }.toSet()
+            if (!offered.containsAll(model.basicDishesFor(restaurant.type))) {
+                return false
+            }
+        }
+        return true
     }
 
     private fun checkAtLeastOneRestaurant(): Boolean {

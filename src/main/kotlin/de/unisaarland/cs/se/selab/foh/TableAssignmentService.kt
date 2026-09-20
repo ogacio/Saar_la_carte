@@ -19,6 +19,7 @@ class TableAssignmentService(
      * Returns the assigned table, already marked as taken, or null if the group cannot be seated.
      */
     fun assign(size: Int, type: TableType, liftRule: Boolean): Table? {
+        if (size <= 0) return null
         val pool = freePool(type)
         val chosen = exactFit(size, pool)
             ?: larger(size, pool, strict = true)
@@ -129,7 +130,7 @@ class TableAssignmentService(
                 break
             }
         }
-        if (mergedSize < size) {
+        if (parts.isEmpty() || mergedSize < size) {
             return null
         }
         while (parts.size > 1 && mergedSize - parts.first().size >= size) {

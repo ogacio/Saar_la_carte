@@ -160,6 +160,7 @@ class ServingService(
                 carried[waiter] = (carried[waiter] ?: 0) + batch.size
                 next += batch.size
             }
+            deliveryDesk.logPreparationFor(driverId)
         }
     }
 

@@ -57,6 +57,11 @@ class DeliveryDesk(private val drivers: MutableList<DeliveryDriver>, private val
         nextDriverId = 1
     }
 
+    /** Lets the driver announce its route, once the waitstaff has handed the meals over. */
+    fun logPreparationFor(driverId: Int) {
+        drivers.firstOrNull { it.getId() == driverId }?.logPreparation()
+    }
+
     /**
      * getter
      */
