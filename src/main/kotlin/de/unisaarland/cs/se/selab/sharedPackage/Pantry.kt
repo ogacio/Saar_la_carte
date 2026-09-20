@@ -1,117 +1,87 @@
 package de.unisaarland.cs.se.selab.sharedPackage
-
 import de.unisaarland.cs.se.selab.logging.Logger.Kitchen.pantryRemoved
 
-/**
- * pantry, stores the ingredients of the kitchen and updates every time somebody orders
- */
+/** Pantry, stores the ingredients of the kitchen and updates every time somebody orders. */
 class Pantry(
-    private var stock: MutableList<Pair<Ingredient, Int>> = mutableListOf(), // (ingredient, amount)
+    private val stock: MutableList<StockEntry> = mutableListOf(),
     private var reserved: MutableList<Pair<Ingredient, Int>> = mutableListOf(),
-    private val restaurantId: Int
+    private val restaurantId: Int,
 ) {
+    /** Keeps the eleven Pantry(mutableListOf(rice to 500), id) test call sites compiling unchanged. */
+    constructor(initial: MutableList<Pair<Ingredient, Int>>, restaurantId: Int) : this(
+        initial.mapTo(mutableListOf()) { (ingredient, amount) ->
+            StockEntry(ingredient, amount, ingredient.bestUntil)
+        },
+        mutableListOf(),
+        restaurantId,
+    )
 
-    /**
-     * the supplier calls it, add the ordered ingredients to the stock
-     */
+    /** The supplier calls it; every delivery is its own entry and starts its own shelf life. */
     fun restock(ingredient: Ingredient, amount: Int) {
-        stock.add(Pair(ingredient, amount))
-    }
-
-    /**
-     * called in every preparation phase, we check the date of the ingredients,
-     * if they expired, we remove / "throw them out" them from the stock
-     */
-    fun checkDateAndCleanOut() {
-        stock.removeIf { (ingredient, amount) ->
-            val expired = !ingredient.reduceBestUntil()
-            if (expired) pantryRemoved(restaurantId, amount, ingredient.unit, ingredient.name)
-            expired
+        if (amount > 0) {
+            stock.add(StockEntry(ingredient, amount, ingredient.bestUntil))
         }
     }
 
-    /**
-     * we reserve the ingredients for a recipe (take the ingredients out of the stock)
-     */
+    /** Every preparation phase: each delivery ages on its own counter, expired ones are thrown out. */
+    // Open question: two deliveries expiring together give two Removed lines; the spec does not say.
+    fun checkDateAndCleanOut() {
+        val expired = stock.filter { !it.ageByOneEvening() }
+        for (entry in expired) {
+            pantryRemoved(restaurantId, entry.amount, entry.ingredient.unit, entry.ingredient.name)
+        }
+        stock.removeAll(expired)
+    }
+
+    /** Reserves the ingredients of a recipe, which takes them out of the stock. */
     fun reserve(r: Recipe): Boolean {
         if (!canCover(r)) return false
-        val ingredients = r.ingredients
-        for (i in ingredients) {
+        for (i in r.ingredients) {
             reserved.add(Pair(i.ingredient, i.amount))
             removeFromStock(i.ingredient, i.amount)
         }
-
         return true
     }
 
-    /**
-     * removes the amount of ingredient from the stock to make reserve simpler
-     */
+    /** Takes [amount] of [i] out of the stock, emptying one package before opening the next. */
     fun removeFromStock(i: Ingredient, amount: Int) {
         var needed = amount
-        val stockCopy = stock.toMutableList()
-        for ((index, entry) in stock.withIndex()) {
-            val (ingredient, ingredientAmount) = entry
-            if (i == ingredient) {
-                if (needed < ingredientAmount) {
-                    stockCopy[index] = Pair(ingredient, ingredientAmount - needed)
-                    needed = 0
-                } else {
-                    needed -= ingredientAmount
-                    stockCopy[index] = Pair(ingredient, 0)
-                }
-            }
-            if (needed == 0) break
+        for (entry in entriesFor(i)) {
+            if (needed <= 0) break
+            needed -= entry.take(needed)
         }
-        stockCopy.removeIf { (_, amount) -> amount == 0 }
-        stock = stockCopy
+        stock.removeAll { it.isEmpty() }
     }
 
-    /**
-     * returns for how much ingredient we have in the pantry
-     */
-    fun getTotalIngredients(i: Ingredient): Int {
-        val filtered = stock.filter { (ingredient, _) -> ingredient == i }
-        return filtered.sumOf { (_, amount) -> amount }
-    }
+    /** Forum update: "open packages are given priority, followed by packages with the earliest best-before date". */
+    private fun entriesFor(i: Ingredient): List<StockEntry> =
+        stock.filter { it.ingredient == i }.sortedWith(compareBy({ !it.opened }, { it.bestUntil }))
 
-    /**
-     * we delete the cooked recipe from reserved
-     */
+    /** Returns how much of an ingredient the pantry holds, across all of its deliveries. */
+    fun getTotalIngredients(i: Ingredient): Int =
+        stock.filter { it.ingredient == i }.sumOf { it.amount }
+
+    /** We delete the cooked recipe from reserved. */
     fun deleteFromReserved(r: Recipe) {
-        val ingredient = r.ingredients
-        for (i in ingredient) {
+        for (i in r.ingredients) {
             reserved.remove(Pair(i.ingredient, i.amount))
         }
     }
 
-    /**
-     * returns if we have enough ingredients to cover the recipe
-     */
+    /** Returns whether the pantry can cover a whole recipe. */
     fun canCover(r: Recipe): Boolean {
-        val ingredients = r.ingredients
-        for (i in ingredients) {
-            var needed = i.amount
-            for ((ingredient, amount) in stock) {
-                if (needed <= 0) break
-                if (i.ingredient == ingredient) {
-                    needed -= amount
-                }
-            }
-            if (needed > 0) return false
+        val needed = mutableMapOf<Ingredient, Int>()
+        for (i in r.ingredients) {
+            needed[i.ingredient] = (needed[i.ingredient] ?: 0) + i.amount
         }
-        return true
+        return needed.all { (ingredient, amount) -> getTotalIngredients(ingredient) >= amount }
     }
 
-    /**
-     * resets / "throws out" the reserved at the end of the night
-     */
+    /** Resets the reserved ingredients at the end of the night; the stock itself keeps. */
     fun discardEvening() {
         reserved = mutableListOf()
     }
 
-    /**
-     * returns the restaurantId
-     */
+    /** Returns the restaurantId. */
     fun getRestaurantId() = restaurantId
 }

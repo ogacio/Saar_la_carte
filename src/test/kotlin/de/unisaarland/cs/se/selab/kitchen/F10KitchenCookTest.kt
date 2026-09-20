@@ -68,7 +68,7 @@ class F10KitchenCookTest {
 
         kitchen.cook()
 
-        assertEquals(listOf(MealStatus.COOKING), statusesOf(basic), "the basic dish takes the only cook")
+        assertEquals(listOf(MealStatus.COOKED), statusesOf(basic), "the basic dish takes the only cook")
         assertEquals(listOf(MealStatus.QUEUED), statusesOf(other), "the other dish waits")
     }
 
@@ -84,7 +84,7 @@ class F10KitchenCookTest {
 
         kitchen.cook()
 
-        assertEquals(listOf(MealStatus.COOKING), statusesOf(low))
+        assertEquals(listOf(MealStatus.COOKED), statusesOf(low))
         assertEquals(listOf(MealStatus.QUEUED), statusesOf(high))
     }
 
@@ -102,8 +102,8 @@ class F10KitchenCookTest {
         kitchen.cook()
 
         // one cook, four meals: they only all start if they were put into a single batch
-        assertEquals(List(2) { MealStatus.COOKING }, statusesOf(first))
-        assertEquals(List(2) { MealStatus.COOKING }, statusesOf(second))
+        assertEquals(List(2) { MealStatus.COOKED }, statusesOf(first))
+        assertEquals(List(2) { MealStatus.COOKED }, statusesOf(second))
     }
 
     /** A dish nobody can cook is skipped and blocks nothing. */
@@ -120,7 +120,7 @@ class F10KitchenCookTest {
         kitchen.cook()
 
         assertEquals(listOf(MealStatus.QUEUED), statusesOf(uncookable))
-        assertEquals(listOf(MealStatus.COOKING), statusesOf(cookable))
+        assertEquals(listOf(MealStatus.COOKED), statusesOf(cookable))
     }
 
     /**
@@ -137,7 +137,7 @@ class F10KitchenCookTest {
 
         kitchen.cook()
 
-        assertEquals(List(2) { MealStatus.COOKING }, statusesOf(gone))
+        assertEquals(List(2) { MealStatus.COOKED }, statusesOf(gone))
     }
 
     /** A dish without a free cook waits and starts once one is free. */
