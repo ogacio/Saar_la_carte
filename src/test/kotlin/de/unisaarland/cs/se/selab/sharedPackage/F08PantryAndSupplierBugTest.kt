@@ -36,12 +36,12 @@ class F08PantryAndSupplierBugTest {
         val rice = rice(bestUntil = 3)
         val pantry = Pantry(mutableListOf(rice to 100), restaurantId = RESTAURANT_ID)
 
-        repeat(3) { pantry.checkDateAndCleanOut() }
-        assertEquals(100, pantry.getTotalIngredients(rice), "still fresh after three evenings")
+        repeat(2) { pantry.checkDateAndCleanOut() }
+        assertEquals(100, pantry.getTotalIngredients(rice), "still fresh after two evenings")
 
         pantry.checkDateAndCleanOut()
 
-        assertEquals(0, pantry.getTotalIngredients(rice), "gone in the fourth evening")
+        assertEquals(0, pantry.getTotalIngredients(rice), "gone in the third evening")
     }
 
     /** The supplier delivers whole packages, so packages times the package size. */

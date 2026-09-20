@@ -29,7 +29,7 @@ class F12KitchenLoggingTest {
     private fun dish(id: Int, riceAmount: Int = 0) = Recipe(
         id,
         "dish$id",
-        10,
+        20,
         setOf(CookType.EXEC),
         if (riceAmount == 0) mutableListOf() else mutableListOf(RecipeIngredient(rice, riceAmount)),
         null,
