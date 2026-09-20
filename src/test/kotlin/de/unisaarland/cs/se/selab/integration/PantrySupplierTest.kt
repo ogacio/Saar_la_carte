@@ -37,10 +37,7 @@ class PantrySupplierTest {
 
     private fun planningFixture(initialStock: Int): PlanningFixture {
         val rice = Ingredient("rice", UnitType.G, packagingVolume = 100, bestUntil = 5)
-        val pantry = Pantry(
-            stock = mutableListOf(rice to initialStock),
-            restaurantId = RESTAURANT_ID,
-        )
+        val pantry = Pantry(mutableListOf(rice to initialStock), RESTAURANT_ID)
         val reservations = ReservationBook(TableAssignmentService(mutableListOf()))
         val roaster = CookRoaster(
             kitchenStaff = mapOf(CookType.EXEC to 1),
