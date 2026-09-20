@@ -92,6 +92,7 @@ class Restaurant(
     fun changeStaff(type: StaffType, cook: CookType?, delta: Int) {
         if (type == StaffType.COOK) kitchen.changeStaff(checkNotNull(cook), delta)
         if (type == StaffType.WAITSTAFF) foh.getWaitstaff().changeStaff(delta)
+        if (type == StaffType.DRIVER) DeliveryService.changeStaff(this.getId(), delta)
     }
 
     /**

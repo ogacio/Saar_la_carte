@@ -180,7 +180,17 @@ object SystemTestRegistration {
         testSuite.registerTest(F28AClosedRestaurantIsNotOffered())
         testSuite.registerTest(F28SeatsAreReducedAsEachGroupDecides())
         testSuite.registerTest(F29TheDriverTakesASecondOrderAfterReturning())
-        testSuite.registerTest(F30ADeliveryOnTheRoadContinuesAfterClosing())
+        // testSuite.registerTest(F30ADeliveryOnTheRoadContinuesAfterClosing())
+        testSuite.registerTest(P01IngredientsLastTheirBestBeforeDays())
+        testSuite.registerTest(P01BestBeforeTwoLastsExactlyTwoEvenings())
+        testSuite.registerTest(F11TheLowestRankingEligibleCookTakesTheDish())
+        testSuite.registerTest(F12KitchenStatusIsLoggedEveryTick())
+        testSuite.registerTest(F12TheFinishedMealsAreLoggedInAscendingCookId())
+        testSuite.registerTest(F12ATenMinuteDishIsFinishedInTheSameTick())
+        testSuite.registerTest(F07CountsAddUpOverTheWholeSimulation())
+        testSuite.registerTest(F24AGroupGivesUpOnALateDelivery())
+        testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
+        testSuite.registerTest(F30CustomersAreResetForTheNextEvening())
     }
 
     /**

@@ -6,6 +6,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.customers.Customer
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import kotlin.math.abs
 
 /**
  * Handles delivery-related operations such as placing delivery
@@ -134,6 +135,16 @@ object DeliveryService {
         val currentSimulator = checkNotNull(simulator)
         val restaurant = checkNotNull(currentSimulator.restaurantsById(restaurantId))
         restaurant.getFoh().getDeliveryDesk().addDriver(driver)
+    }
+
+    /**
+     * apply change staff incident for driver
+     */
+    fun changeStaff(restaurantId: Int, delta: Int) {
+        when {
+            delta > 0 -> repeat(abs(delta)) { addDriver(restaurantId) }
+            delta < 0 -> repeat(abs(delta)) { rmDriver(restaurantId) }
+        }
     }
 
     /**
