@@ -158,6 +158,11 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07SentAwayGroup
 // F01FirstTickLogOrder, F13DishWithoutEligibleCookIsNotOrdered, F28NoNewCustomersInLastThreeTicks
 // and F20DeliveryOverSevenKilometres unregistered below, see the notes there — imports removed too.
 
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipesArray
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngExtraKey
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngUnitMismatch
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipesEmpty
+
 /**
  * Used for test registration
  */
