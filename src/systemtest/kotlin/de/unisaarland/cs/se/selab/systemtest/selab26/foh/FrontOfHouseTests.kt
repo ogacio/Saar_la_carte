@@ -15,6 +15,7 @@ private const val ARRIVAL_PREFIX = "[INFO] Restaurant Arrival"
 private const val GROUP_1_ARRIVED = "[INFO] Restaurant Arrival (R 1): Group 1 arrived at restaurant 1."
 private const val FOOD_RICE = "foh/food_rice.json"
 private const val FOOD_MENU = "foh/food_menu.json"
+private const val DEBUG = "DEBUG"
 
 /** F14: with one table, the regular group with the higher id gets no reservation. */
 class F14RegularWithoutTableIsNotReserved : LogSkippingSystemTest() {
@@ -232,5 +233,35 @@ class P03EventOrdersFavouriteDish : LogSkippingSystemTest() {
             GROUP_1_SEATED,
         )
         assertNextLine(ORDER_RICE_BOWL_FOR_FOUR)
+    }
+}
+
+/**
+ * F14: "the table is reserved for the whole evening" - the table of a regular group stays blocked
+ * after that group has eaten and left, so a later group is never offered its seats.
+ */
+class F14AReservedTableIsBlockedForTheWholeEvening : LogSkippingSystemTest() {
+    override val name = "F14AReservedTableIsBlockedForTheWholeEvening"
+    override val description = "Regular group 1 leaves table 1 in tick 3, group 2 is still not offered it in tick 15."
+    override val food = FOOD_RICE
+    override val restaurants = "foh/f14/restaurants_two_tables_long_evening.json"
+    override val scenario = "foh/f14/scenario_regular_then_group_of_four.json"
+    override val logLevel = DEBUG
+    override val maxTicks = 24
+
+    override suspend fun run() {
+        skipToAndAssert(SEATING_PREFIX, GROUP_1_SEATED)
+        skipToAndAssert(
+            "[IMPORTANT] FOH Escorting",
+            "[IMPORTANT] FOH Escorting (R 1): Waitstaff 1 escorts 2 customers of group 1 from table 1 outside.",
+        )
+        // Table 1 is empty from here on, only table 2 of the two 2-seat tables is free to merge,
+        // so the group of four is offered no restaurant at all.
+        skipToAndAssert(
+            "[IMPORTANT] Simulation: Tick 15",
+            "[IMPORTANT] Simulation: Tick 15 (1) started.",
+        )
+        assertNextLine("[DEBUG] Restaurant No Decision: Group 2 could not decide for a restaurant.")
+        assertStatistics(1, cooked = 2, served = 2, delivered = 0, ratings = 1)
     }
 }

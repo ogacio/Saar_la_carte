@@ -110,6 +110,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01StopsAfterFullEvenin
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07ServedAndDeliveredCountedSeparately
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07StatisticsInAscendingRestaurantId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F13DishWithoutEligibleCookIsNotOrdered
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14AReservedTableIsBlockedForTheWholeEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14EventReservedBeforeRegular
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14RegularWithoutTableIsNotReserved
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16BarGroupSentAwayRatesNegative
@@ -128,6 +129,9 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWait
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsNeutralExperience
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentChangesTheProcuredAmount
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncidentChangesTheProcuredPackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08SupplierDeliversWholePackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08TheSupplierBuysOnlyWhatIsMissing
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09PlanningEstimatesOneGroupPerTenSeats
@@ -176,6 +180,7 @@ object SystemTestRegistration {
         registerFoodParserTests(testSuite)
         registerFrontOfHouseTests(testSuite)
         registerF06Tests(testSuite)
+        registerIncidentTests(testSuite)
         registerKitchenTests(testSuite)
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
@@ -207,6 +212,7 @@ object SystemTestRegistration {
     fun registerSystemTestsMutantSimulation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
         registerFrontOfHouseTests(testSuite)
+        registerIncidentTests(testSuite)
         testSuite.registerTest(F08SupplierDeliversWholePackages())
         testSuite.registerTest(F09PlanningEstimatesOneGroupPerTenSeats())
         testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
@@ -257,6 +263,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F07StatisticsInAscendingRestaurantId())
         testSuite.registerTest(F14RegularWithoutTableIsNotReserved())
         testSuite.registerTest(F14EventReservedBeforeRegular())
+        testSuite.registerTest(F14AReservedTableIsBlockedForTheWholeEvening())
         testSuite.registerTest(F16CasualGroupSeatedAtMergedTable())
         testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
@@ -292,6 +299,13 @@ object SystemTestRegistration {
     /**
      * Registers the F03 food file validation tests covering the root and ingredient fixtures.
      */
+
+    /** F31-F33: the incidents that change staff, recipes and packaging while the simulation runs. */
+    private fun registerIncidentTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F31StaffIncidentAddsTheCookThatUnlocksTheDish())
+        testSuite.registerTest(F32RecipeIncidentChangesTheProcuredAmount())
+        testSuite.registerTest(F33PackagingIncidentChangesTheProcuredPackages())
+    }
 
     /** F06 incident validation: every incident of a scenario file must be applicable. */
     private fun registerF06Tests(testSuite: SELab26TestSuite) {
