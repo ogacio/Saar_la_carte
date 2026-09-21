@@ -75,12 +75,13 @@ class EventCustomerGroup(
         if (experience == Experience.NEGATIVE) Rating.NEGATIVE else Rating.POSITIVE
 
     /**
-     * The whole group orders the favourite dish of the event, so the restaurant prepares that dish
-     * for every member.
+     * The whole group orders the favourite dish of the event for the restaurant's [type], so the
+     * restaurant prepares that dish for every member. Favourites for other restaurant types do not
+     * count (forum: only the favourite of the restaurant's type applies).
      */
-    override fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int> {
-        val favourites = favouriteDishes.values.toSet()
-        val dish = menu.firstOrNull { favourites.contains(it.getDishName()) } ?: return emptyMap()
+    override fun expectedDishes(menu: List<Recipe>, type: RestaurantType): Map<Recipe, Int> {
+        val favourite = favouriteDishes.filterKeys { it == type }.values.firstOrNull() ?: return emptyMap()
+        val dish = menu.firstOrNull { it.getDishName() == favourite } ?: return emptyMap()
         return mapOf(dish to groupSize())
     }
 

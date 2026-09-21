@@ -75,7 +75,12 @@ class DeliveryIntegrationTest {
         driver.logPreparation()
         repeat(4) {
             GlobalClock.advanceTick()
-            driver.plusTick()
+            driver.prepare()
+            driver.drive()
+            driver.arrive()
+            driver.deliverAccepted()
+            driver.deliverRejected()
+            driver.returnHome()
         }
         Statistics.record(811, group.members().count { it.status() == CustomerStatus.SERVED }, delivered = true)
 
