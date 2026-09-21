@@ -1,0 +1,48 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 1,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Slow Basic"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 5,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Slow Extra"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    }
+  ],
+  "incidents": []
+}

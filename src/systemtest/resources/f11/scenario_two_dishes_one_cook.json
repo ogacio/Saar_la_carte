@@ -1,0 +1,49 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 1,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Sous Dish"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1,
+        2
+      ],
+      "ratingLikelihood": "ALWAYS"
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 1,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Sous Extra"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1,
+        2
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": []
+}

@@ -4,122 +4,90 @@ import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 
-/**
- * manages the cooks mostly
- */
+/** Manages the cooks mostly. */
 class CookRoaster(
     val kitchenStaff: Map<CookType, Int>,
     val cooks: MutableList<Cook> = mutableListOf(),
     var nextId: Int = 1,
-    var restaurantId: Int
+    var restaurantId: Int,
 ) {
-    /**
-     * called in parser, makes the cooks field
-     */
+    /** Called in parser, makes the cooks field. */
     fun initialiseCooks() {
         for (type in CookType.entries) {
-            var remaining = kitchenStaff[type] ?: 0
-            while (remaining != 0) {
-                val cook = Cook(type, clock = GlobalClock)
-                cooks.add(cook)
-                remaining--
-            }
+            repeat(kitchenStaff[type] ?: 0) { cooks.add(Cook(type, clock = GlobalClock)) }
         }
     }
 
-    /**
-     * returns the cook that starts cooking the meals - that all have the same type - (if any is free)
-     */
+    /** The lowest-ranking eligible cook takes the dish, so the highest CookType ordinal. */
     fun startCooking(meals: MutableList<Meal>): Cook? {
-        val meal = meals[0]
-        for (cook in cooks) {
-            if (cook.isFree() && meal.recipe.cookTypes.contains(cook.getType())) {
-                if (cook.getId() == null) {
-                    cook.setId(nextId)
-                    nextId++
-                }
-                val m = meals[0]
-                val cookId = cook.getId()
-                val orderId = m.orderId
-                val allOrderIds = meals.map { it.orderId }.toSet().filterNotNull()
-                if (cookId != null && orderId != null) {
-                    dishAssignment(
-                        restaurantId,
-                        cookId,
-                        cook.getType(),
-                        meals.size,
-                        m.recipe.getDishName(),
-                        orderId,
-                        allOrderIds
-                    )
-                    cook.startCooking(meals)
-                    return cook
-                }
+        if (meals.isEmpty()) return null
+        val recipe = meals[0].recipe
+        val orderIds = meals.mapNotNull { it.orderId }.distinct().sorted()
+        if (orderIds.isEmpty()) return null
+        // sortedByDescending is stable, so among cooks of one type the first free one still takes it
+        for (cook in cooks.sortedByDescending { it.getType().ordinal }) {
+            if (!cook.isFree() || !recipe.cookableBy(cook.getType())) continue
+            // "A cook is assigned an id the moment they start cooking the first assigned dish."
+            if (cook.getId() == null) {
+                cook.setId(nextId)
+                nextId++
             }
+            dishAssignment(
+                restaurantId,
+                checkNotNull(cook.getId()),
+                cook.getType(),
+                meals.size,
+                recipe.getDishName(),
+                orderIds[0],
+                orderIds,
+            )
+            cook.startCooking(meals)
+            return cook
         }
         return null
     }
 
-    /**
-     * returns all the meals that are cooked in this tick
-     */
-    fun finished(): MutableMap<Cook, MutableList<Meal>> {
-        val finished = mutableMapOf<Cook, MutableList<Meal>>()
-        for (cook in cooks) {
-            val finishedOrNot = cook.cookingFinished()
-            if (finishedOrNot != null) finished[cook] = finishedOrNot
+    /** The meals finished this tick are reported by ascending cook id, empty pans skipped. */
+    fun finished(): Map<Cook, List<Meal>> {
+        val finished = linkedMapOf<Cook, List<Meal>>()
+        for (cook in cooks.sortedBy { it.getId() ?: Int.MAX_VALUE }) {
+            val batch = cook.cookingFinished()
+            if (!batch.isNullOrEmpty()) {
+                finished[cook] = batch
+            }
         }
         return finished
     }
 
-    /**
-     * returns if we have a cook to cook the recipe
-     */
-    fun hasEligible(r: Recipe): Boolean {
-        for (cook in cooks) {
-            if (r.cookTypes.contains(cook.getType())) return true
-        }
-        return false
-    }
+    /** ISSUE 2: how many cooks still have meals in the pan, for the status line. */
+    fun cooksWithAFullPan(): Int = cooks.count { it.batchSize() > 0 }
 
-    /**
-     * returns if we have a cook who is free to cook the recipe
-     */
-    fun hasEligibleAndFree(r: Recipe): Boolean {
-        for (cook in cooks) {
-            if (cook.isFree() && r.cookTypes.contains(cook.getType())) return true
-        }
-        return false
-    }
+    /** ISSUE 2: how many meals are still being cooked, for the status line. */
+    fun mealsInPans(): Int = cooks.sumOf { it.batchSize() }
 
-    /**
-     * triggered by incident, adds or removes cooks
-     */
+    /** Returns whether the restaurant employs a cook who could cook the recipe at all. */
+    fun hasEligible(r: Recipe): Boolean = cooks.any { r.cookableBy(it.getType()) }
+
+    /** Returns whether such a cook is also free this tick. */
+    fun hasEligibleAndFree(r: Recipe): Boolean = cooks.any { it.isFree() && r.cookableBy(it.getType()) }
+
+    /** Free cooks are fired first; a busy one hands its batch back to the queue. */
     fun changeStaff(type: CookType, delta: Int) {
-        var d = delta
-        if (d >= 0) {
-            while (d != 0) {
-                val cook = Cook(type, clock = GlobalClock)
-                cooks.add(cook)
-                d--
-            }
-        } else {
-            val cookCopy = cooks.toMutableList()
-            for (cook in cooks) {
-                if (d == 0) break
-                if (cook.getType() == type) {
-                    cookCopy.remove(cook)
-                    d++
-                }
-            }
-            cooks.clear()
-            cooks.addAll(cookCopy)
+        if (delta >= 0) {
+            repeat(delta) { cooks.add(Cook(type, clock = GlobalClock)) }
+            return
+        }
+        var toRemove = -delta
+        val candidates = cooks.filter { it.getType() == type }.sortedBy { if (it.isFree()) 0 else 1 }
+        for (cook in candidates) {
+            if (toRemove == 0) break
+            cook.releaseBatch()
+            cooks.remove(cook)
+            toRemove--
         }
     }
 
-    /**
-     * called at the end of the evening, resets every needed field for the next night
-     */
+    /** Called at the end of the evening, resets every needed field for the next night. */
     fun resetEvening() {
         for (cook in cooks) {
             cook.reset()

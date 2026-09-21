@@ -1,0 +1,90 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 20,
+      "bestBefore": 5
+    },
+    {
+      "name": "beef",
+      "unit": "g",
+      "packagingVolume": 50,
+      "bestBefore": 3
+    },
+    {
+      "name": "tofu",
+      "unit": "X",
+      "packagingVolume": 1,
+      "bestBefore": 4
+    },
+    {
+      "name": "broth",
+      "unit": "mL",
+      "packagingVolume": 500,
+      "bestBefore": 7
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Rice Bowl",
+      "duration": 2,
+      "cookType": [
+        "EXEC",
+        "SOUS",
+        "TOURNANT",
+        "SAUCE",
+        "FISH",
+        "ROAST",
+        "VEGETABLE",
+        "PASTRY"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Beef Stew",
+      "duration": 10,
+      "cookType": [
+        "ROAST",
+        "SAUCE"
+      ],
+      "ingredients": [
+        {
+          "name": "beef",
+          "amount": 2
+        },
+        {
+          "name": "broth",
+          "amount": 300
+        }
+      ],
+      "basicDishFor": "EUROPEAN"
+    },
+    {
+      "id": 3,
+      "dishName": "Tofu Salad",
+      "duration": 4,
+      "cookType": [
+        "VEGETABLE"
+      ],
+      "ingredients": [
+        {
+          "name": "tofu",
+          "amount": 1
+        },
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

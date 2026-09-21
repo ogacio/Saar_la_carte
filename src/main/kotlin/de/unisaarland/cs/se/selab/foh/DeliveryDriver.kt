@@ -89,6 +89,14 @@ class DeliveryDriver(private val restaurantId: Int) {
         ticksLeft = DeliveryService.calculateTravelTicks(checkNotNull(distance))
         travelTicks = checkNotNull(ticksLeft)
         o.getCustomerGroup().orderPlaced()
+    }
+
+    /**
+     * "Based on the meals received by the waitstaff, the drivers that have a full order prepare
+     * driving": the waitstaff hands the meals over first, so this line is written after those.
+     */
+    fun logPreparation() {
+        val o = order ?: return
         Logger.Delivery.deliveryPreparation(
             restaurantId,
             checkNotNull(id),
@@ -97,6 +105,9 @@ class DeliveryDriver(private val restaurantId: Int) {
             checkNotNull(travelTicks)
         )
     }
+
+    /** The order this driver is carrying, null while it is waiting or on its way back. */
+    fun currentOrder(): Order? = order
 
     /**
      * is the driver state waiting?

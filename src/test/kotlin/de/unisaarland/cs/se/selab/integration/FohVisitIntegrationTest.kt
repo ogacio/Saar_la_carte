@@ -148,7 +148,7 @@ class FohVisitIntegrationTest {
             logLines(log),
         )
         assertTrue(visit.isFinished())
-        assertTrue(order.getMeals().all { it.status == MealStatus.ABORTED })
+        assertTrue(order.getMeals().all { it.status == MealStatus.QUEUED })
         assertEquals(1, group.failedAttempts())
     }
 

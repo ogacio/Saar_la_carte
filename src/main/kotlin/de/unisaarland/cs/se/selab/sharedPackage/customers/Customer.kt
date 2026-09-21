@@ -46,6 +46,18 @@ class Customer(private val preference: FoodPreference?) {
         return tick - served >= EATING_TICKS
     }
 
+    /**
+     * Puts the customer back into the state it starts an evening in. F30 is responsible for the
+     * "resetting of customers"; without it a group that visits twice arrives on the second evening
+     * with every member still LEFT.
+     */
+    fun resetForVisit() {
+        chosenDish = null
+        meal = null
+        servedTick = null
+        status = CustomerStatus.ORDERED
+    }
+
     /** Records that this customer has left the restaurant. */
     fun leave() {
         status = CustomerStatus.LEFT

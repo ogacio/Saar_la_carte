@@ -139,7 +139,10 @@ class ServingService(
     private fun serveDeliveryDesk(carried: MutableMap<Waiter, Int>, sbu: SubUnits) {
         for (order in deliveryDesk.getReady().sortedBy { it.getId() }) {
             val meals = order.getMeals().sortedWith(mealPriority)
-            if (waitstaff.capacity(ActionType.SERVING) < meals.size) return
+            // Several waiters may carry one order out together. An order that does not fit into
+            // this tick waits, but it does not block the smaller orders behind it.
+            if (waitstaff.capacity(ActionType.SERVING) < meals.size) continue
+            // Without a free driver no order can go out this tick at all.
             val driverId = deliveryDesk.sendForOrder(order) ?: return
             var next = 0
             while (next < meals.size) {
@@ -157,6 +160,7 @@ class ServingService(
                 carried[waiter] = (carried[waiter] ?: 0) + batch.size
                 next += batch.size
             }
+            deliveryDesk.logPreparationFor(driverId)
         }
     }
 

@@ -72,6 +72,7 @@ class DeliveryIntegrationTest {
         val log = captureLog(LogLevel.DEBUG)
 
         driver.receiveOrder(order)
+        driver.logPreparation()
         repeat(4) {
             GlobalClock.advanceTick()
             driver.plusTick()

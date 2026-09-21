@@ -1,6 +1,50 @@
 package de.unisaarland.cs.se.selab.systemtest.selab26
 
 import de.unisaarland.cs.se.selab.systemtest.selab26.basictests.ExampleSystemTest
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24AGroupGivesUpOnALateDelivery
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28SeatsAreReducedAsEachGroupDecides
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheDriverTakesASecondOrderAfterReturning
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheHandOverIsLoggedBeforeTheDriverPrepares
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30ADeliveryOnTheRoadContinuesAfterClosing
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30CustomersAreResetForTheNextEvening
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30NoNewCustomersInTheLastThreeTicks
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadDupIdenticalRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDishLowercase
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDishUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDupName
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDupNameDiffType
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeDuplicate
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeLowercase
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDishNameEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDishNameMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDupId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDuration1
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDuration41
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDurationFractional
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDurationNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDurationZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIdFractional
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIdMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIdNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountFractional
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngNameMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngUnknownName
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngredientsEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngredientsMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyCookTypeArray
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipeIngredientsArray
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipesArray
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyStringDishName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeFractional
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeOne
@@ -35,6 +79,23 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientUnused
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsAndRecipesBothEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArrayDuplicateFixture
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullBasicDishFor
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRecipeIngUnit
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRequiredId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngUnitMismatch
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecipesEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeAllEightCooktypes
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeAmountOne
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDuplicateDishnameNoBasic
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDurationForty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDurationTwo
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeIdZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeIngredientUnitMatches
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeNoBasicdishAnywhere
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeSameIngredientTwice
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeTwoBasicsSameTypeDiffNames
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootBaseline
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootExtraKey
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootIngredientsNotArray
@@ -44,10 +105,18 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMissingRecipes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootNotObject
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootRecipesNull
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootSingleIngredientSingleRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentDuplicateId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownIngredient
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownRestaurant
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentsValid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06OverlappingUnavailability
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06StaffChangeOfTheExecCook
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06StaffChangeWithoutNumber
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01SecondEveningRestartsTickCount
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01StopsAfterFullEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07ServedAndDeliveredCountedSeparately
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07StatisticsInAscendingRestaurantId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F13DishWithoutEligibleCookIsNotOrdered
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14EventReservedBeforeRegular
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14RegularWithoutTableIsNotReserved
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16BarGroupSentAwayRatesNegative
@@ -66,6 +135,30 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWait
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsNeutralExperience
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08SupplierDeliversWholePackages
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08TheSupplierBuysOnlyWhatIsMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09PlanningEstimatesOneGroupPerTenSeats
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BasicDishesAreQueuedFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10OneBatchServesSeveralOrders
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ADishWaitsWhileItsOnlyCookIsBusy
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11EachDishGoesToACookOfItsType
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11TheLowestRankingEligibleCookTakesTheDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12ATenMinuteDishIsFinishedInTheSameTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12KitchenStatusIsLoggedEveryTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12MealCookedReportsTheBatchAndTheWaitingTime
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12TheFinishedMealsAreLoggedInAscendingCookId
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.P01BestBeforeTwoLastsExactlyTwoEvenings
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.P01IngredientsLastTheirBestBeforeDays
+import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13ADishWithoutAnEligibleCookIsNotOnTheMenu
+import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13AnUnavailableIngredientEmptiesTheMenuForOneEvening
+import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13CustomersFallBackToTheNextAvailableDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13ReservedIngredientsAreNotAvailable
+import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13TheLastPortionLeavesTheSecondCustomerWithNothing
+import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07CountsAddUpOverTheWholeSimulation
+import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07DeliveredCountsCustomersNotOrders
+import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07EachRestaurantCountsOnlyItsOwn
+import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07RatingsCountRatingsNotCustomers
+import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07SentAwayGroupIsARatingButNotACustomer
 // RootEmptyFile and RootMalformedJson unregistered below, see the note there — imports removed too.
 // F01FirstTickLogOrder, F13DishWithoutEligibleCookIsNotOrdered, F28NoNewCustomersInLastThreeTicks
 // and F20DeliveryOverSevenKilometres unregistered below, see the notes there — imports removed too.
@@ -84,6 +177,11 @@ object SystemTestRegistration {
         testSuite.registerTest(ExampleSystemTest())
         registerFoodParserTests(testSuite)
         registerFrontOfHouseTests(testSuite)
+        registerF06Tests(testSuite)
+        registerKitchenTests(testSuite)
+        registerStatisticsTests(testSuite)
+        registerMenuTests(testSuite)
+        registerDeliveryTests(testSuite)
     }
 
     /**
@@ -95,6 +193,13 @@ object SystemTestRegistration {
     fun registerSystemTestsMutantValidation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
         registerFoodParserTests(testSuite)
+        testSuite.registerTest(F06IncidentsValid())
+        testSuite.registerTest(F06IncidentUnknownRestaurant())
+        testSuite.registerTest(F06IncidentUnknownIngredient())
+        testSuite.registerTest(F06IncidentDuplicateId())
+        testSuite.registerTest(F06OverlappingUnavailability())
+        testSuite.registerTest(F06StaffChangeWithoutNumber())
+        testSuite.registerTest(F06StaffChangeOfTheExecCook())
     }
 
     /**
@@ -104,6 +209,39 @@ object SystemTestRegistration {
     fun registerSystemTestsMutantSimulation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
         registerFrontOfHouseTests(testSuite)
+        testSuite.registerTest(F08SupplierDeliversWholePackages())
+        testSuite.registerTest(F09PlanningEstimatesOneGroupPerTenSeats())
+        testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
+        testSuite.registerTest(F10BasicDishesAreQueuedFirst())
+        testSuite.registerTest(F10OneBatchServesSeveralOrders())
+        testSuite.registerTest(F11EachDishGoesToACookOfItsType())
+        testSuite.registerTest(F11ADishWaitsWhileItsOnlyCookIsBusy())
+        testSuite.registerTest(F12MealCookedReportsTheBatchAndTheWaitingTime())
+        testSuite.registerTest(F07DeliveredCountsCustomersNotOrders())
+        testSuite.registerTest(F07RatingsCountRatingsNotCustomers())
+        testSuite.registerTest(F07EachRestaurantCountsOnlyItsOwn())
+        testSuite.registerTest(F07SentAwayGroupIsARatingButNotACustomer())
+        testSuite.registerTest(F13TheLastPortionLeavesTheSecondCustomerWithNothing())
+        testSuite.registerTest(F13ReservedIngredientsAreNotAvailable())
+        testSuite.registerTest(F13CustomersFallBackToTheNextAvailableDish())
+        testSuite.registerTest(F13ADishWithoutAnEligibleCookIsNotOnTheMenu())
+        testSuite.registerTest(F13AnUnavailableIngredientEmptiesTheMenuForOneEvening())
+        testSuite.registerTest(F24ADeliveredGroupEatsAndRates())
+        testSuite.registerTest(F28ADeliveryIsOnlyOfferedWhileADriverIsFree())
+        testSuite.registerTest(F28AClosedRestaurantIsNotOffered())
+        testSuite.registerTest(F28SeatsAreReducedAsEachGroupDecides())
+        testSuite.registerTest(F29TheDriverTakesASecondOrderAfterReturning())
+        // testSuite.registerTest(F30ADeliveryOnTheRoadContinuesAfterClosing())
+        testSuite.registerTest(P01IngredientsLastTheirBestBeforeDays())
+        testSuite.registerTest(P01BestBeforeTwoLastsExactlyTwoEvenings())
+        testSuite.registerTest(F11TheLowestRankingEligibleCookTakesTheDish())
+        testSuite.registerTest(F12KitchenStatusIsLoggedEveryTick())
+        testSuite.registerTest(F12TheFinishedMealsAreLoggedInAscendingCookId())
+        testSuite.registerTest(F12ATenMinuteDishIsFinishedInTheSameTick())
+        testSuite.registerTest(F07CountsAddUpOverTheWholeSimulation())
+        testSuite.registerTest(F24AGroupGivesUpOnALateDelivery())
+        testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
+        testSuite.registerTest(F30CustomersAreResetForTheNextEvening())
     }
 
     /**
@@ -126,10 +264,9 @@ object SystemTestRegistration {
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
         testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
         testSuite.registerTest(F18FavouriteDishAndHighestRecipeId())
-        // F13DishWithoutEligibleCookIsNotOrdered unregistered 2026-09-18: Menu/Statistics (Constantin,
-        // F13) does not yet exclude a dish when no eligible cook exists, per qa-findings-2026-09-18.md
-        // §6. Not Stefan's file to fix.
-        // testSuite.registerTest(F13DishWithoutEligibleCookIsNotOrdered())
+        // F13DishWithoutEligibleCookIsNotOrdered re-registered 2026-09-19: the menu now excludes a
+        // dish without an eligible cook, so this test passes again.
+        testSuite.registerTest(F13DishWithoutEligibleCookIsNotOrdered())
         testSuite.registerTest(F21VisitServedEscortedAndRated())
         testSuite.registerTest(P03EventOrdersFavouriteDish())
         testSuite.registerTest(F28TieGoesToLowestId())
@@ -138,14 +275,11 @@ object SystemTestRegistration {
         // has no last-3-ticks closing exclusion at all (Adjustment 15, documented known bug #2 in
         // qa-findings-2026-09-18.md §6). Not Stefan's file to fix.
         // testSuite.registerTest(F28NoNewCustomersInLastThreeTicks())
-        // F20DeliveryOverSevenKilometres unregistered 2026-09-18: NOT a code defect. Manually running
-        // this exact scenario against libs/selab.jar produces the fully correct log end to end
-        // (Delivery Finished -> 2-tick eating clock -> Delivery Finished Eating -> Rating POSITIVE ->
-        // delivered=2, ratings=1). The systemtest runner itself reports
-        // "End of log reached before '[INFO] Delivery Preparation'" even though that line is present
-        // in the captured output — reproduced identically on the pre-fix code by stashing all local
-        // changes, so this is a runner-level flake, not something in src/main. Re-register once the
-        // runner issue is understood; no application code change should be needed.
+        // F20DeliveryOverSevenKilometres still unregistered 2026-09-20: the "runner flake" of the old
+        // note was real, the hand-over and the preparation line were swapped, and that half is fixed.
+        // What is left is the Delivery Driving distance: we log the kilometres of this tick (5, then
+        // 2), the test expects the cumulative distance (5, then 7) citing forum thread 126.
+        // DeliveryDriver.drivenDistance() is the only place to change.
         // testSuite.registerTest(F20DeliveryOverSevenKilometres())
         testSuite.registerTest(F18SecondCustomerFindsNoDishAndLeaves())
         testSuite.registerTest(F19TableHeldBackUntilAllMealsAreCooked())
@@ -160,11 +294,76 @@ object SystemTestRegistration {
     /**
      * Registers the F03 food file validation tests covering the root and ingredient fixtures.
      */
+
+    /** F06 incident validation: every incident of a scenario file must be applicable. */
+    private fun registerF06Tests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F06IncidentsValid())
+        testSuite.registerTest(F06IncidentUnknownRestaurant())
+        testSuite.registerTest(F06IncidentUnknownIngredient())
+        testSuite.registerTest(F06IncidentDuplicateId())
+        testSuite.registerTest(F06OverlappingUnavailability())
+        testSuite.registerTest(F06StaffChangeWithoutNumber())
+        testSuite.registerTest(F06StaffChangeOfTheExecCook())
+    }
+
+    /** F08-F12 and P01: what the kitchen buys, who cooks a dish and when it is reported. */
+    private fun registerKitchenTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F08SupplierDeliversWholePackages())
+        testSuite.registerTest(F09PlanningEstimatesOneGroupPerTenSeats())
+        testSuite.registerTest(P01IngredientsLastTheirBestBeforeDays())
+        testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
+        testSuite.registerTest(P01BestBeforeTwoLastsExactlyTwoEvenings())
+        testSuite.registerTest(F10BasicDishesAreQueuedFirst())
+        testSuite.registerTest(F10OneBatchServesSeveralOrders())
+        testSuite.registerTest(F11EachDishGoesToACookOfItsType())
+        testSuite.registerTest(F11ADishWaitsWhileItsOnlyCookIsBusy())
+        testSuite.registerTest(F12MealCookedReportsTheBatchAndTheWaitingTime())
+        testSuite.registerTest(F12KitchenStatusIsLoggedEveryTick())
+        testSuite.registerTest(F11TheLowestRankingEligibleCookTakesTheDish())
+        testSuite.registerTest(F12TheFinishedMealsAreLoggedInAscendingCookId())
+        testSuite.registerTest(F12ATenMinuteDishIsFinishedInTheSameTick())
+    }
+
+    /** F07: what the four statistics lines count, and over which part of the simulation. */
+    private fun registerStatisticsTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F07DeliveredCountsCustomersNotOrders())
+        testSuite.registerTest(F07RatingsCountRatingsNotCustomers())
+        testSuite.registerTest(F07CountsAddUpOverTheWholeSimulation())
+        testSuite.registerTest(F07EachRestaurantCountsOnlyItsOwn())
+        testSuite.registerTest(F07SentAwayGroupIsARatingButNotACustomer())
+    }
+
+    /** F13: which dishes can still be ordered, and what happens when none is left. */
+    private fun registerMenuTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F13TheLastPortionLeavesTheSecondCustomerWithNothing())
+        testSuite.registerTest(F13ReservedIngredientsAreNotAvailable())
+        testSuite.registerTest(F13CustomersFallBackToTheNextAvailableDish())
+        testSuite.registerTest(F13ADishWithoutAnEligibleCookIsNotOnTheMenu())
+        testSuite.registerTest(F13AnUnavailableIngredientEmptiesTheMenuForOneEvening())
+    }
+
+    /** F24, F28-F30: deliveries, browsing and the end of the opening time. */
+    private fun registerDeliveryTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F24ADeliveredGroupEatsAndRates())
+        testSuite.registerTest(F24AGroupGivesUpOnALateDelivery())
+        testSuite.registerTest(F28ADeliveryIsOnlyOfferedWhileADriverIsFree())
+        testSuite.registerTest(F28AClosedRestaurantIsNotOffered())
+        testSuite.registerTest(F28SeatsAreReducedAsEachGroupDecides())
+        testSuite.registerTest(F29TheDriverTakesASecondOrderAfterReturning())
+        testSuite.registerTest(F30NoNewCustomersInTheLastThreeTicks())
+        testSuite.registerTest(F30ADeliveryOnTheRoadContinuesAfterClosing())
+        testSuite.registerTest(F30CustomersAreResetForTheNextEvening())
+        testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
+    }
+
     private fun registerFoodParserTests(testSuite: SELab26TestSuite) {
         registerRootTests(testSuite)
         registerIngredientValidTests(testSuite)
         registerIngredientFieldTests(testSuite)
         registerIngredientRangeTests(testSuite)
+        registerRecipeValidTests(testSuite)
+        registerRecipeInvalidTests(testSuite)
+        registerProbeTests(testSuite)
     }
 
     /**
@@ -239,5 +438,71 @@ object SystemTestRegistration {
         testSuite.registerTest(IngredientsAndRecipesBothEmpty())
         testSuite.registerTest(IngredientNameEmptyStringFixture())
         testSuite.registerTest(IngredientNameNullFixture())
+    }
+
+    private fun registerRecipeValidTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(EmptyRecipesArray())
+        testSuite.registerTest(NullRecipeIngUnit())
+        testSuite.registerTest(RecipeAllEightCooktypes())
+        testSuite.registerTest(RecipeAmountOne())
+        testSuite.registerTest(RecipeDuplicateDishnameNoBasic())
+        testSuite.registerTest(RecipeDurationTwo())
+        testSuite.registerTest(RecipeDurationForty())
+        testSuite.registerTest(RecipeIdZero())
+        testSuite.registerTest(RecipeNoBasicdishAnywhere())
+        testSuite.registerTest(RecipeIngredientUnitMatches())
+        testSuite.registerTest(RecipesEmpty())
+        testSuite.registerTest(RecipeSameIngredientTwice())
+        testSuite.registerTest(RecipeTwoBasicsSameTypeDiffNames())
+    }
+
+    /**
+     * Registers the recipe fixtures that must be rejected.
+     */
+    private fun registerRecipeInvalidTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(BadDupIdenticalRecipe())
+        testSuite.registerTest(BadRecBasicDupName())
+        testSuite.registerTest(BadRecBasicDupNameDiffType())
+        testSuite.registerTest(BadRecBasicDishLowercase())
+        testSuite.registerTest(BadRecBasicDishUnknown())
+        testSuite.registerTest(BadRecCookTypeDuplicate())
+        testSuite.registerTest(BadRecCookTypeEmpty())
+        testSuite.registerTest(BadRecCookTypeLowercase())
+        testSuite.registerTest(BadRecCookTypeMissing())
+        testSuite.registerTest(BadRecCookTypeUnknown())
+        testSuite.registerTest(BadRecDishNameEmpty())
+        testSuite.registerTest(BadRecDishNameMissing())
+        testSuite.registerTest(BadRecDupId())
+        testSuite.registerTest(BadRecDuration1())
+        testSuite.registerTest(BadRecDuration41())
+        testSuite.registerTest(BadRecDurationFractional())
+        testSuite.registerTest(BadRecDurationNegative())
+        testSuite.registerTest(BadRecDurationZero())
+        testSuite.registerTest(BadRecExtraKey())
+        testSuite.registerTest(BadRecIdFractional())
+        testSuite.registerTest(BadRecIdMissing())
+        testSuite.registerTest(BadRecIdNegative())
+        testSuite.registerTest(BadRecIngAmountFractional())
+        testSuite.registerTest(BadRecIngAmountMissing())
+        testSuite.registerTest(BadRecIngAmountNegative())
+        testSuite.registerTest(BadRecIngAmountZero())
+        testSuite.registerTest(BadRecIngNameMissing())
+        testSuite.registerTest(BadRecIngUnknownName())
+        testSuite.registerTest(BadRecIngredientsEmpty())
+        testSuite.registerTest(BadRecIngredientsMissing())
+        testSuite.registerTest(EmptyCookTypeArray())
+        testSuite.registerTest(EmptyRecipeIngredientsArray())
+        testSuite.registerTest(EmptyStringDishName())
+        testSuite.registerTest(NullBasicDishFor())
+        testSuite.registerTest(NullRequiredId())
+    }
+
+    /**
+     * Registers the probe fixtures to verify parser over-validation behaviors.
+     */
+    private fun registerProbeTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ProbeRecipesEmpty())
+        testSuite.registerTest(ProbeRecIngUnitMismatch())
+        testSuite.registerTest(ProbeRecIngExtraKey())
     }
 }

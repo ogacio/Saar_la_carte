@@ -137,7 +137,13 @@ class FoodParser(model: ParsedModel) : ConfigParser(model) {
      */
     private fun checkBasicDishUniqueness(recipes: MutableList<Recipe>): Boolean {
         val basicNames = recipes.filter { it.basicDishFor != null }.map { it.getDishName() }
-        return basicNames.size == basicNames.toSet().size
+        if (basicNames.size != basicNames.toSet().size) {
+            return false
+        }
+        // "There must exist exactly 1 recipe per basic dish name", so a second recipe carrying the
+        // name of a basic dish is one too many, whether it is marked as a basic dish or not.
+        val namesInFile = recipes.map { it.getDishName() }
+        return basicNames.none { name -> namesInFile.count { it == name } > 1 }
     }
 
     /** File scope constants of the food stage. */

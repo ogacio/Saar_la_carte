@@ -46,6 +46,9 @@ class FrontOfTheHouse(
     /** Delivery groups that gave up waiting this tick; rated in the next rating step. */
     private var gaveUpDeliveries: List<CustomerGroup> = emptyList()
 
+    /** Orders whose group has already been reported as having given up, so the line is written once. */
+    private val reportedGiveUps: MutableSet<Int> = mutableSetOf()
+
     /**
      * Preparation, before the doors open. The floor is reset first, then tables are
      * reserved for EVENT and then REGULAR groups; the groups that got no table are sent away.
@@ -88,7 +91,7 @@ class FrontOfTheHouse(
      * then seating, then ordering, before the next group. Groups that found no waiter
      * last tick try again here without arriving again. The two status lines come last.
      */
-    fun callSeatingAndOrdering(arrivals: List<CustomerGroup>) {
+    fun callSeatingAndOrdering(arrivals: List<CustomerGroup>, acceptsCustomers: Boolean = true) {
         val tick = GlobalClock.currentTick
         val arrived = arrivals.filter { it.id() !in cancelledTonight }.map { Visit(it) }
         visits += arrived
@@ -97,6 +100,10 @@ class FrontOfTheHouse(
         for (visit in visits) {
             if (visit.state !is AwaitingSeatState) continue
             if (visit in arrived) Logger.Customer.arrival(sbu.restaurantId, visit.group.id())
+            // "A restaurant does not accept new customers in the last 3 ticks of their opening
+            // time. This includes customers that arrived in the previous tick but could not be
+            // seated." They keep waiting and are sent out when the opening time ends.
+            if (!acceptsCustomers) continue
             services.seating.seat(visit, sbu, tick)
             services.ordering.takeOrder(visit, sbu, tick)
         }
@@ -109,6 +116,7 @@ class FrontOfTheHouse(
 
     /** Step 4: the drivers prepare, drive, deliver and return; resolved orders join the eating/rating flow. */
     fun callDeliveryDesk() {
+        dropGivenUpOrders()
         for (driver in deliveryDesk.getDrivers()) {
             driver.plusTick()
             val resolved = driver.takeResolvedOrder() ?: continue
@@ -192,6 +200,7 @@ class FrontOfTheHouse(
 
     /** After the last rating step of the evening: drop everything that belongs to tonight. */
     fun closeEvening() {
+        reportedGiveUps.clear()
         visits.clear()
         turnedAway = emptyList()
         cancelledTonight.clear()
@@ -237,4 +246,30 @@ class FrontOfTheHouse(
 
     /** The reservations of this restaurant; the restaurant's snapshot reads the booked event seats from it. */
     fun getReservationBook(): ReservationBook = reservations
+
+    /**
+     * "in case they didn't get food at the end of the 3rd tick after the tick where their food should
+     * have arrived": an order still waiting at the desk is dropped, its meals are aborted so the kitchen
+     * stops cooking them, and the group rates in this tick.
+     */
+    private fun dropGivenUpOrders() {
+        val atTheDesk = deliveryDesk.getNewOrders() + deliveryDesk.getReady()
+        val onTheRoad = deliveryDesk.getDrivers().mapNotNull { it.currentOrder() }
+        // "This is logged using group and order id in ascending order of group id": an order that
+        // is already with a driver counts too, and the line is written once, in the tick the group
+        // ran out of patience. The driver then fails to deliver it on arrival.
+        for (order in (atTheDesk + onTheRoad).filter { it.getCustomerGroup().hasGivenUp() }
+            .sortedBy { it.getCustomerGroupId() }) {
+            if (reportedGiveUps.add(order.getId())) {
+                Logger.Delivery.deliveryGivenUp(sbu.restaurantId, order.getCustomerGroup().id(), order.getId())
+            }
+        }
+        for (order in atTheDesk.filter { it.getCustomerGroup().hasGivenUp() }) {
+            // "It can happen that a customer leaves the restaurant or aborts a delivery. However,
+            // for this there is no synchronization to the kitchen": the meals keep being cooked,
+            // only no driver takes them out any more.
+            deliveryDesk.drop(order)
+            gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
+        }
+    }
 }

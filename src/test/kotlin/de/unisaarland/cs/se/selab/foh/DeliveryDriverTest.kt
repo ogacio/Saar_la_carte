@@ -60,11 +60,12 @@ class DeliveryDriverTest {
     }
 
     @Test
-    fun receivingAnOrderLogsThePreparationAndDoesNotDriveInTheSameTick() {
+    fun receivingAnOrderStartsTheDeliveryAndDoesNotDriveInTheSameTick() {
         val order = orderFor(casual(3, 2, deliveryDistance = 7))
         val log = captureLog()
 
         driver.receiveOrder(order)
+        driver.logPreparation()
         driver.plusTick()
 
         assertEquals(
