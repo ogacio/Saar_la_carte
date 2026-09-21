@@ -57,7 +57,7 @@ object DeliveryService {
         }
         var order: Order? = null
         if (found.isNotEmpty()) {
-            order = Order(g, restaurant.getId(), g.id(), GlobalClock.currentTick, true, found)
+            order = Order(g, restaurant.getId(), g.id(), GlobalClock.getCurrentTick(), true, found)
             for (i in order.getMeals()) {
                 i.orderId = order.getId()
             }
@@ -127,6 +127,17 @@ object DeliveryService {
     }
 
     /**
+     * add allDrivers to deliveryDesks
+     */
+    fun distributeDriversToDesks() {
+        allDrivers.forEach {
+            val currentSimulator = checkNotNull(simulator)
+            val restaurant = checkNotNull(currentSimulator.restaurantsById(it.getRestaurantId()))
+            restaurant.getFoh().getDeliveryDesk().addDriver(it)
+        }
+    }
+
+    /**
      * adds driver to simulation
      */
     fun addDriver(restaurantId: Int) {
@@ -151,4 +162,11 @@ object DeliveryService {
      * sets simulator: necessary
      */
     fun setSimulator(s: Simulator) { simulator = s }
+
+    /**
+     * add List to allDrivers
+     */
+    fun setAllDrivers(drivers: List<DeliveryDriver>) {
+        allDrivers.addAll(drivers)
+    }
 }
