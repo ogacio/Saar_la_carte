@@ -133,18 +133,15 @@ class FoodParser(model: ParsedModel) : ConfigParser(model) {
         ingredientCount > 0 && recipes.isNotEmpty() && checkBasicDishUniqueness(recipes)
 
     /**
-     * Whether there is exactly one default recipe per basic dish name and restaurant type.
+     * Whether there is exactly one default recipe per basic dish name.
      *
      * Only recipes carrying `basicDishFor` count: a restaurant adapts a basic dish through a second
      * recipe of the same name without `basicDishFor` (forum threads 78 and 297), so such a recipe
      * is allowed. Whether a restaurant lists both is checked by the restaurant parser.
-     *
-     * The same name may be the basic dish of two different restaurant types, because each type has
-     * its own set of basic dishes; only a second default recipe for the same name and type is rejected.
      */
     private fun checkBasicDishUniqueness(recipes: MutableList<Recipe>): Boolean {
-        val basicDishes = recipes.filter { it.basicDishFor != null }.map { it.getDishName() to it.basicDishFor }
-        return basicDishes.size == basicDishes.toSet().size
+        val basicNames = recipes.filter { it.basicDishFor != null }.map { it.getDishName() }
+        return basicNames.size == basicNames.toSet().size
     }
 
     /** File scope constants of the food stage. */
