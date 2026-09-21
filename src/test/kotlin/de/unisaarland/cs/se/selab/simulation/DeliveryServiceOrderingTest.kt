@@ -103,7 +103,7 @@ class DeliveryServiceOrderingTest {
         offer(listOf(riceBowl, tofuBowl, tofuRice))
         val log = captureLog(LogLevel.IMPORTANT)
 
-        val order = assertNotNull(DeliveryService.placeOrder(deliveryGroup(null), restaurant, ORDER_TICK))
+        val order = assertNotNull(DeliveryService.placeOrder(deliveryGroup(null), restaurant))
 
         assertEquals(mapOf("Tofu Rice" to 1), order.dishCounts())
         assertEquals(
@@ -118,7 +118,7 @@ class DeliveryServiceOrderingTest {
     fun theOrderGoesToTheKitchenAndTheDeliveryDesk() {
         offer(listOf(riceBowl))
 
-        val order = assertNotNull(DeliveryService.placeOrder(deliveryGroup(null), restaurant, ORDER_TICK))
+        val order = assertNotNull(DeliveryService.placeOrder(deliveryGroup(null), restaurant))
 
         verify(kitchen).enqueue(order)
         verify(desk).enqueue(order)
@@ -131,7 +131,7 @@ class DeliveryServiceOrderingTest {
     fun anExcludedIngredientRulesTheDishOut() {
         offer(listOf(riceBowl, tofuBowl, tofuRice))
 
-        val order = DeliveryService.placeOrder(deliveryGroup(preference(excluded = setOf(tofu))), restaurant, 1)
+        val order = DeliveryService.placeOrder(deliveryGroup(preference(excluded = setOf(tofu))), restaurant)
 
         assertEquals(mapOf("Rice Bowl" to 1), assertNotNull(order).dishCounts())
     }
@@ -142,7 +142,7 @@ class DeliveryServiceOrderingTest {
 
         val group = deliveryGroup(preference(favourites = listOf("Tofu Bowl")))
 
-        val order = DeliveryService.placeOrder(group, restaurant, 1)
+        val order = DeliveryService.placeOrder(group, restaurant)
 
         assertEquals(mapOf("Tofu Bowl" to 1), assertNotNull(order).dishCounts())
     }
@@ -152,7 +152,7 @@ class DeliveryServiceOrderingTest {
         offer(listOf(riceBowl, tofuRice))
 
         val favourites = listOf("Tofu Bowl", "Rice Bowl", "Tofu Rice")
-        val order = DeliveryService.placeOrder(deliveryGroup(preference(favourites = favourites)), restaurant, 1)
+        val order = DeliveryService.placeOrder(deliveryGroup(preference(favourites = favourites)), restaurant)
 
         // Tofu Bowl is not offered, so the next favourite in the declared order is taken.
         assertEquals(mapOf("Rice Bowl" to 1), assertNotNull(order).dishCounts())
@@ -162,7 +162,7 @@ class DeliveryServiceOrderingTest {
     fun theMostPreferredIngredientsBeatTheHighestId() {
         offer(listOf(riceBowl, tofuBowl))
 
-        val order = DeliveryService.placeOrder(deliveryGroup(preference(preferred = setOf(rice))), restaurant, 1)
+        val order = DeliveryService.placeOrder(deliveryGroup(preference(preferred = setOf(rice))), restaurant)
 
         assertEquals(mapOf("Rice Bowl" to 1), assertNotNull(order).dishCounts())
     }
@@ -171,7 +171,7 @@ class DeliveryServiceOrderingTest {
     fun amongEquallyPreferredDishesTheHighestIdWins() {
         offer(listOf(riceBowl, tofuBowl, tofuRice))
 
-        val order = DeliveryService.placeOrder(deliveryGroup(preference(preferred = setOf(rice))), restaurant, 1)
+        val order = DeliveryService.placeOrder(deliveryGroup(preference(preferred = setOf(rice))), restaurant)
 
         // Rice Bowl and Tofu Rice both contain rice once.
         assertEquals(mapOf("Tofu Rice" to 1), assertNotNull(order).dishCounts())
@@ -186,7 +186,7 @@ class DeliveryServiceOrderingTest {
         val picky = preference(excluded = setOf(tofu))
 
         // The relaxed customer is listed first, but the picky one has more exclusions and chooses first.
-        val order = DeliveryService.placeOrder(deliveryGroup(relaxed, picky), restaurant, 1)
+        val order = DeliveryService.placeOrder(deliveryGroup(relaxed, picky), restaurant)
 
         // Had the relaxed customer chosen first, it would have taken Tofu Rice (highest id) and the
         // picky one would have found nothing.
@@ -199,7 +199,7 @@ class DeliveryServiceOrderingTest {
         offer(listOf(riceBowl), emptyList())
         val log = captureLog(LogLevel.IMPORTANT)
 
-        val order = assertNotNull(DeliveryService.placeOrder(deliveryGroup(null, null), restaurant, 1))
+        val order = assertNotNull(DeliveryService.placeOrder(deliveryGroup(null, null), restaurant))
 
         assertEquals(mapOf("Rice Bowl" to 1), order.dishCounts())
         assertEquals(
@@ -215,7 +215,7 @@ class DeliveryServiceOrderingTest {
         val log = captureLog(LogLevel.IMPORTANT)
         val picky = preference(excluded = setOf(tofu))
 
-        val order = DeliveryService.placeOrder(deliveryGroup(picky, picky), restaurant, 1)
+        val order = DeliveryService.placeOrder(deliveryGroup(picky, picky), restaurant)
 
         assertNull(order)
         verify(kitchen, never()).enqueue(any())
@@ -291,6 +291,5 @@ class DeliveryServiceOrderingTest {
         const val DURATION = 10
         const val DISTANCE = 7
         const val VISITING_TICK = 10
-        const val ORDER_TICK = 5
     }
 }
