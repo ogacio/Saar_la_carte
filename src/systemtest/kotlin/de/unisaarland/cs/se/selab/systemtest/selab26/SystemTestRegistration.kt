@@ -11,6 +11,40 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheHandOverIsLo
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30ADeliveryOnTheRoadContinuesAfterClosing
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30CustomersAreResetForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30NoNewCustomersInTheLastThreeTicks
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadDupIdenticalRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDishLowercase
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDishUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDupName
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDupNameDiffType
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeDuplicate
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeLowercase
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecCookTypeUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDishNameEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDishNameMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDupId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDuration1
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDuration41
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDurationFractional
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDurationNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecDurationZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIdFractional
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIdMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIdNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountFractional
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngAmountZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngNameMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngUnknownName
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngredientsEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngredientsMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyCookTypeArray
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipeIngredientsArray
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipesArray
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyStringDishName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeFractional
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeOne
@@ -45,6 +79,23 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientUnused
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsAndRecipesBothEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArrayDuplicateFixture
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullBasicDishFor
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRecipeIngUnit
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRequiredId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngUnitMismatch
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecipesEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeAllEightCooktypes
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeAmountOne
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDuplicateDishnameNoBasic
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDurationForty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDurationTwo
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeIdZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeIngredientUnitMatches
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeNoBasicdishAnywhere
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeSameIngredientTwice
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeTwoBasicsSameTypeDiffNames
+import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootBaseline
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootExtraKey
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootIngredientsNotArray
@@ -310,6 +361,9 @@ object SystemTestRegistration {
         registerIngredientValidTests(testSuite)
         registerIngredientFieldTests(testSuite)
         registerIngredientRangeTests(testSuite)
+        registerRecipeValidTests(testSuite)
+        registerRecipeInvalidTests(testSuite)
+        registerProbeTests(testSuite)
     }
 
     /**
@@ -384,5 +438,71 @@ object SystemTestRegistration {
         testSuite.registerTest(IngredientsAndRecipesBothEmpty())
         testSuite.registerTest(IngredientNameEmptyStringFixture())
         testSuite.registerTest(IngredientNameNullFixture())
+    }
+
+    private fun registerRecipeValidTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(EmptyRecipesArray())
+        testSuite.registerTest(NullRecipeIngUnit())
+        testSuite.registerTest(RecipeAllEightCooktypes())
+        testSuite.registerTest(RecipeAmountOne())
+        testSuite.registerTest(RecipeDuplicateDishnameNoBasic())
+        testSuite.registerTest(RecipeDurationTwo())
+        testSuite.registerTest(RecipeDurationForty())
+        testSuite.registerTest(RecipeIdZero())
+        testSuite.registerTest(RecipeNoBasicdishAnywhere())
+        testSuite.registerTest(RecipeIngredientUnitMatches())
+        testSuite.registerTest(RecipesEmpty())
+        testSuite.registerTest(RecipeSameIngredientTwice())
+        testSuite.registerTest(RecipeTwoBasicsSameTypeDiffNames())
+    }
+
+    /**
+     * Registers the recipe fixtures that must be rejected.
+     */
+    private fun registerRecipeInvalidTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(BadDupIdenticalRecipe())
+        testSuite.registerTest(BadRecBasicDupName())
+        testSuite.registerTest(BadRecBasicDupNameDiffType())
+        testSuite.registerTest(BadRecBasicDishLowercase())
+        testSuite.registerTest(BadRecBasicDishUnknown())
+        testSuite.registerTest(BadRecCookTypeDuplicate())
+        testSuite.registerTest(BadRecCookTypeEmpty())
+        testSuite.registerTest(BadRecCookTypeLowercase())
+        testSuite.registerTest(BadRecCookTypeMissing())
+        testSuite.registerTest(BadRecCookTypeUnknown())
+        testSuite.registerTest(BadRecDishNameEmpty())
+        testSuite.registerTest(BadRecDishNameMissing())
+        testSuite.registerTest(BadRecDupId())
+        testSuite.registerTest(BadRecDuration1())
+        testSuite.registerTest(BadRecDuration41())
+        testSuite.registerTest(BadRecDurationFractional())
+        testSuite.registerTest(BadRecDurationNegative())
+        testSuite.registerTest(BadRecDurationZero())
+        testSuite.registerTest(BadRecExtraKey())
+        testSuite.registerTest(BadRecIdFractional())
+        testSuite.registerTest(BadRecIdMissing())
+        testSuite.registerTest(BadRecIdNegative())
+        testSuite.registerTest(BadRecIngAmountFractional())
+        testSuite.registerTest(BadRecIngAmountMissing())
+        testSuite.registerTest(BadRecIngAmountNegative())
+        testSuite.registerTest(BadRecIngAmountZero())
+        testSuite.registerTest(BadRecIngNameMissing())
+        testSuite.registerTest(BadRecIngUnknownName())
+        testSuite.registerTest(BadRecIngredientsEmpty())
+        testSuite.registerTest(BadRecIngredientsMissing())
+        testSuite.registerTest(EmptyCookTypeArray())
+        testSuite.registerTest(EmptyRecipeIngredientsArray())
+        testSuite.registerTest(EmptyStringDishName())
+        testSuite.registerTest(NullBasicDishFor())
+        testSuite.registerTest(NullRequiredId())
+    }
+
+    /**
+     * Registers the probe fixtures to verify parser over-validation behaviors.
+     */
+    private fun registerProbeTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ProbeRecipesEmpty())
+        testSuite.registerTest(ProbeRecIngUnitMismatch())
+        testSuite.registerTest(ProbeRecIngExtraKey())
     }
 }
