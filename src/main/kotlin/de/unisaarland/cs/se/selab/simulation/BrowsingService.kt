@@ -25,7 +25,7 @@ class BrowsingService(var entries: MutableList<RestaurantData>, var ratings: Rat
         candidates = candidates.filter {
             it.getType() in g.restaurantTypes()
         }.filter {
-            it.openAt(GlobalClock.getTickInEvening())
+            it.acceptsNewCustomersAt(GlobalClock.getTickInEvening())
         }
         candidates = candidates.filter {
                 c ->

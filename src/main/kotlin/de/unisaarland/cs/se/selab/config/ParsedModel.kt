@@ -18,6 +18,7 @@ class ParsedModel {
     private val restaurantsById = mutableMapOf<Int, Restaurant>()
     private val customerGroupsById = mutableMapOf<Int, CustomerGroup>()
     private val incidentsById = mutableMapOf<Int, Incident>()
+    private val restaurantNames = mutableSetOf<String>()
 
     // ------------------------------------------------------------------ lookup
 
@@ -53,7 +54,16 @@ class ParsedModel {
     fun registerRecipe(r: Recipe): Boolean = register(recipesById, r.getId(), r)
 
     /** Stores [r] under its id; false if a restaurant with that id already exists. */
-    fun registerRestaurant(r: Restaurant): Boolean = register(restaurantsById, r.getId(), r)
+    fun registerRestaurant(r: Restaurant): Boolean {
+        if (restaurantNames.contains(r.name)) {
+            return false
+        }
+        if (!register(restaurantsById, r.getId(), r)) {
+            return false
+        }
+        restaurantNames.add(r.name)
+        return true
+    }
 
     /** Stores [g] under its id; false if a customer group with that id already exists. */
     fun registerCustomerGroup(g: CustomerGroup): Boolean = register(customerGroupsById, g.id(), g)
