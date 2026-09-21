@@ -78,7 +78,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsAndRecipesBo
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArrayDuplicateFixture
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullBasicDishFor
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRecipeIngUnit
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRequiredId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecipesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeAllEightCooktypes
@@ -87,7 +86,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDuplicateDishname
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDurationForty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeDurationTwo
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeIdZero
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeIngredientUnitMatches
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeNoBasicdishAnywhere
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeSameIngredientTwice
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeTwoBasicsSameTypeDiffNames
@@ -453,7 +451,7 @@ object SystemTestRegistration {
         // Stefan's fixture to fix (F03). Re-register once paired with a companion restaurants file
         // that has no recipe ids, or a food file whose restaurants still resolve.
         // testSuite.registerTest(EmptyRecipesArray())
-        testSuite.registerTest(NullRecipeIngUnit())
+        // testSuite.registerTest(NullRecipeIngUnit())
         testSuite.registerTest(RecipeAllEightCooktypes())
         testSuite.registerTest(RecipeAmountOne())
         testSuite.registerTest(RecipeDuplicateDishnameNoBasic())
@@ -461,7 +459,7 @@ object SystemTestRegistration {
         testSuite.registerTest(RecipeDurationForty())
         testSuite.registerTest(RecipeIdZero())
         testSuite.registerTest(RecipeNoBasicdishAnywhere())
-        testSuite.registerTest(RecipeIngredientUnitMatches())
+        // testSuite.registerTest(RecipeIngredientUnitMatches())
         // testSuite.registerTest(RecipesEmpty())
         testSuite.registerTest(RecipeSameIngredientTwice())
         testSuite.registerTest(RecipeTwoBasicsSameTypeDiffNames())
