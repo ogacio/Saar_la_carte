@@ -98,6 +98,39 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMissingRecipes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootNotObject
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootRecipesNull
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootSingleIngredientSingleRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateName
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateTableId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResEmptyArray
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResEndBeforeStart
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResExecTwo
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMissingName
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMissingPastry
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResNegativeRatings
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResOpeningEnd25
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResOpeningStartZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTableSize31
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTableSizeOne
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTableTypeUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTablesEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTypeLowercase
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResUnknownRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResWaitstaffZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualNoLikelihood
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualTableAndDistance
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateGroupId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventEveningThree
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventNoFavourites
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventSizeThree
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScMissingIncidents
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRatingUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularPeriod11
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularUnknownRestaurant
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularWithTypes
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRestaurantTypesEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingTick22
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentDuplicateId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownIngredient
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownRestaurant
@@ -115,6 +148,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14EventReservedBeforeR
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14RegularWithoutTableIsNotReserved
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16BarGroupSentAwayRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16CasualGroupSeatedAtMergedTable
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16MergedTablesAreSeparatedForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeatedNextTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
@@ -178,6 +212,8 @@ object SystemTestRegistration {
     fun registerSystemTestsForReferenceImplementation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
         registerFoodParserTests(testSuite)
+        registerRestaurantParserTests(testSuite)
+        registerScenarioParserTests(testSuite)
         registerFrontOfHouseTests(testSuite)
         registerF06Tests(testSuite)
         registerIncidentTests(testSuite)
@@ -196,6 +232,8 @@ object SystemTestRegistration {
     fun registerSystemTestsMutantValidation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
         registerFoodParserTests(testSuite)
+        registerRestaurantParserTests(testSuite)
+        registerScenarioParserTests(testSuite)
         testSuite.registerTest(F06IncidentsValid())
         testSuite.registerTest(F06IncidentUnknownRestaurant())
         testSuite.registerTest(F06IncidentUnknownIngredient())
@@ -265,6 +303,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F14EventReservedBeforeRegular())
         testSuite.registerTest(F14AReservedTableIsBlockedForTheWholeEvening())
         testSuite.registerTest(F16CasualGroupSeatedAtMergedTable())
+        testSuite.registerTest(F16MergedTablesAreSeparatedForTheNextEvening())
         testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
         testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
@@ -305,6 +344,47 @@ object SystemTestRegistration {
         testSuite.registerTest(F31StaffIncidentAddsTheCookThatUnlocksTheDish())
         testSuite.registerTest(F32RecipeIncidentChangesTheProcuredAmount())
         testSuite.registerTest(F33PackagingIncidentChangesTheProcuredPackages())
+    }
+
+    /** F04: every restaurants file rule, from the schema bounds to the cross-file recipe ids. */
+    private fun registerRestaurantParserTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ResExecTwo())
+        testSuite.registerTest(ResWaitstaffZero())
+        testSuite.registerTest(ResTablesEmpty())
+        testSuite.registerTest(ResTableTypeUnknown())
+        testSuite.registerTest(ResTypeLowercase())
+        testSuite.registerTest(ResEndBeforeStart())
+        testSuite.registerTest(ResUnknownRecipe())
+        testSuite.registerTest(ResExtraKey())
+        testSuite.registerTest(ResMissingName())
+        testSuite.registerTest(ResEmptyArray())
+        testSuite.registerTest(ResDuplicateId())
+        testSuite.registerTest(ResDuplicateName())
+        testSuite.registerTest(ResDuplicateTableId())
+        testSuite.registerTest(ResMissingPastry())
+        testSuite.registerTest(ResNegativeRatings())
+        testSuite.registerTest(ResOpeningEnd25())
+        testSuite.registerTest(ResOpeningStartZero())
+        testSuite.registerTest(ResTableSizeOne())
+        testSuite.registerTest(ResTableSize31())
+    }
+
+    /** F05: every scenario file rule, per customer group type and across files. */
+    private fun registerScenarioParserTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ScVisitingTick22())
+        testSuite.registerTest(ScRestaurantTypesEmpty())
+        testSuite.registerTest(ScRatingUnknown())
+        testSuite.registerTest(ScCasualTableAndDistance())
+        testSuite.registerTest(ScCasualNoLikelihood())
+        testSuite.registerTest(ScExtraKey())
+        testSuite.registerTest(ScMissingIncidents())
+        testSuite.registerTest(ScDuplicateGroupId())
+        testSuite.registerTest(ScRegularWithTypes())
+        testSuite.registerTest(ScRegularUnknownRestaurant())
+        testSuite.registerTest(ScRegularPeriod11())
+        testSuite.registerTest(ScEventSizeThree())
+        testSuite.registerTest(ScEventEveningThree())
+        testSuite.registerTest(ScEventNoFavourites())
     }
 
     /** F06 incident validation: every incident of a scenario file must be applicable. */

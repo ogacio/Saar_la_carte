@@ -265,3 +265,40 @@ class F14AReservedTableIsBlockedForTheWholeEvening : LogSkippingSystemTest() {
         assertStatistics(1, cooked = 2, served = 2, delivered = 0, ratings = 1)
     }
 }
+
+/**
+ * F16 + F30: "The front of house is immediately cleaned and tables are separated in preparation of
+ * the next evening." Two 2-seat tables merged for a group of four on evening 1 are two separate
+ * tables again on evening 2, so two pairs get one table each and nothing is merged.
+ */
+class F16MergedTablesAreSeparatedForTheNextEvening : LogSkippingSystemTest() {
+    override val name = "F16MergedTablesAreSeparatedForTheNextEvening"
+    override val description = "Tables 1 and 2 are merged on evening 1 and serve two separate pairs on evening 2."
+    override val food = FOOD_RICE
+    override val restaurants = "foh/f16/restaurants_two_small_tables.json"
+    override val scenario = "foh/f16/scenario_merge_then_two_pairs.json"
+    override val logLevel = INFO
+    override val maxTicks = 48
+
+    override suspend fun run() {
+        skipToAndAssert(
+            "[INFO] FOH Merging Tables",
+            "[INFO] FOH Merging Tables (R 1): For group 1 the tables 1,2 were merged into 1.",
+        )
+        assertNextLine(GROUP_1_SEATED)
+        skipToAndAssert(
+            "[IMPORTANT] Preparation: Preparation for evening 2",
+            "[IMPORTANT] Preparation: Preparation for evening 2 starts.",
+        )
+        // No merging line this evening: the two pairs each take one of the separated tables.
+        skipToAndAssert(
+            SEATING_PREFIX,
+            "[IMPORTANT] FOH Seating (R 1): Group 2 seated at table 1 by waitstaff 1.",
+        )
+        skipToAndAssert(
+            SEATING_PREFIX,
+            "[IMPORTANT] FOH Seating (R 1): Group 3 seated at table 2 by waitstaff 1.",
+        )
+        assertStatistics(1, cooked = 8, served = 8, delivered = 0, ratings = 3)
+    }
+}

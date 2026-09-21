@@ -41,7 +41,7 @@ import kotlin.collections.set
  */
 class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
 
-    override val schemaPath: String = "/schema/restaurant.schema"
+    override val schemaPath: String = "/schema/restaurants.schema"
 
     override fun readEntities(path: String): Boolean {
         var returnValue = true
@@ -111,7 +111,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             // create kitchen, foh and menu
             val kitchenStaff = serialiseCookCounts(rjd)
             val tables = serialiseTables(rjd)
-            val recipes = resolveRecipes(rjd, type) // Passing 'type' to resolve basic dishes
+            val recipes = resolveRecipes(rjd)
 
             if (kitchenStaff != null && tables != null && recipes != null) {
                 // create tableAssignmentService and reservationBook
@@ -234,32 +234,18 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         return null
     }
 
-    private fun resolveRecipes(rjd: RestaurantJsonDto, type: RestaurantType): MutableList<Recipe>? {
-        val idDto: MutableList<Int> = rjd.recipes
-        val explicitRecipes = mutableListOf<Recipe>()
-
-        // 1. Resolve explicitly declared recipes
-        for (recipeId in idDto) {
-            val recipe: Recipe? = model.recipe(recipeId)
-            if (recipe != null) {
-                explicitRecipes.add(recipe)
-            } else {
-                return null
-            }
+    /**
+     * The recipes the restaurant owns, exactly as declared. A restaurant does not pick up the basic
+     * dishes of its type that it did not list: that was added in 7a0e8bf and a commit bisect traced
+     * KitchenConfidential, KylianDictador, MilkShake, NoVarNoCry and SousToTheRescue to it.
+     */
+    private fun resolveRecipes(rjd: RestaurantJsonDto): MutableList<Recipe>? {
+        val recipes = mutableListOf<Recipe>()
+        for (recipeId in rjd.recipes) {
+            val recipe = model.recipe(recipeId) ?: return null
+            recipes.add(recipe)
         }
-
-        val explicitDishNames = explicitRecipes.map { it.getDishName() }.toSet()
-
-        // 2. Fetch default basic recipes for this restaurant type[cite: 2]
-        // Note: You must add `allRecipes()` to ParsedModel returning all parsed Recipes.
-        val defaultBasicRecipes = model.allRecipes().filter {
-            it.isBasicFor(type) && it.getDishName() !in explicitDishNames
-        }
-
-        // 3. Combine explicit overrides and missing basic dishes
-        val finalRecipes = explicitRecipes.toMutableList()
-        finalRecipes.addAll(defaultBasicRecipes)
-        return finalRecipes
+        return recipes
     }
 
     private fun serialiseCookCounts(rjd: RestaurantJsonDto): Map<CookType, Int>? {
