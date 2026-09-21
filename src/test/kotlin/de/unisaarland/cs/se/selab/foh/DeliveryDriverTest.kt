@@ -32,9 +32,23 @@ class DeliveryDriverTest {
         return order
     }
 
+    /**
+     * One tick of the delivery step for [drivers]: every phase runs for all drivers before the next
+     * phase starts, so each log type is written for all drivers before the next one (post-change
+     * specification, "Delivering").
+     */
+    private fun runPhases(vararg drivers: DeliveryDriver) {
+        drivers.forEach { it.prepare() }
+        drivers.forEach { it.drive() }
+        drivers.forEach { it.arrive() }
+        drivers.forEach { it.deliverAccepted() }
+        drivers.forEach { it.deliverRejected() }
+        drivers.forEach { it.returnHome() }
+    }
+
     private fun nextTick() {
         GlobalClock.advanceTick()
-        driver.plusTick()
+        runPhases(driver)
     }
 
     @BeforeTest
@@ -49,7 +63,7 @@ class DeliveryDriverTest {
         val idle = DeliveryDriver(RESTAURANT_ID)
         val log = captureLog()
 
-        idle.plusTick()
+        runPhases(idle)
 
         assertTrue(idle.isFree())
         assertTrue(idle.isWaiting())
@@ -60,13 +74,12 @@ class DeliveryDriverTest {
     }
 
     @Test
-    fun receivingAnOrderStartsTheDeliveryAndDoesNotDriveInTheSameTick() {
+    fun receivingAnOrderLogsThePreparationOnceAndDoesNotDriveInTheSameTick() {
         val order = orderFor(casual(3, 2, deliveryDistance = 7))
         val log = captureLog()
 
         driver.receiveOrder(order)
-        driver.logPreparation()
-        driver.plusTick()
+        runPhases(driver)
 
         assertEquals(
             listOf(
@@ -238,6 +251,49 @@ class DeliveryDriverTest {
         nextTick()
 
         assertEquals(1, driver.getId())
+    }
+
+    @Test
+    fun twoDriversWriteEachLogTypeForBothBeforeTheNextType() {
+        val second = DeliveryDriver(RESTAURANT_ID).also { it.setId(2) }
+        val first = orderFor(casual(3, 1, deliveryDistance = 5))
+        val other = orderFor(casual(4, 1, deliveryDistance = 5))
+        driver.receiveOrder(first)
+        second.receiveOrder(other)
+        val log = captureLog()
+
+        nextTickFor(driver, second)
+
+        assertEquals(
+            listOf(
+                "[DEBUG] Delivery Driving (R 1): Driver 1 drove 5 km and needs 0 more ticks.",
+                "[DEBUG] Delivery Driving (R 1): Driver 2 drove 5 km and needs 0 more ticks.",
+                "[INFO] Delivery Arrival (R 1): Driver 1 arrived at group 3 with order ${first.getId()}.",
+                "[INFO] Delivery Arrival (R 1): Driver 2 arrived at group 4 with order ${other.getId()}.",
+                "[IMPORTANT] Delivery Finished (R 1): Driver 1 gave delivery of order ${first.getId()} to group 3.",
+                "[IMPORTANT] Delivery Finished (R 1): Driver 2 gave delivery of order ${other.getId()} to group 4.",
+            ),
+            logLines(log),
+        )
+    }
+
+    @Test
+    fun aDriverThatJustDeliveredDoesNotStartReturningInTheSameTick() {
+        driver.receiveOrder(orderFor(casual(3, 1, deliveryDistance = 5)))
+        val log = captureLog(LogLevel.INFO)
+
+        nextTick()
+
+        // One tick out, so one tick back: the return only starts counting in the next tick.
+        assertTrue(driver.isReturning())
+        assertTrue(logLines(log).none { it.contains("has returned") })
+        nextTick()
+        assertTrue(driver.isWaiting())
+    }
+
+    private fun nextTickFor(vararg drivers: DeliveryDriver) {
+        GlobalClock.advanceTick()
+        runPhases(*drivers)
     }
 
     @Test
