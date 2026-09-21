@@ -41,7 +41,7 @@ import kotlin.collections.set
  */
 class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
 
-    override val schemaPath: String = "/schema/restaurant.schema"
+    override val schemaPath: String = "/schema/restaurants.schema"
 
     override fun readEntities(path: String): Boolean {
         var returnValue = true
