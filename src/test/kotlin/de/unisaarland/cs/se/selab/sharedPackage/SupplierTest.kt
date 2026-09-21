@@ -117,7 +117,7 @@ class SupplierTest {
     ) = Recipe(
         id = id,
         dishName = "dish$id",
-        minuteDuration = 10,
+        minuteDuration = 10, // makes the tests fail, recipe.durationInTicks() will be 0, meal -> cooked not cooking
         cookTypes = setOf(cookType),
         ingredients = mutableListOf(),
         basicDishFor = basicFor,

@@ -57,7 +57,7 @@ class Kitchen(
         val sorted = grouped.entries.sortedWith(
             compareBy(
                 { !it.key.isBasicFor(restaurantType) },
-                { it.value.mapNotNull { m -> m.orderId }.minOrNull() ?: Int.MAX_VALUE }
+                { it.key.getId() }
             )
         )
         for (entry in sorted) {
