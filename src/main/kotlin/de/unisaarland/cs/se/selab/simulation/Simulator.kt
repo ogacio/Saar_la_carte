@@ -93,7 +93,7 @@ class Simulator(
             }
             Logger.Customer.restaurantDecision(group.id(), restaurant.getId())
             if (group.isDelivery()) {
-                DeliveryService.placeOrder(group, restaurant, tick)
+                DeliveryService.placeOrder(group, restaurant)
             } else {
                 walkIns.getOrPut(restaurant.getId()) { mutableListOf() } += group
             }
