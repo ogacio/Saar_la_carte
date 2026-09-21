@@ -31,13 +31,6 @@ object GlobalClock {
         tickInEvening = 0
     }
 
-    /**
-     * The same value as [currentTick], for callers that use the getter style (e.g. Cook). The JVM
-     * name is changed because the property's generated getter is already called `getCurrentTick`.
-     */
-    @JvmName("currentTickValue")
-    fun getCurrentTick(): Int = currentTick
-
     /** The current evening. */
     fun getEvening(): Int = evening
 
