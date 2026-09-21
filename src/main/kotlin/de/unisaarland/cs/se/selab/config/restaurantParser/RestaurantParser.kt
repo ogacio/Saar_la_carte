@@ -24,6 +24,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
+import de.unisaarland.cs.se.selab.simulation.DeliveryService
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Restaurant
 import de.unisaarland.cs.se.selab.simulation.SubUnits
@@ -144,7 +145,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         kitchen: Kitchen,
         rb: ReservationBook
     ): FrontOfTheHouse {
-        // create foh: deliveryDesk, waiterAssignmentService, fohSevices
+        // create foh: deliveryDesk, deliveryService drivers, waiterAssignmentService, fohSevices
         val deliveryDrivers: MutableList<DeliveryDriver> = mutableListOf()
         var driverCounter = rjd.deliveryDrivers
         while (driverCounter > 0) {
@@ -152,6 +153,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             deliveryDrivers.add(driver)
             driverCounter--
         }
+        DeliveryService.setAllDrivers(deliveryDrivers)
         val deliveryDesk = DeliveryDesk(deliveryDrivers, rjd.id)
 
         val waitstaff: MutableList<Waiter> = mutableListOf()
