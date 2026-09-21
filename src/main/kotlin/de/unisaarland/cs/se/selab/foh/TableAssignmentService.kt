@@ -161,4 +161,7 @@ class TableAssignmentService(
         const val QUARTERS = 4
         const val OCCUPIED_QUARTERS = 3
     }
+
+    /** returns tables */
+    fun getTables(): List<Table> = tables
 }

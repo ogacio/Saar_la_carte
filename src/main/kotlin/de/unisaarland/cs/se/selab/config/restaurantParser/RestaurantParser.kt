@@ -1,4 +1,5 @@
 package de.unisaarland.cs.se.selab.config.restaurantParser
+
 import de.unisaarland.cs.se.selab.config.ConfigParser
 import de.unisaarland.cs.se.selab.config.ParsedModel
 import de.unisaarland.cs.se.selab.foh.DeliveryDesk
@@ -50,13 +51,18 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         } catch (_: SerializationException) {
             return false
         }
-        for (restaurantDto in fileDto.restaurants) {
-            val restaurant = serialiseRestaurant(restaurantDto)
-            if (restaurant == null || !model.registerRestaurant(restaurant)) {
-                returnValue = false
-                break
+        if (!checkUniqueRestaurantIds(fileDto.restaurants)) {
+            returnValue = false
+        } else {
+            for (restaurantDto in fileDto.restaurants) {
+                val restaurant = serialiseRestaurant(restaurantDto)
+                if (restaurant == null || !model.registerRestaurant(restaurant)) {
+                    returnValue = false
+                    break
+                }
             }
         }
+
         return returnValue
     }
 
@@ -71,6 +77,18 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             }
         }
         return returnValue
+    }
+
+    private fun checkUniqueRestaurantIds(restaurants: List<RestaurantJsonDto>): Boolean {
+        for (restaurant in restaurants) {
+            var count = 0
+            val resId: Int = restaurant.id
+            for (r in restaurants) {
+                if (resId == r.id) count++
+            }
+            if (count > 1) return false
+        }
+        return true
     }
 
     /**
@@ -93,7 +111,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             // create kitchen, foh and menu
             val kitchenStaff = serialiseCookCounts(rjd)
             val tables = serialiseTables(rjd)
-            val recipes = resolveRecipes(rjd)
+            val recipes = resolveRecipes(rjd, type) // Passing 'type' to resolve basic dishes
 
             if (kitchenStaff != null && tables != null && recipes != null) {
                 // create tableAssignmentService and reservationBook
@@ -216,14 +234,32 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         return null
     }
 
-    private fun resolveRecipes(rjd: RestaurantJsonDto): MutableList<Recipe>? {
+    private fun resolveRecipes(rjd: RestaurantJsonDto, type: RestaurantType): MutableList<Recipe>? {
         val idDto: MutableList<Int> = rjd.recipes
-        val recipes = mutableListOf<Recipe>()
+        val explicitRecipes = mutableListOf<Recipe>()
+
+        // 1. Resolve explicitly declared recipes
         for (recipeId in idDto) {
             val recipe: Recipe? = model.recipe(recipeId)
-            if (recipe != null) { recipes.add(recipe) } else { return null }
+            if (recipe != null) {
+                explicitRecipes.add(recipe)
+            } else {
+                return null
+            }
         }
-        return recipes
+
+        val explicitDishNames = explicitRecipes.map { it.getDishName() }.toSet()
+
+        // 2. Fetch default basic recipes for this restaurant type[cite: 2]
+        // Note: You must add `allRecipes()` to ParsedModel returning all parsed Recipes.
+        val defaultBasicRecipes = model.allRecipes().filter {
+            it.isBasicFor(type) && it.getDishName() !in explicitDishNames
+        }
+
+        // 3. Combine explicit overrides and missing basic dishes
+        val finalRecipes = explicitRecipes.toMutableList()
+        finalRecipes.addAll(defaultBasicRecipes)
+        return finalRecipes
     }
 
     private fun serialiseCookCounts(rjd: RestaurantJsonDto): Map<CookType, Int>? {
@@ -287,11 +323,12 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
     }
 
     private fun checkAtLeastOneOfEach(rjd: RestaurantJsonDto): Boolean {
-        return rjd.recipes.isNotEmpty() && rjd.kitchenStaff.values.sum() > 0 &&
+        // as long as the restaurant inherits its type's basic dishes.
+        return rjd.kitchenStaff.values.sum() > 0 &&
             rjd.waitstaff > 0 && rjd.tables.isNotEmpty()
     }
 
-// helper functions for validateFileScope
+    // helper functions for validateFileScope
     private fun checkBasicDishCoverage(dishes: Set<String>): Boolean {
         return dishes.isNotEmpty()
     }
