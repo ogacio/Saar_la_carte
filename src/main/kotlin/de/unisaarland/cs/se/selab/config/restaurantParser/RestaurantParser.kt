@@ -210,9 +210,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         recipes: MutableList<Recipe>,
         type: RestaurantType
     ): RestaurantData? {
-        if (checkUniqueDishNames(recipes) && checkUniqueTableIds(tables) &&
-            checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)
-        ) {
+        if (checkUniqueTableIds(tables) && checkOpeningHours(rjd.openingTickStart, rjd.openingTickEnd)) {
             val seats: MutableMap<TableType, Int> = mutableMapOf<TableType, Int>()
             var totalSeats = 0
 
@@ -248,10 +246,12 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
             }
         }
 
+        // Check uniqueness STRICTLY on the explicitly listed IDs, as per your design note
+        if (!checkUniqueDishNames(explicitRecipes)) return null
+
         val explicitDishNames = explicitRecipes.map { it.getDishName() }.toSet()
 
-        // 2. Fetch default basic recipes for this restaurant type[cite: 2]
-        // Note: You must add `allRecipes()` to ParsedModel returning all parsed Recipes.
+        // 2. Fetch default basic recipes for this restaurant type
         val defaultBasicRecipes = model.allRecipes().filter {
             it.isBasicFor(type) && it.getDishName() !in explicitDishNames
         }
