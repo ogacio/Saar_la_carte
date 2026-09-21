@@ -13,7 +13,6 @@ import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Supplier.resupply
-import kotlin.comparisons.compareBy
 
 private const val SEATS_PER_ESTIMATE = 10
 
@@ -32,14 +31,14 @@ class Kitchen(
 
     /** One tick: assign the queued dishes, then finish what is done, then the summary line. */
     fun cook(): Int {
-        // assigning first is what lets a 10 minute dish finish in the tick it was ordered.
+        // ISSUE 1: assigning first is what lets a 10 minute dish finish in the tick it was ordered.
         assignQueuedMeals()
 
-        // already in ascending cook id, so the Meal Cooked lines come out in that order.
+        // ISSUE 5: already in ascending cook id, so the Meal Cooked lines come out in that order.
         val finishedBatches = roaster.finished()
         val finishedCount = reportFinishedBatches(finishedBatches)
 
-        // the summary the kitchen
+        // ISSUE 2: the summary the kitchen never wrote.
         Logger.Kitchen.kitchenStatus(
             pantry.getRestaurantId(),
             roaster.cooksWithAFullPan() + finishedBatches.size,
@@ -50,8 +49,7 @@ class Kitchen(
         return finishedCount
     }
 
-    /** Dishes with smaller orderIds first, basic dishes first, then the lower recipe id;
-     * a dish without a free cook stays queued. */
+    /** Basic dishes first, then the lower recipe id; a dish without a free cook stays queued. */
     private fun assignQueuedMeals() {
         for (order in queue.sortedBy { it.getId() }) {
             val recipes = order.getMeals()
@@ -81,7 +79,7 @@ class Kitchen(
         }
     }
 
-    /** one line per batch, with the ticks since the order the assignment named. */
+    /** ISSUE 3: one line per batch, with the ticks since the order the assignment named. */
     private fun reportFinishedBatches(finishedBatches: Map<Cook, List<Meal>>): Int {
         val ordersById = queue.associateBy { it.getId() }
         var count = 0

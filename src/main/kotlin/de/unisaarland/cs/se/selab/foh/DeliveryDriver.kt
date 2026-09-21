@@ -26,56 +26,94 @@ class DeliveryDriver(private val restaurantId: Int) {
         const val TICK_DISTANCE = 5
     }
 
-    /**
-     * simulates one tick of the driver
-     */
-    fun plusTick() {
-        if (state == DriverState.WAITING || departureTick == GlobalClock.getTickInEvening())return
+    /** Captured by prepare(), before any driver delivers during this tick. */
+    private var returningAtStartOfTick = false
+
+    /** First phase: capture the return state and log newly loaded orders. */
+    fun prepare() {
+        returningAtStartOfTick = state == DriverState.RETURNING
+        if (state == DriverState.DELIVERING &&
+            departureTick == GlobalClock.getTickInEvening()
+        ) {
+            logPreparation()
+        }
+    }
+
+    /** Advance outbound travel once. A newly loaded driver starts next tick. */
+    fun drive() {
+        if (state != DriverState.DELIVERING) return
+        if (departureTick == GlobalClock.getTickInEvening()) return
+
         ticksLeft = checkNotNull(ticksLeft) - 1
-        if (state == DriverState.DELIVERING) {
-            Logger.Delivery.deliveryDriving(
-                restaurantId,
-                checkNotNull(id),
-                drivenDistance(),
-                checkNotNull(ticksLeft)
-            )
+        Logger.Delivery.deliveryDriving(
+            restaurantId,
+            checkNotNull(id),
+            drivenDistance(),
+            checkNotNull(ticksLeft),
+        )
+    }
+
+    private fun atDestination(): Boolean =
+        state == DriverState.DELIVERING && ticksLeft == 0
+
+    /** Emit arrivals after every driver's Driving message has been emitted. */
+    fun arrive() {
+        if (!atDestination()) return
+        val current = checkNotNull(order)
+        Logger.Delivery.deliveryArrival(
+            restaurantId,
+            checkNotNull(id),
+            current.getCustomerGroup().id(),
+            current.getId(),
+        )
+    }
+
+    /** Resolve successful arrivals before the rejected-delivery phase. */
+    fun deliverAccepted() {
+        if (!atDestination()) return
+        val current = checkNotNull(order)
+        if (current.getCustomerGroup().hasGivenUp()) return
+
+        for (meal in current.getMeals()) {
+            meal.customer.receive(meal, GlobalClock.getTickInEvening())
         }
-        if (ticksLeft != 0) {
-            return
-        }
-        if (state == DriverState.DELIVERING) {
-            Logger.Delivery.deliveryArrival(
-                restaurantId,
-                checkNotNull(id),
-                checkNotNull(order).getCustomerGroup().id(),
-                checkNotNull(order).getId()
-            )
-            if (checkNotNull(order).getCustomerGroup().hasGivenUp()) {
-                Logger.Delivery.deliveryFailed(
-                    restaurantId,
-                    checkNotNull(id),
-                    checkNotNull(order).getId(),
-                    checkNotNull(order).getCustomerGroup().id()
-                )
-                resolvedAsGivenUp = true
-            } else {
-                for (i in checkNotNull(order).getMeals()) {
-                    i.customer.receive(i, GlobalClock.getTickInEvening())
-                }
-                Logger.Delivery.deliveryFinished(
-                    restaurantId,
-                    checkNotNull(id),
-                    checkNotNull(order).getId(),
-                    checkNotNull(order).getCustomerGroup().id()
-                )
-                resolvedAsGivenUp = false
-            }
-            resolvedOrder = order
-            startReturn(checkNotNull(travelTicks))
-            return
-        }
+        Logger.Delivery.deliveryFinished(
+            restaurantId,
+            checkNotNull(id),
+            current.getId(),
+            current.getCustomerGroup().id(),
+        )
+        resolvedOrder = current
+        resolvedAsGivenUp = false
+        startReturn(checkNotNull(travelTicks))
+    }
+
+    /** Successful arrivals are already RETURNING and cannot be rejected here. */
+    fun deliverRejected() {
+        if (!atDestination()) return
+        val current = checkNotNull(order)
+        if (!current.getCustomerGroup().hasGivenUp()) return
+
+        Logger.Delivery.deliveryFailed(
+            restaurantId,
+            checkNotNull(id),
+            current.getId(),
+            current.getCustomerGroup().id(),
+        )
+        resolvedOrder = current
+        resolvedAsGivenUp = true
+        startReturn(checkNotNull(travelTicks))
+    }
+
+    /** Advance only drivers who were already returning when prepare() ran. */
+    fun returnHome() {
+        if (!returningAtStartOfTick || state != DriverState.RETURNING) return
+
+        ticksLeft = checkNotNull(ticksLeft) - 1
+        if (ticksLeft != 0) return
+
         Logger.Delivery.deliveryReturned(restaurantId, checkNotNull(id))
-        if (switch) { abort() } else { clearDelivery() }
+        if (switch) abort() else clearDelivery()
     }
 
     /**
@@ -106,7 +144,7 @@ class DeliveryDriver(private val restaurantId: Int) {
         )
     }
 
-    /** The order this driver is carrying, null while it is waiting or on its way back. */
+    /** Retain the order during the return trip so phases can still sort by group id. */
     fun currentOrder(): Order? = order
 
     /**
@@ -128,6 +166,7 @@ class DeliveryDriver(private val restaurantId: Int) {
      * resets everything except for the id
      */
     private fun clearDelivery() {
+        returningAtStartOfTick = false
         departureTick = null
         order = null
         ticksLeft = null

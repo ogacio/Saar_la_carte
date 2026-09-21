@@ -47,11 +47,26 @@ class IncidentSerialiser(private val model: ParsedModel) {
 
     private fun staffFieldsAreValid(dto: IncidentJsonDto): Boolean {
         val restaurantId = dto.restaurant ?: return false
-        val cookTypeResolves = dto.cookType == null || cookTypeOf(dto.cookType) != null
-        return model.restaurant(restaurantId) != null &&
-            staffTypeOf(dto.staffType) != null &&
-            dto.number != null &&
-            cookTypeResolves
+        val staffType = staffTypeOf(dto.staffType) ?: return false
+
+        if (
+            dto.number == null ||
+            dto.number == 0 ||
+            model.restaurant(restaurantId) == null
+        ) {
+            return false
+        }
+
+        return when (staffType) {
+            StaffType.COOK -> {
+                val cookType = dto.cookType?.let { cookTypeOf(it) } ?: return false
+                cookType != CookType.EXEC
+            }
+
+            StaffType.WAITSTAFF,
+            StaffType.DRIVER,
+            -> { dto.cookType == null }
+        }
     }
 
     private fun serialiseRecipeChange(dto: IncidentJsonDto): RecipeChange? {

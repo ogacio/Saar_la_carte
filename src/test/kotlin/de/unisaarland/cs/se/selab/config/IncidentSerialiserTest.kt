@@ -25,6 +25,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -73,41 +74,41 @@ class IncidentSerialiserTest {
         verify(restaurant).changeStaff(StaffType.COOK, CookType.SOUS, -2)
     }
 
-//    @Test
-//    fun staffFieldsAreValid() {
-//        assertNotNull(
-//            serialiser.serialise(
-//                incident(id = 20, type = "STAFF", evening = 2).copy(
-//                    restaurant = RESTAURANT_ID,
-//                    number = 1,
-//                    staffType = "COOK",
-//                    cookType = "SOUS",
-//                ),
-//            ),
-//        )
-//
-//        assertNull(
-//            serialiser.serialise(
-//                incident(id = 21, type = "STAFF", evening = 2).copy(
-//                    restaurant = RESTAURANT_ID,
-//                    number = 1,
-//                    staffType = "COOK",
-//                    cookType = "EXEC",
-//                ),
-//            ),
-//        )
-//
-//        assertNull(
-//            serialiser.serialise(
-//                incident(id = 22, type = "STAFF", evening = 2).copy(
-//                    restaurant = RESTAURANT_ID,
-//                    number = 1,
-//                    staffType = "COOK",
-//                    cookType = null,
-//                ),
-//            ),
-//        )
-//    }
+    @Test
+    fun staffFieldsAreValid() {
+        assertNotNull(
+            serialiser.serialise(
+                incident(id = 20, type = "STAFF", evening = 2).copy(
+                    restaurant = RESTAURANT_ID,
+                    number = 1,
+                    staffType = "COOK",
+                    cookType = "SOUS",
+                ),
+            ),
+        )
+
+        assertNull(
+            serialiser.serialise(
+                incident(id = 21, type = "STAFF", evening = 2).copy(
+                    restaurant = RESTAURANT_ID,
+                    number = 1,
+                    staffType = "COOK",
+                    cookType = "EXEC",
+                ),
+            ),
+        )
+
+        assertNull(
+            serialiser.serialise(
+                incident(id = 22, type = "STAFF", evening = 2).copy(
+                    restaurant = RESTAURANT_ID,
+                    number = 1,
+                    staffType = "COOK",
+                    cookType = null,
+                ),
+            ),
+        )
+    }
 
     @Test
     fun validPackagingIncidentHasCorrectTypeAndValues() {
@@ -156,21 +157,21 @@ class IncidentSerialiserTest {
         assertNull(serialiser.serialise(input))
     }
 
-//    @Test
-//    fun staffIncidentCannotChangeExecCooks() {
-//        val input = incident(
-//            id = 6,
-//            type = "STAFF",
-//            evening = 2,
-//        ).copy(
-//            restaurant = RESTAURANT_ID,
-//            number = 1,
-//            staffType = "COOK",
-//            cookType = "EXEC",
-//        )
-//
-//        assertNull(serialiser.serialise(input))
-//    }
+    @Test
+    fun staffIncidentCannotChangeExecCooks() {
+        val input = incident(
+            id = 6,
+            type = "STAFF",
+            evening = 2,
+        ).copy(
+            restaurant = RESTAURANT_ID,
+            number = 1,
+            staffType = "COOK",
+            cookType = "EXEC",
+        )
+
+        assertNull(serialiser.serialise(input))
+    }
 
     @Test
     fun recipeIncidentWithUnknownIngredientIsRejected() {
