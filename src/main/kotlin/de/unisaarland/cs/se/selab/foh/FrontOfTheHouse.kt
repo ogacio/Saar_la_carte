@@ -116,11 +116,25 @@ class FrontOfTheHouse(
 
     /** Step 4: the drivers prepare, drive, deliver and return; resolved orders join the eating/rating flow. */
     fun callDeliveryDesk() {
-        dropGivenUpOrders()
-        for (driver in deliveryDesk.getDrivers()) {
-            driver.plusTick()
-            val resolved = driver.takeResolvedOrder() ?: continue
-            val (order, gaveUp) = resolved
+        // A returning driver still holds its order until it is back, so it sorts by that group too.
+        // Typed on purpose: inferred, detektMain wrongly reports the loop below as unreachable.
+        val drivers: List<DeliveryDriver> = deliveryDesk.getDrivers()
+            .filter { it.currentOrder() != null }
+            .sortedBy { checkNotNull(it.currentOrder()).getCustomerGroupId() }
+
+        // Forum #18: each of these runs across every driver before the next one starts. prepare()
+        // also captures whether a driver was already returning before this tick's travel runs,
+        // which returnHome() needs to tell "just started back" from "back this tick".
+        drivers.forEach { it.prepare() } // Preparation
+        drivers.forEach { it.drive() } // Driving
+        drivers.forEach { it.arrive() } // Arrival
+        drivers.forEach { it.deliverAccepted() } // Finished
+        drivers.forEach { it.deliverRejected() } // Failed
+        dropGivenUpOrders() // Given Up
+        drivers.forEach { it.returnHome() } // Returned
+
+        for (driver in drivers) {
+            val (order, gaveUp) = driver.takeResolvedOrder() ?: continue
             if (gaveUp) {
                 gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
             } else {
@@ -250,6 +264,12 @@ class FrontOfTheHouse(
      * "in case they didn't get food at the end of the 3rd tick after the tick where their food should
      * have arrived": an order still waiting at the desk is dropped, its meals are aborted so the kitchen
      * stops cooking them, and the group rates in this tick.
+     *
+     * Called from [callDeliveryDesk] after [DeliveryDriver.deliverAccepted] / [DeliveryDriver.deliverRejected],
+     * so an order that gives up the same tick a driver reaches it logs "Given Up" after "Delivery Failed",
+     * matching the section order in the spec ("Delivering") and forum update #18. `libs/selab.jar` logs
+     * these the other way round for that case; it does not implement #18's per-phase ordering at all
+     * (see BUGS-FOUND.md #4), so it is not a reason to move this call back above the delivery phases.
      */
     private fun dropGivenUpOrders() {
         val atTheDesk = deliveryDesk.getNewOrders() + deliveryDesk.getReady()
