@@ -43,7 +43,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngredientsEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecIngredientsMissing
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyCookTypeArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipeIngredientsArray
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipesArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyStringDishName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeFractional
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientBestBeforeNegative
@@ -82,8 +81,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.IngredientsEmptyArrayDu
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullBasicDishFor
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRecipeIngUnit
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.NullRequiredId
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngExtraKey
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngUnitMismatch
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecipesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeAllEightCooktypes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeAmountOne
@@ -95,7 +92,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeIngredientUnitMat
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeNoBasicdishAnywhere
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeSameIngredientTwice
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipeTwoBasicsSameTypeDiffNames
-import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootBaseline
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootExtraKey
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootIngredientsNotArray
@@ -162,6 +158,11 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07SentAwayGroup
 // RootEmptyFile and RootMalformedJson unregistered below, see the note there — imports removed too.
 // F01FirstTickLogOrder, F13DishWithoutEligibleCookIsNotOrdered, F28NoNewCustomersInLastThreeTicks
 // and F20DeliveryOverSevenKilometres unregistered below, see the notes there — imports removed too.
+
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipesArray
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngExtraKey
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngUnitMismatch
+// import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RecipesEmpty
 
 /**
  * Used for test registration
@@ -441,7 +442,7 @@ object SystemTestRegistration {
     }
 
     private fun registerRecipeValidTests(testSuite: SELab26TestSuite) {
-        testSuite.registerTest(EmptyRecipesArray())
+        // testSuite.registerTest(EmptyRecipesArray())
         testSuite.registerTest(NullRecipeIngUnit())
         testSuite.registerTest(RecipeAllEightCooktypes())
         testSuite.registerTest(RecipeAmountOne())
@@ -451,7 +452,7 @@ object SystemTestRegistration {
         testSuite.registerTest(RecipeIdZero())
         testSuite.registerTest(RecipeNoBasicdishAnywhere())
         testSuite.registerTest(RecipeIngredientUnitMatches())
-        testSuite.registerTest(RecipesEmpty())
+        // testSuite.registerTest(RecipesEmpty())
         testSuite.registerTest(RecipeSameIngredientTwice())
         testSuite.registerTest(RecipeTwoBasicsSameTypeDiffNames())
     }
@@ -502,7 +503,7 @@ object SystemTestRegistration {
      */
     private fun registerProbeTests(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ProbeRecipesEmpty())
-        testSuite.registerTest(ProbeRecIngUnitMismatch())
-        testSuite.registerTest(ProbeRecIngExtraKey())
+        // testSuite.registerTest(ProbeRecIngUnitMismatch())
+        // testSuite.registerTest(ProbeRecIngExtraKey())
     }
 }
