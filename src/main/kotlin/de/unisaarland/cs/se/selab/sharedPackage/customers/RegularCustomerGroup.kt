@@ -54,7 +54,7 @@ class RegularCustomerGroup(
         if (experience == Experience.NEGATIVE) Rating.NEGATIVE else Rating.POSITIVE
 
     /** The dishes of the group's last three visits, counted once per member that ordered it. */
-    override fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int> {
+    override fun expectedDishes(menu: List<Recipe>, type: RestaurantType): Map<Recipe, Int> {
         val counts = mutableMapOf<Recipe, Int>()
         for (visit in history().getLastThree()) {
             for (dish in visit) {

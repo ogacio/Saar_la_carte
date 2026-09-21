@@ -3,6 +3,7 @@ import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
+import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.ratings.Experience
 import de.unisaarland.cs.se.selab.simulation.ratings.Rating
@@ -145,7 +146,7 @@ class RegularCustomerGroupTest {
         val beefPasta = recipe(2)
         visitWith(g, evening = 1, recipes = listOf(chickenRice, chickenRice, beefPasta))
 
-        val expected = g.expectedDishes(listOf(chickenRice, beefPasta))
+        val expected = g.expectedDishes(listOf(chickenRice, beefPasta), RestaurantType.ASIAN)
 
         assertEquals(2, expected[chickenRice])
         assertEquals(1, expected[beefPasta])
@@ -159,7 +160,7 @@ class RegularCustomerGroupTest {
         val stillOnMenu = recipe(2)
         visitWith(g, evening = 1, recipes = listOf(discontinued, stillOnMenu))
 
-        val expected = g.expectedDishes(listOf(stillOnMenu))
+        val expected = g.expectedDishes(listOf(stillOnMenu), RestaurantType.ASIAN)
 
         assertFalse(expected.containsKey(discontinued))
         assertEquals(1, expected[stillOnMenu])

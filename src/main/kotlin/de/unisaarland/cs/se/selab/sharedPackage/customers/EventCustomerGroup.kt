@@ -80,7 +80,7 @@ class EventCustomerGroup(
      * count (forum: only the favourite of the restaurant's type applies).
      */
     override fun expectedDishes(menu: List<Recipe>, type: RestaurantType): Map<Recipe, Int> {
-        val favourite = favouriteDishes.filterKeys { it == type }.values.firstOrNull() ?: return emptyMap()
+        val favourite: String = favouriteDishes[type] ?: return emptyMap()
         val dish = menu.firstOrNull { it.getDishName() == favourite } ?: return emptyMap()
         return mapOf(dish to groupSize())
     }

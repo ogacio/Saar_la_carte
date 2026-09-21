@@ -109,7 +109,7 @@ class CasualCustomerGroupTest {
         val g = group()
         val dummyMenu = listOf(Recipe(1, "dish1", 10, emptySet(), mutableListOf(), null))
 
-        val expected = g.expectedDishes(dummyMenu)
+        val expected = g.expectedDishes(dummyMenu, RestaurantType.ASIAN)
 
         assertTrue(expected.isEmpty())
     }
