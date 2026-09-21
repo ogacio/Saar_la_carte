@@ -57,7 +57,7 @@ object DeliveryService {
         }
         var order: Order? = null
         if (found.isNotEmpty()) {
-            order = Order(g, restaurant.getId(), g.id(), GlobalClock.getTickInEvening(), true, found)
+            order = Order(g, restaurant.getId(), g.id(), GlobalClock.currentTick, true, found)
             for (i in order.getMeals()) {
                 i.orderId = order.getId()
             }
