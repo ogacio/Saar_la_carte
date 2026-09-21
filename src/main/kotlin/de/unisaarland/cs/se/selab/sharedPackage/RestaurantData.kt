@@ -55,6 +55,14 @@ data class RestaurantData(
     }
 
     /**
+     * bool
+     */
+    fun acceptsNewCustomersAt(tick: Int): Boolean {
+        return openingTick <= tick &&
+            tick <= closingTick - 3
+    }
+
+    /**
      * returns number of seats left available for an event
      */
     fun eventSeatsLeft(evening: Int): Int {
