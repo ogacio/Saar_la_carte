@@ -12,6 +12,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
+import de.unisaarland.cs.se.selab.simulation.Statistics
 import de.unisaarland.cs.se.selab.simulation.SubUnits
 
 /**
@@ -77,6 +78,7 @@ class ServingService(
             if (meals.isEmpty()) continue
             next += meals.size
             visit.serve(meals, tick)
+            Statistics.record(sbu.restaurantId, meals.size, delivered = false)
             waiter.consume(ActionType.SERVING, meals.size)
             Logger.Foh.serving(
                 sbu.restaurantId,

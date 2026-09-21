@@ -130,7 +130,7 @@ class SupplierTest {
             group = group,
             restaurantId = RESTAURANT_ID,
             customerGroupId = id,
-            placedTick = GlobalClock.getTickInEvening(),
+            placedTick = GlobalClock.currentTick,
             isDelivery = false,
             meals = meals,
         )

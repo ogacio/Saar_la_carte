@@ -44,7 +44,7 @@ class F10KitchenCookTest {
     private fun order(id: Int, recipe: Recipe, count: Int): Order {
         val group = regular(id, count)
         val meals = group.members().map { Meal(null, it, recipe) }.toMutableList()
-        val order = Order(group, RESTAURANT_ID, id, GlobalClock.getTickInEvening(), false, meals)
+        val order = Order(group, RESTAURANT_ID, id, GlobalClock.currentTick, false, meals)
         meals.forEach { it.orderId = order.getId() }
         return order
     }

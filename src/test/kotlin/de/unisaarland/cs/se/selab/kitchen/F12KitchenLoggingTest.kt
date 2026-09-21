@@ -51,7 +51,7 @@ class F12KitchenLoggingTest {
     /** An order of [size] meals of [recipe], placed in the current tick. */
     private fun order(group: CustomerGroup, recipe: Recipe): Order {
         val meals = group.members().map { Meal(null, it, recipe) }.toMutableList()
-        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.getTickInEvening(), false, meals)
+        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.currentTick, false, meals)
         meals.forEach { it.orderId = order.getId() }
         return order
     }

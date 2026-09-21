@@ -78,7 +78,7 @@ class F24DeliveryFlowTest {
         val meals = group.members()
             .map { Meal(null, it, recipe(1), status = MealStatus.COOKED) }
             .toMutableList()
-        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.getTickInEvening(), true, meals)
+        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.currentTick, true, meals)
         meals.forEach { it.orderId = order.getId() }
         group.orderPlaced()
         desk.enqueue(order)
@@ -89,7 +89,7 @@ class F24DeliveryFlowTest {
     /** A delivery order of [group] that the kitchen has not finished, so it waits at the desk. */
     private fun queuedOrderOf(group: CustomerGroup): Order {
         val meals = group.members().map { Meal(null, it, recipe(1)) }.toMutableList()
-        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.getTickInEvening(), true, meals)
+        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.currentTick, true, meals)
         meals.forEach { it.orderId = order.getId() }
         group.orderPlaced()
         desk.enqueue(order)

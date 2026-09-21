@@ -215,7 +215,6 @@ class FrontOfTheHouse(
 
     /** Books a finished visit: served customers, the group's history, and a CASUAL table becomes free. */
     private fun finishVisit(visit: Visit) {
-        Statistics.record(sbu.restaurantId, visit.servedCustomers(), delivered = false)
         visit.order?.let { visit.group.recordVisit(GlobalClock.getEvening(), it) }
         val table = visit.table
         // REGULAR and EVENT tables stay reserved for the whole evening, "even after the group has left".
@@ -267,7 +266,7 @@ class FrontOfTheHouse(
         for (order in atTheDesk.filter { it.getCustomerGroup().hasGivenUp() }) {
             // "It can happen that a customer leaves the restaurant or aborts a delivery. However,
             // for this there is no synchronization to the kitchen": the meals keep being cooked,
-            // only no driver takes them out any more.
+            // only no driver takes them out anymore.
             deliveryDesk.drop(order)
             gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
         }

@@ -73,7 +73,7 @@ class F30EndOfEveningTest {
         val meals = group.members()
             .map { Meal(null, it, recipe(1), status = MealStatus.COOKED) }
             .toMutableList()
-        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.getTickInEvening(), true, meals)
+        val order = Order(group, RESTAURANT_ID, group.id(), GlobalClock.currentTick, true, meals)
         meals.forEach { it.orderId = order.getId() }
         group.orderPlaced()
         desk.enqueue(order)
