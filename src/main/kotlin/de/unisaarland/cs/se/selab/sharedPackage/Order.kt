@@ -57,7 +57,7 @@ class Order(
      * returns the ticks that passed since the order was placed
      */
     fun ticksSince(): Int {
-        return GlobalClock.getTickInEvening() - placedTick
+        return GlobalClock.currentTick - placedTick
     }
 
     /**
