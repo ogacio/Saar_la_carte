@@ -65,7 +65,7 @@ class CasualCustomerGroup(
     override fun getEventEvening(): Int = 0
 
     /** The kitchen guesses casual orders itself; this group contributes nothing fixed. */
-    override fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int> = emptyMap()
+    override fun expectedDishes(menu: List<Recipe>, type: RestaurantType): Map<Recipe, Int> = emptyMap()
 
     /** Marks that a delivery order was placed this evening and is now awaited. */
     override fun orderPlaced() {

@@ -65,8 +65,8 @@ abstract class CustomerGroup(
     /** The rating the group leaves after [experience], or null if it does not rate. */
     abstract fun ratingFor(experience: Experience): Rating?
 
-    /** The dishes and amounts the kitchen should prepare for this group, given [menu]. */
-    abstract fun expectedDishes(menu: List<Recipe>): Map<Recipe, Int>
+    /** The dishes and amounts the kitchen should prepare for this group, given [menu] at a [type] restaurant. */
+    abstract fun expectedDishes(menu: List<Recipe>, type: RestaurantType): Map<Recipe, Int>
 
     /** The dish the group forces its members to order at a restaurant of [type], or null. */
     open fun dishOverride(type: RestaurantType): String? = null

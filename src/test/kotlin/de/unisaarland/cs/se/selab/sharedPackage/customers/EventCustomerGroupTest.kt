@@ -137,7 +137,7 @@ class EventCustomerGroupTest {
         val other = recipe(2)
         val group = eventGroup(size = 6, favourites = mapOf(RestaurantType.EUROPEAN to favourite.getDishName()))
 
-        val expected = group.expectedDishes(listOf(other, favourite))
+        val expected = group.expectedDishes(listOf(other, favourite), RestaurantType.EUROPEAN)
 
         assertEquals(mapOf(favourite to 6), expected)
     }
@@ -147,7 +147,18 @@ class EventCustomerGroupTest {
         val other = recipe(2)
         val group = eventGroup(favourites = mapOf(RestaurantType.EUROPEAN to "unrelated-dish"))
 
-        val expected = group.expectedDishes(listOf(other))
+        val expected = group.expectedDishes(listOf(other), RestaurantType.EUROPEAN)
+
+        assertTrue(expected.isEmpty())
+    }
+
+    /** Only the hosting restaurant's own favourite is planned for, even if another type's is on the menu. */
+    @Test
+    fun expectedDishesIgnoresTheFavouriteOfAnotherRestaurantType() {
+        val asianFavourite = recipe(1)
+        val group = eventGroup(favourites = mapOf(RestaurantType.ASIAN to asianFavourite.getDishName()))
+
+        val expected = group.expectedDishes(listOf(asianFavourite), RestaurantType.EUROPEAN)
 
         assertTrue(expected.isEmpty())
     }
