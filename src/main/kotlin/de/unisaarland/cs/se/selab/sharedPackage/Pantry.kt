@@ -26,7 +26,7 @@ class Pantry(
     /** Every preparation phase: each delivery ages on its own counter, expired ones are thrown out. */
     // Open question: two deliveries expiring together give two Removed lines; the spec does not say.
     fun checkDateAndCleanOut() {
-        val expired = stock.filter { !it.ageByOneEvening() }
+        val expired = stock.filter { !it.ageByOneEvening() }.sortedBy { it.ingredient.name }
         for (entry in expired) {
             pantryRemoved(restaurantId, entry.amount, entry.ingredient.unit, entry.ingredient.name)
         }

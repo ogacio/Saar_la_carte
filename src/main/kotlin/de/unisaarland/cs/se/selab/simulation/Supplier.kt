@@ -14,6 +14,7 @@ object Supplier {
      * adds to pantry the ingredients in the needed quantities
      */
     fun resupply(p: Pantry, needed: Map<Ingredient, Int>) {
+        needed.entries.sortedBy { it.key.name }
         for ((ingredient, amount) in needed) {
             val evening = GlobalClock.getEvening()
             // if the ingredient is available, we supply it

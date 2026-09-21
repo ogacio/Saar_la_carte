@@ -53,15 +53,31 @@ class Kitchen(
     /** Dishes with smaller orderIds first, basic dishes first, then the lower recipe id;
      * a dish without a free cook stays queued. */
     private fun assignQueuedMeals() {
-        val grouped = groupQueuedMealsByRecipe()
-        val sorted = grouped.entries.sortedWith(
-            compareBy(
-                { !it.key.isBasicFor(restaurantType) },
-                { it.key.getId() }
-            )
-        )
-        for (entry in sorted) {
-            roaster.startCooking(entry.value)
+        for (order in queue.sortedBy { it.getId() }) {
+            val recipes = order.getMeals()
+                .filter { it.status == MealStatus.QUEUED }
+                .map { it.recipe }
+                .distinct()
+                .sortedWith(
+                    compareBy<Recipe>(
+                        { !it.isBasicFor(restaurantType) },
+                        { it.getId() },
+                    ),
+                )
+
+            for (recipe in recipes) {
+                if (!roaster.hasEligibleAndFree(recipe)) continue
+
+                val batch = queue
+                    .flatMap { it.getMeals() }
+                    .filter {
+                        it.status == MealStatus.QUEUED &&
+                            it.recipe == recipe
+                    }
+                    .toMutableList()
+
+                roaster.startCooking(batch)
+            }
         }
     }
 
@@ -89,19 +105,6 @@ class Kitchen(
     /** Meals that are cooked and still waiting for a waiter, the last number of the status line. */
     private fun servableMeals(): Int =
         queue.sumOf { order -> order.getMeals().count { it.status == MealStatus.COOKED } }
-
-    private fun groupQueuedMealsByRecipe(): MutableMap<Recipe, MutableList<Meal>> {
-        val mealsToCookByRecipe: MutableMap<Recipe, MutableList<Meal>> = mutableMapOf()
-        for (o in queue) {
-            val filtered = o.getMeals().filter {
-                it.status == MealStatus.QUEUED && roaster.hasEligibleAndFree(it.recipe)
-            }
-            for (m in filtered) {
-                mealsToCookByRecipe.getOrPut(m.recipe) { mutableListOf() }.add(m)
-            }
-        }
-        return mealsToCookByRecipe
-    }
 
     /** Called by Restaurant -> prepare, gets the supplies from Supplier into the Pantry. */
     fun planEvening(regulars: MutableList<CustomerGroup>, otherSeats: Int, menu: Menu) {
