@@ -136,7 +136,7 @@ class Kitchen(
         reservers.addAll(reservationBook.expectedFor(GlobalClock.getEvening()))
         val expected: MutableMap<Recipe, Int> = mutableMapOf()
         for (r in reservers) {
-            for ((recipe, amount) in r.expectedDishes(menu.getRecipes())) {
+            for ((recipe, amount) in r.expectedDishes(menu.getRecipes(),restaurantType)) {
                 expected[recipe] = (expected[recipe] ?: 0) + amount
             }
         }

@@ -51,7 +51,7 @@ class RestaurantParser(model: ParsedModel) : ConfigParser(model) {
         } catch (_: SerializationException) {
             return false
         }
-        if (!checkUniqueRestaurantIds(fileDto.restaurants)) {
+        if (!checkUniqueRestaurantIds(fileDto.restaurants)) { // may be double check, parse model also does something
             returnValue = false
         } else {
             for (restaurantDto in fileDto.restaurants) {
