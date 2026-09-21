@@ -114,6 +114,22 @@ class OrderingServiceTest {
     }
 
     @Test
+    fun customerWithoutFavouriteOrdersTheDishWithMostPreferredIngredientsOverAHigherId() {
+        val tofu = Ingredient("tofu", UnitType.X, 100, 1)
+        val rice = Ingredient("rice", UnitType.G, 100, 1)
+        val tofuDish = recipe(1, listOf(RecipeIngredient(tofu, 1)))
+        val riceDish = recipe(2, listOf(RecipeIngredient(rice, 1)))
+        whenever(menu.getOrderables()).thenReturn(listOf(tofuDish, riceDish))
+        whenever(pantry.reserve(any())).thenReturn(true)
+        val likesTofu = FoodPreference(1, emptySet(), setOf(tofu), emptyList())
+        val visit = seatedVisit(Visit(casual(3, 1, preference = likesTofu)), Waiter())
+
+        service.takeOrder(visit, sbu, 2)
+
+        assertEquals(listOf(1), visit.order?.getMeals()?.map { it.recipe.getId() })
+    }
+
+    @Test
     fun statusCountsNothingWhenNobodyOrdered() {
         whenever(menu.getOrderables()).thenReturn(emptyList())
         service.takeOrder(seatedVisit(Visit(regular(3, 2)), Waiter()), sbu, 2)

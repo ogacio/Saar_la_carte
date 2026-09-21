@@ -47,6 +47,17 @@ class ReservationBookTest {
     }
 
     @Test
+    fun eventSeatsBookedSumsTheEventGroupsPerEveningAndSkipsEveningsWithoutEvents() {
+        val book = bookWith(Table(1, 10, TableType.COMMON))
+        book.bookAhead(event(1, 3), evening = 4)
+        book.bookAhead(event(2, 5), evening = 4)
+        // Only EVENT groups count towards the event seats of an evening.
+        book.bookAhead(regular(3, 6), evening = 5)
+
+        assertEquals(mapOf(4 to 8), book.getEventSeatsBooked())
+    }
+
+    @Test
     fun expectedForIsEmptyWithoutBookingsAndSortedById() {
         val book = bookWith(Table(1, 10, TableType.COMMON))
         book.bookAhead(event(7, 2), evening = 4)

@@ -282,11 +282,44 @@ class DeliveryServiceOrderingTest {
         assertNull(DeliveryService.chooseDriverForOrder(DRIVER_RESTAURANT))
     }
 
+    @Test
+    fun removingADriverFromARestaurantWithoutDriversLeavesTheOtherRestaurantsDriver() {
+        val withDriver = DeliveryDesk(mutableListOf(), DRIVER_RESTAURANT_2)
+        val withoutDriver = DeliveryDesk(mutableListOf(), EMPTY_RESTAURANT_2)
+        val owners = listOf(withDriver, withoutDriver).map { ownDesk ->
+            val foh = mock<FrontOfTheHouse>()
+            whenever(foh.getDeliveryDesk()).thenReturn(ownDesk)
+            val owner = mock<Restaurant>()
+            whenever(owner.getId()).thenReturn(ownDesk.getRestaurantId())
+            whenever(owner.getFoh()).thenReturn(foh)
+            owner
+        }
+        DeliveryService.setSimulator(
+            Simulator(
+                0,
+                owners.toMutableList(),
+                CustomerRegistry(mutableListOf()),
+                mutableListOf(),
+                BrowsingService(mutableListOf(), RatingBook),
+            ),
+        )
+        DeliveryService.addDriver(DRIVER_RESTAURANT_2)
+
+        DeliveryService.rmDriver(EMPTY_RESTAURANT_2)
+
+        assertEquals(1, withDriver.getDrivers().size)
+        assertEquals(0, withoutDriver.getDrivers().size)
+        DeliveryService.rmDriver(DRIVER_RESTAURANT_2)
+        assertEquals(0, withDriver.getDrivers().size)
+    }
+
     /** Values shared by the tests. */
     private companion object {
         const val RESTAURANT = 951
         const val EMPTY_RESTAURANT = 952
         const val DRIVER_RESTAURANT = 953
+        const val DRIVER_RESTAURANT_2 = 954
+        const val EMPTY_RESTAURANT_2 = 955
         const val GROUP = 7
         const val DURATION = 10
         const val DISTANCE = 7
