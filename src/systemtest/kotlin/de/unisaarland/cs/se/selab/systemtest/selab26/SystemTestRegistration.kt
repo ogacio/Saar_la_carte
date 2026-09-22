@@ -208,6 +208,10 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16MergedTablesAreSepar
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeatedNextTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16TwoConsecutiveFailuresLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CurrentLoadDropsWhenTheCustomersLeave
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CustomersWhoCannotOrderLeaveTheLoad
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EventCustomersDoNotCountTowardTheLoad
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EventIsSeatedByTheMostLoadedWaiterFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EverybodyBusyTheLeastLoadedWaiterSeats
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17WaiterWithTheMostCustomersSeatsTheNextGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
@@ -452,6 +456,10 @@ object SystemTestRegistration {
         testSuite.registerTest(F15MergedTableIsSplitWhenTheCasualGroupLeaves())
         testSuite.registerTest(F17WaiterWithTheMostCustomersSeatsTheNextGroup())
         testSuite.registerTest(F17CurrentLoadDropsWhenTheCustomersLeave())
+        testSuite.registerTest(F17EverybodyBusyTheLeastLoadedWaiterSeats())
+        testSuite.registerTest(F17CustomersWhoCannotOrderLeaveTheLoad())
+        testSuite.registerTest(F17EventCustomersDoNotCountTowardTheLoad())
+        testSuite.registerTest(F17EventIsSeatedByTheMostLoadedWaiterFirst())
         testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
         testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
