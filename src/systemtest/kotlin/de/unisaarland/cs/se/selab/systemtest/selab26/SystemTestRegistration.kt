@@ -140,7 +140,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDeliveryOneTickTooEar
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateGroupId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateIdAcrossGroupTypes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventEveningThree
-import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventFavouriteForWrongType
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventFavouritesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventMinimumSize
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventMissingFavouriteForType
@@ -197,11 +196,14 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14EventReservedBeforeR
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14RegularWithoutTableIsNotReserved
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14ReservedTableStaysBlockedAfterEarlyLeave
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F15BarTablesNeverMerge
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F15MergedTableIsSplitWhenTheCasualGroupLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16BarGroupSentAwayRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16CasualGroupSeatedAtMergedTable
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16MergedTablesAreSeparatedForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeatedNextTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16TwoConsecutiveFailuresLeaves
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CurrentLoadDropsWhenTheCustomersLeave
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17WaiterWithTheMostCustomersSeatsTheNextGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19BusierWaiterUnderTenWins
@@ -245,6 +247,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GUnknownExclude
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GUnknownFavouriteDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32OnlyThatIngredientChanges
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentChangesTheProcuredAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncidentChangesTheProcuredPackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08ExactPackageMultiple
@@ -441,6 +444,9 @@ object SystemTestRegistration {
         testSuite.registerTest(F14AReservedTableIsBlockedForTheWholeEvening())
         testSuite.registerTest(F16CasualGroupSeatedAtMergedTable())
         testSuite.registerTest(F16MergedTablesAreSeparatedForTheNextEvening())
+        testSuite.registerTest(F15MergedTableIsSplitWhenTheCasualGroupLeaves())
+        testSuite.registerTest(F17WaiterWithTheMostCustomersSeatsTheNextGroup())
+        testSuite.registerTest(F17CurrentLoadDropsWhenTheCustomersLeave())
         testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
         testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
@@ -481,6 +487,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F31StaffIncidentAddsTheCookThatUnlocksTheDish())
         testSuite.registerTest(F32RecipeIncidentChangesTheProcuredAmount())
         testSuite.registerTest(F33PackagingIncidentChangesTheProcuredPackages())
+        testSuite.registerTest(F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe())
     }
 
     /** F04: every restaurants file rule, from the schema bounds to the cross-file recipe ids. */
@@ -533,7 +540,9 @@ object SystemTestRegistration {
         testSuite.registerTest(ScDeliveryBarelyInPhase())
         testSuite.registerTest(ScDeliveryOneTickTooEarly())
         testSuite.registerTest(ScEventMissingFavouriteForType())
-        testSuite.registerTest(ScEventFavouriteForWrongType())
+        // Forum 352: an event favourite need not be a basic dish of that type, so this
+        // expectation is wrong; it fails against the reference and blocks the mutant run.
+        // testSuite.registerTest(ScEventFavouriteForWrongType())
         testSuite.registerTest(ScEventMinimumSize())
         testSuite.registerTest(ScVisitingEveningsContainsZero())
         testSuite.registerTest(ScVisitingTickZero())

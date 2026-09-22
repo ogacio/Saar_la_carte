@@ -72,6 +72,27 @@ class WaiterAssignmentService(
     }
 
     /**
+     * Hands the orders of an EVENT group to the waiters who seated it (forum thread 266).
+     *
+     * Customers are seated and order in the same fixed sequence, so every waiter owns the next block
+     * of that sequence, as large as the number of customers it seated in [seatingPlan] (in seating
+     * order). [placed] tells for each position of the ordering sequence whether that customer placed
+     * an order. A customer who found no dish leaves an empty slot; orders never move to another
+     * waiter. Returns the orders each waiter takes, in seating order; a waiter whose customers all
+     * failed keeps an entry of 0. Nothing is booked here, the caller does that with [Waiter.consume].
+     */
+    fun assignEventOrders(seatingPlan: Map<Waiter, Int>, placed: List<Boolean>): Map<Waiter, Int> {
+        val orders = linkedMapOf<Waiter, Int>()
+        var position = 0
+        for ((waiter, seated) in seatingPlan) {
+            val block = placed.subList(minOf(position, placed.size), minOf(position + seated, placed.size))
+            orders[waiter] = block.count { it }
+            position += seated
+        }
+        return orders
+    }
+
+    /**
      * The waiter the event manager would pick first for [action], ignoring capacity. Nothing is
      * planned, but the waiter receives its id: the specification demands that the No Serving line of
      * an EVENT table names "the first that would have served", which is only possible with an id.

@@ -38,6 +38,13 @@ class ReservationBook(
     /** The EVENT groups booked for [evening], in ascending id; the kitchen plans for them. */
     fun expectedFor(evening: Int): List<CustomerGroup> = upcoming[evening].orEmpty().sortedBy { it.id() }
 
+    /** groupId -> the table it holds tonight. Valid only after openEvening. */
+    fun tablesTonight(): Map<Int, Table> = tonight
+
+    /** The groups that actually hold a table tonight, events first then regulars, by id. */
+    fun reservedGroupsTonight(evening: Int, regulars: List<CustomerGroup>): List<CustomerGroup> =
+        (expectedFor(evening) + regulars.sortedBy { it.id() }).filter { it.id() in tonight }
+
     /**
      * Preparation of [evening]: reserves one table for each EVENT and then each REGULAR group,
      * each type in ascending id. The table rules are applied with the three-quarter rule lifted

@@ -34,6 +34,7 @@ class CasualCustomerGroup(
 ) {
 
     private var deliveryOrderPending: Boolean = false
+    private var deliveryGivenUp: Boolean = false
 
     /** The restaurant types this group is willing to visit. */
     override fun restaurantTypes(): Set<RestaurantType> = restaurantTypes
@@ -70,6 +71,7 @@ class CasualCustomerGroup(
     /** Marks that a delivery order was placed this evening and is now awaited. */
     override fun orderPlaced() {
         deliveryOrderPending = true
+        deliveryGivenUp = false
     }
 
     /** Marks a placed delivery order as resolved, whether delivered or given up on. */
@@ -78,11 +80,22 @@ class CasualCustomerGroup(
     }
 
     /**
-     * A placed delivery order not yet arrived 3 ticks after [visitingTick] is given up on.
-     * "The delivery was expected by this tick and has not arrived — 3 ticks after visitingTick."
+     * A placed delivery order stays acceptable through the third tick after [visitingTick].
+     * It becomes due for give-up in the following tick.
      */
-    override fun hasGivenUp(): Boolean =
+    override fun deliveryGiveUpDue(): Boolean =
         deliveryOrderPending && GlobalClock.getTickInEvening() > visitingTick() + GIVE_UP_DELAY_TICKS
+
+    /** The time-based due check is kept for existing callers that ask whether the pending order timed out. */
+    override fun hasGivenUp(): Boolean = deliveryGiveUpDue()
+
+    /** Remember the actual give-up separately, so a driver arriving later must still fail. */
+    override fun markDeliveryGivenUp() {
+        deliveryGivenUp = true
+        deliveryOrderPending = false
+    }
+
+    override fun deliveryWasGivenUp(): Boolean = deliveryGivenUp
 
     private companion object {
         const val GIVE_UP_DELAY_TICKS = 3

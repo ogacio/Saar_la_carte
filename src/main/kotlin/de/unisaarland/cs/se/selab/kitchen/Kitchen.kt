@@ -10,7 +10,6 @@ import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 import de.unisaarland.cs.se.selab.sharedPackage.Recipe
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
-import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.Supplier.resupply
 
@@ -132,8 +131,8 @@ class Kitchen(
         otherSeats: Int,
         menu: Menu,
     ): MutableMap<Recipe, Int> {
+        // Restaurant.prepare already passes exactly the groups to plan for, events included.
         val reservers = regulars.toMutableList()
-        reservers.addAll(reservationBook.expectedFor(GlobalClock.getEvening()))
         val expected: MutableMap<Recipe, Int> = mutableMapOf()
         for (r in reservers) {
             for ((recipe, amount) in r.expectedDishes(menu.getRecipes(), restaurantType)) {

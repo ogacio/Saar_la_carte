@@ -4,7 +4,6 @@ import de.unisaarland.cs.se.selab.foh.visit.AwaitingSeatState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
-import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 import de.unisaarland.cs.se.selab.sharedPackage.customers.EventCustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
@@ -44,7 +43,10 @@ class FrontOfTheHouse(
     private val eatingDeliveries: MutableList<CustomerGroup> = mutableListOf()
 
     /** Delivery groups that gave up waiting this tick; rated in the next rating step. */
-    private var gaveUpDeliveries: List<CustomerGroup> = emptyList()
+    private val gaveUpDeliveries: MutableSet<CustomerGroup> = mutableSetOf()
+
+    /** Delivery groups that finished eating in this tick; produced by the eating step, consumed by rating. */
+    private var finishedEatingDeliveriesThisTick: List<CustomerGroup> = emptyList()
 
     /** Orders whose group has already been reported as having given up, so the line is written once. */
     private val reportedGiveUps: MutableSet<Int> = mutableSetOf()
@@ -100,10 +102,9 @@ class FrontOfTheHouse(
         for (visit in visits) {
             if (visit.state !is AwaitingSeatState) continue
             if (visit in arrived) Logger.Customer.arrival(sbu.restaurantId, visit.group.id())
-            // "A restaurant does not accept new customers in the last 3 ticks of their opening
-            // time. This includes customers that arrived in the previous tick but could not be
-            // seated." They keep waiting and are sent out when the opening time ends.
-            if (!acceptsCustomers) continue
+            // The last-three-ticks rule applies only to new arrivals. A group that already arrived
+            // last tick but found no free waiter still gets its one retry in this tick.
+            if (!acceptsCustomers && visit in arrived) continue
             services.seating.seat(visit, sbu, tick)
             services.ordering.takeOrder(visit, sbu, tick)
         }
@@ -135,16 +136,20 @@ class FrontOfTheHouse(
 
         for (driver in drivers) {
             val (order, gaveUp) = driver.takeResolvedOrder() ?: continue
-            if (gaveUp) {
-                gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
-            } else {
-                eatingDeliveries += order.getCustomerGroup()
+            if (!gaveUp) {
+                val group = order.getCustomerGroup()
+                group.orderResolved()
+                Statistics.record(sbu.restaurantId, order.getMeals().size, delivered = true)
+                if (group !in eatingDeliveries) eatingDeliveries += group
             }
         }
     }
 
-    /** Step 5: eating; waiting deadlines and finished eaters. */
-    fun callDiningService() = services.dining.eat(visits, sbu)
+    /** Step 5: eating; waiting deadlines and finished eaters, including delivered food. */
+    fun callDiningService() {
+        finishedEatingDeliveriesThisTick = services.dining.eat(visits, eatingDeliveries, sbu)
+        eatingDeliveries.removeAll(finishedEatingDeliveriesThisTick.toSet())
+    }
 
     /** Step 6: escorting groups that have finished eating. */
     fun callEscortingService() = services.escorting.escort(visits, sbu)
@@ -157,15 +162,7 @@ class FrontOfTheHouse(
     fun callRatingService() {
         val finished = visits.filter { it.isFinished() }
         val visitOf = finished.associateBy { it.group.id() }
-        val tick = GlobalClock.getTickInEvening()
-        for (group in eatingDeliveries) {
-            for (customer in group.members()) {
-                if (customer.status() == CustomerStatus.SERVED && customer.isDoneEating(tick)) customer.doneEating()
-            }
-        }
-        val doneEatingDeliveries = eatingDeliveries.filter { group ->
-            group.members().all { it.status() == CustomerStatus.DONE_EATING }
-        }
+        val doneEatingDeliveries = finishedEatingDeliveriesThisTick
         val allRaters = finished.map { it.group } + turnedAway + doneEatingDeliveries + gaveUpDeliveries
         val raters: List<CustomerGroup> = allRaters.sortedWith(compareBy({ it.groupType().ordinal }, { it.id() }))
         for (group in raters) {
@@ -179,9 +176,6 @@ class FrontOfTheHouse(
                     services.rating.rateDelivery(group, Experience.NEGATIVE, sbu)
                 }
                 group in doneEatingDeliveries -> {
-                    group.orderResolved()
-                    Logger.Delivery.deliveryFinishedEating(sbu.restaurantId, group.id())
-                    Statistics.record(sbu.restaurantId, group.groupSize(), delivered = true)
                     services.rating.rateDelivery(group, deliveryExperience(group), sbu)
                 }
                 else -> {
@@ -191,8 +185,8 @@ class FrontOfTheHouse(
         }
         services.rating.logStatus(sbu)
         turnedAway = emptyList()
-        gaveUpDeliveries = emptyList()
-        eatingDeliveries.removeAll(doneEatingDeliveries)
+        gaveUpDeliveries.clear()
+        finishedEatingDeliveriesThisTick = emptyList()
         finished.forEach { finishVisit(it) }
         visits.removeAll(finished)
 
@@ -219,7 +213,8 @@ class FrontOfTheHouse(
         turnedAway = emptyList()
         cancelledTonight.clear()
         eatingDeliveries.clear()
-        gaveUpDeliveries = emptyList()
+        gaveUpDeliveries.clear()
+        finishedEatingDeliveriesThisTick = emptyList()
         reservations.clearTonight()
         reservations.dropBookings()
         tables.splitAllMerged()
@@ -277,18 +272,23 @@ class FrontOfTheHouse(
         // "This is logged using group and order id in ascending order of group id": an order that
         // is already with a driver counts too, and the line is written once, in the tick the group
         // ran out of patience. The driver then fails to deliver it on arrival.
-        for (order in (atTheDesk + onTheRoad).filter { it.getCustomerGroup().hasGivenUp() }
-            .sortedBy { it.getCustomerGroupId() }) {
+        val due = (atTheDesk + onTheRoad)
+            .distinctBy { it.getId() }
+            .filter { it.getCustomerGroup().deliveryGiveUpDue() }
+            .sortedBy { it.getCustomerGroupId() }
+        for (order in due) {
             if (reportedGiveUps.add(order.getId())) {
-                Logger.Delivery.deliveryGivenUp(sbu.restaurantId, order.getCustomerGroup().id(), order.getId())
+                val group = order.getCustomerGroup()
+                group.markDeliveryGivenUp()
+                Logger.Delivery.deliveryGivenUp(sbu.restaurantId, group.id(), order.getId())
+                gaveUpDeliveries += group
             }
         }
-        for (order in atTheDesk.filter { it.getCustomerGroup().hasGivenUp() }) {
+        for (order in atTheDesk.filter { it.getCustomerGroup().deliveryWasGivenUp() }) {
             // "It can happen that a customer leaves the restaurant or aborts a delivery. However,
             // for this there is no synchronization to the kitchen": the meals keep being cooked,
             // only no driver takes them out anymore.
             deliveryDesk.drop(order)
-            gaveUpDeliveries = gaveUpDeliveries + order.getCustomerGroup()
         }
     }
 }

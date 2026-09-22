@@ -115,11 +115,13 @@ class F09KitchenPlanEveningTest {
         val busy = rice()
         val busyPantry = Pantry(mutableListOf(busy to PORTION), restaurantId = RESTAURANT_ID)
         val busyBook = ReservationBook(TableAssignmentService(mutableListOf()))
-        busyBook.bookAhead(eventGroup(2, 4, tonight), tonight)
+        val busyEvent = eventGroup(2, 4, tonight)
+        busyBook.bookAhead(busyEvent, tonight)
         val busyKitchen = kitchen(busyPantry, busyBook)
         val busyMenu = Menu(mutableListOf(dish(busy)), busyPantry, busyKitchen)
 
-        busyKitchen.planEvening(mutableListOf(), TEN_SEATS, busyMenu)
+        // Restaurant.prepare now passes the groups to plan for; the kitchen no longer looks them up.
+        busyKitchen.planEvening(mutableListOf(busyEvent), TEN_SEATS, busyMenu)
 
         assertTrue(
             busyPantry.getTotalIngredients(busy) > PORTION,
