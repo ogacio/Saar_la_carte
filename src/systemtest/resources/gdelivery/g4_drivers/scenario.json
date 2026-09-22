@@ -1,0 +1,51 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 8,
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [1, 2],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 2,
+      "foodPreferences": [{"size": 2, "favoriteDishes": ["Rice Bowl"]}]
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 8,
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [1, 2],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 7,
+      "foodPreferences": [{"size": 2, "favoriteDishes": ["Rice Bowl"]}]
+    },
+    {
+      "id": 3,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 8,
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [1, 2],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 2,
+      "foodPreferences": [{"size": 2, "favoriteDishes": ["Beef Bowl"]}]
+    },
+    {
+      "id": 4,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 8,
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [1, 2],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 12,
+      "foodPreferences": [{"size": 2, "favoriteDishes": ["Beef Bowl"]}]
+    }
+  ],
+  "incidents": [
+    {"id": 1, "type": "STAFF", "evening": 2, "restaurant": 1, "number": -1, "staffType": "DRIVER"}
+  ]
+}

@@ -26,7 +26,7 @@ class AwaitingMealState : VisitState() {
 
         val servedSomebody = visit.group.members().any { it.servedTick() != null }
         if (!servedSomebody) {
-            if (waited >= PATIENCE_TICKS) {
+            if (waited >= PATIENCE_TICKS - 1) {
                 val everyone = visit.customersInside()
                 visit.leftUnservedThisTick = everyone.size
                 visit.leaveUnserved(everyone)
@@ -36,7 +36,7 @@ class AwaitingMealState : VisitState() {
             return
         }
 
-        if (waited >= PATIENCE_TICKS + EXTRA_PATIENCE_TICKS) {
+        if (waited >= PATIENCE_TICKS - 1 + EXTRA_PATIENCE_TICKS) {
             val unserved = visit.customersWaitingForFood()
             visit.leftUnservedThisTick = unserved.size
             visit.leaveUnserved(unserved)

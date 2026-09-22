@@ -1,0 +1,24 @@
+{
+  "ingredients": [
+    {"name": "rice", "unit": "g", "packagingVolume": 30, "bestBefore": 9},
+    {"name": "beef", "unit": "g", "packagingVolume": 30, "bestBefore": 9}
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Rice Bowl",
+      "duration": 4,
+      "cookType": ["EXEC"],
+      "ingredients": [{"name": "rice", "amount": 2}],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Beef Bowl",
+      "duration": 4,
+      "cookType": ["EXEC"],
+      "ingredients": [{"name": "beef", "amount": 2}],
+      "basicDishFor": "EUROPEAN"
+    }
+  ]
+}
