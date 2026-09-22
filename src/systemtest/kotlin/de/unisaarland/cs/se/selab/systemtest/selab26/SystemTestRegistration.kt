@@ -1,6 +1,14 @@
 package de.unisaarland.cs.se.selab.systemtest.selab26
 
 import de.unisaarland.cs.se.selab.systemtest.selab26.basictests.ExampleSystemTest
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F20DeliveryOfTwoMealsFromOrderToRating
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F22RegularVisitsEverySecondEvening
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F25OnlyRestaurantsOfTheWantedTypeAreConsidered
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F26CustomerWithMoreExclusionsOrdersFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F28DecidedGroupTakesTheLastSeats
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F31HiredDriverMakesTheRestaurantAvailableForDelivery
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F34UnavailableIngredientIsNotProcuredForItsDuration
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24AGroupGivesUpOnALateDelivery
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
@@ -279,6 +287,7 @@ object SystemTestRegistration {
         registerFrontOfHouseTests(testSuite)
         registerF06Tests(testSuite)
         registerIncidentTests(testSuite)
+        registerCoverageTests(testSuite)
         registerKitchenTests(testSuite)
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
@@ -322,6 +331,7 @@ object SystemTestRegistration {
         testSuite.registerTest(ExampleSystemTest())
         registerFrontOfHouseTests(testSuite)
         registerIncidentTests(testSuite)
+        registerCoverageTests(testSuite)
         testSuite.registerTest(F08SupplierDeliversWholePackages())
         testSuite.registerTest(F08ExactPackageMultiple())
         testSuite.registerTest(F08PartialStockDeficit())
@@ -423,6 +433,20 @@ object SystemTestRegistration {
     /**
      * Registers the F03 food file validation tests covering the root and ingredient fixtures.
      */
+
+    /**
+     * Registers the simulation tests for the features with the lowest system test coverage.
+     */
+    private fun registerCoverageTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F34UnavailableIngredientIsNotProcuredForItsDuration())
+        testSuite.registerTest(F31HiredDriverMakesTheRestaurantAvailableForDelivery())
+        testSuite.registerTest(F20DeliveryOfTwoMealsFromOrderToRating())
+        testSuite.registerTest(F22RegularVisitsEverySecondEvening())
+        testSuite.registerTest(F28DecidedGroupTakesTheLastSeats())
+        testSuite.registerTest(F25OnlyRestaurantsOfTheWantedTypeAreConsidered())
+        testSuite.registerTest(F26CustomerWithMoreExclusionsOrdersFirst())
+        testSuite.registerTest(P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening())
+    }
 
     /** F31-F33: the incidents that change staff, recipes and packaging while the simulation runs. */
     private fun registerIncidentTests(testSuite: SELab26TestSuite) {
