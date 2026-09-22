@@ -149,3 +149,45 @@ class ResTableSize31 : RestaurantInvalidTest("bad_res_table_size_31") {
     override val name = "F04ResTableSize31"
     override val description = "A table size of 31 is above the range of two to thirty."
 }
+
+/** openingTickEnd equal to openingTickStart violates the strictly greater rule. */
+class ResEndEqualsStart : RestaurantInvalidTest("bad_res_end_equals_start") {
+    override val name = "F04ResEndEqualsStart"
+    override val description = "openingTickEnd equal to openingTickStart violates the strictly greater rule."
+}
+
+/** An unknown key beside the restaurants array is rejected. */
+class ResRootExtraKey : RestaurantInvalidTest("bad_res_root_extra_key") {
+    override val name = "F04ResRootExtraKey"
+    override val description = "An unknown key beside the restaurants array is rejected."
+}
+
+/** The required root restaurants key is absent. */
+class ResRootMissingKey : RestaurantInvalidTest("bad_res_root_missing_key") {
+    override val name = "F04ResRootMissingKey"
+    override val description = "The required root restaurants key is absent."
+}
+
+/** A restaurant listing the same recipe id twice violates uniqueness. */
+class ResRecipesDuplicateId : RestaurantInvalidTest("bad_res_recipes_duplicate_id") {
+    override val name = "F04ResRecipesDuplicateId"
+    override val description = "A restaurant listing the same recipe id twice violates uniqueness."
+}
+
+/** An empty restaurant name violates the minimum length of one. */
+class ResNameEmpty : RestaurantInvalidTest("bad_res_name_empty") {
+    override val name = "F04ResNameEmpty"
+    override val description = "An empty restaurant name violates the minimum length of one."
+}
+
+/** A negative number of delivery drivers violates the minimum of zero. */
+class ResNegativeDrivers : RestaurantInvalidTest("bad_res_negative_drivers") {
+    override val name = "F04ResNegativeDrivers"
+    override val description = "A negative number of delivery drivers violates the minimum of zero."
+}
+
+/** GRILL is not a cook type, so the kitchen staff object is rejected. */
+class ResUnknownCookType : RestaurantInvalidTest("bad_res_unknown_cook_type") {
+    override val name = "F04ResUnknownCookType"
+    override val description = "GRILL is not a cook type, so the kitchen staff object is rejected."
+}

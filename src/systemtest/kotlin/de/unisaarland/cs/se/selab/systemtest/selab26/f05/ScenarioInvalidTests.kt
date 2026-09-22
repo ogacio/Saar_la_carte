@@ -110,3 +110,63 @@ class ScEventNoFavourites : ScenarioInvalidTest("bad_sc_event_no_favourites") {
     override val name = "F05ScEventNoFavourites"
     override val description = "An event group must declare its favourite dishes."
 }
+
+/** A visitingTick of 0 is below the minimum of one. */
+class ScVisitingTickZero : ScenarioInvalidTest("bad_sc_visiting_tick_zero") {
+    override val name = "F05ScVisitingTickZero"
+    override val description = "A visitingTick of 0 is below the minimum of one."
+}
+
+/** A casual group of eleven is above the maximum size of ten. */
+class ScCasualSize11 : ScenarioInvalidTest("bad_sc_casual_size_11") {
+    override val name = "F05ScCasualSize11"
+    override val description = "A casual group of eleven is above the maximum size of ten."
+}
+
+/** A casual group needs at least one visiting evening. */
+class ScVisitingEveningsEmpty : ScenarioInvalidTest("bad_sc_visiting_evenings_empty") {
+    override val name = "F05ScVisitingEveningsEmpty"
+    override val description = "A casual group needs at least one visiting evening."
+}
+
+/** A food preference must exclude, prefer or favour something. */
+class ScPreferenceWithoutRule : ScenarioInvalidTest("bad_sc_preference_without_rule") {
+    override val name = "F05ScPreferenceWithoutRule"
+    override val description = "A food preference must exclude, prefer or favour something."
+}
+
+/** A food preference for zero customers violates the exclusive minimum. */
+class ScPreferenceSizeZero : ScenarioInvalidTest("bad_sc_preference_size_zero") {
+    override val name = "F05ScPreferenceSizeZero"
+    override val description = "A food preference for zero customers violates the exclusive minimum."
+}
+
+/** MEXICAN is not a member of the restaurant type enum. */
+class ScUnknownRestaurantType : ScenarioInvalidTest("bad_sc_unknown_restaurant_type") {
+    override val name = "F05ScUnknownRestaurantType"
+    override val description = "MEXICAN is not a member of the restaurant type enum."
+}
+
+/** The required root customerGroups key is absent. */
+class ScMissingCustomerGroups : ScenarioInvalidTest("bad_sc_missing_customer_groups") {
+    override val name = "F05ScMissingCustomerGroups"
+    override val description = "The required root customerGroups key is absent."
+}
+
+/** A regular group must declare when its visits start. */
+class ScRegularNoVisitingStart : ScenarioInvalidTest("bad_sc_regular_no_visiting_start") {
+    override val name = "F05ScRegularNoVisitingStart"
+    override val description = "A regular group must declare when its visits start."
+}
+
+/** An event group always rates and may not declare a rating likelihood. */
+class ScEventWithLikelihood : ScenarioInvalidTest("bad_sc_event_with_likelihood") {
+    override val name = "F05ScEventWithLikelihood"
+    override val description = "An event group always rates and may not declare a rating likelihood."
+}
+
+/** An event group needs at least one favourite dish. */
+class ScEventFavouritesEmpty : ScenarioInvalidTest("bad_sc_event_favourites_empty") {
+    override val name = "F05ScEventFavouritesEmpty"
+    override val description = "An event group needs at least one favourite dish."
+}

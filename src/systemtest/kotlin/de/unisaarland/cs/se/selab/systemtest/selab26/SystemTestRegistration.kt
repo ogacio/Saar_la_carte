@@ -103,34 +103,51 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateTableId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResEmptyArray
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResEndBeforeStart
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResEndEqualsStart
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResExecTwo
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResExtraKey
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMissingName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMissingPastry
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResNameEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResNegativeDrivers
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResNegativeRatings
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResOpeningEnd25
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResOpeningStartZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResRecipesDuplicateId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResRootExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResRootMissingKey
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTableSize31
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTableSizeOne
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTableTypeUnknown
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTablesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTypeLowercase
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResUnknownCookType
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResUnknownRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResWaitstaffZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualNoLikelihood
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualSize11
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualTableAndDistance
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateGroupId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventEveningThree
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventFavouritesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventNoFavourites
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventSizeThree
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventWithLikelihood
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScMissingCustomerGroups
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScMissingIncidents
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScPreferenceSizeZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScPreferenceWithoutRule
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRatingUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularNoVisitingStart
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularPeriod11
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularUnknownRestaurant
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularWithTypes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRestaurantTypesEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScUnknownRestaurantType
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingEveningsEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingTick22
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingTickZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentDuplicateId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownIngredient
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownRestaurant
@@ -348,6 +365,13 @@ object SystemTestRegistration {
 
     /** F04: every restaurants file rule, from the schema bounds to the cross-file recipe ids. */
     private fun registerRestaurantParserTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ResEndEqualsStart())
+        testSuite.registerTest(ResRootExtraKey())
+        testSuite.registerTest(ResRootMissingKey())
+        testSuite.registerTest(ResRecipesDuplicateId())
+        testSuite.registerTest(ResNameEmpty())
+        testSuite.registerTest(ResNegativeDrivers())
+        testSuite.registerTest(ResUnknownCookType())
         testSuite.registerTest(ResExecTwo())
         testSuite.registerTest(ResWaitstaffZero())
         testSuite.registerTest(ResTablesEmpty())
@@ -371,6 +395,16 @@ object SystemTestRegistration {
 
     /** F05: every scenario file rule, per customer group type and across files. */
     private fun registerScenarioParserTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ScVisitingTickZero())
+        testSuite.registerTest(ScCasualSize11())
+        testSuite.registerTest(ScVisitingEveningsEmpty())
+        testSuite.registerTest(ScPreferenceWithoutRule())
+        testSuite.registerTest(ScPreferenceSizeZero())
+        testSuite.registerTest(ScUnknownRestaurantType())
+        testSuite.registerTest(ScMissingCustomerGroups())
+        testSuite.registerTest(ScRegularNoVisitingStart())
+        testSuite.registerTest(ScEventWithLikelihood())
+        testSuite.registerTest(ScEventFavouritesEmpty())
         testSuite.registerTest(ScVisitingTick22())
         testSuite.registerTest(ScRestaurantTypesEmpty())
         testSuite.registerTest(ScRatingUnknown())
