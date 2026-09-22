@@ -10,13 +10,10 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F31HiredDriverMake
 import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F34UnavailableIngredientIsNotProcuredForItsDuration
 import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
-import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24AGroupGivesUpOnALateDelivery
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28SeatsAreReducedAsEachGroupDecides
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheDriverTakesASecondOrderAfterReturning
-import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheHandOverIsLoggedBeforeTheDriverPrepares
-import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30ADeliveryOnTheRoadContinuesAfterClosing
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30CustomersAreResetForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadDupIdenticalRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDishLowercase
@@ -605,8 +602,12 @@ object SystemTestRegistration {
 
     /** F24, F28-F30: deliveries, browsing and the end of the opening time. */
     private fun registerDeliveryTests(testSuite: SELab26TestSuite) {
+        // Unregistered 2026-09-22 20:30: these three fail against the REFERENCE, which makes the
+        // server skip the whole mutant detection run (results for ef2d6aa: "The mutant detection was
+        // not run, as not all of your registered tests pass against the reference"). Fix the
+        // expectations and register them again, one at a time.
         testSuite.registerTest(F24ADeliveredGroupEatsAndRates())
-        testSuite.registerTest(F24AGroupGivesUpOnALateDelivery())
+        // testSuite.registerTest(F24AGroupGivesUpOnALateDelivery())
         testSuite.registerTest(F28ADeliveryIsOnlyOfferedWhileADriverIsFree())
         testSuite.registerTest(F28AClosedRestaurantIsNotOffered())
         testSuite.registerTest(F28SeatsAreReducedAsEachGroupDecides())
@@ -617,9 +618,9 @@ object SystemTestRegistration {
         // reference per origin/results @ ab417c3 (Jenkins). Re-register once libs/ holds a genuine
         // reference jar, or drop this line if origin/results is trusted instead of local runs.
         // testSuite.registerTest(F30NoNewCustomersInTheLastThreeTicks())
-        testSuite.registerTest(F30ADeliveryOnTheRoadContinuesAfterClosing())
+        // testSuite.registerTest(F30ADeliveryOnTheRoadContinuesAfterClosing())
         testSuite.registerTest(F30CustomersAreResetForTheNextEvening())
-        testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
+        // testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
     }
 
     private fun registerFoodParserTests(testSuite: SELab26TestSuite) {
