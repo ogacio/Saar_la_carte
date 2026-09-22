@@ -3,11 +3,13 @@ package de.unisaarland.cs.se.selab.systemtest.selab26
 import de.unisaarland.cs.se.selab.systemtest.selab26.basictests.ExampleSystemTest
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24AGroupGivesUpOnALateDelivery
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24GivesUpThreeTicksAfterVisitingTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28SeatsAreReducedAsEachGroupDecides
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheDriverTakesASecondOrderAfterReturning
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheHandOverIsLoggedBeforeTheDriverPrepares
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29ThreeTickDistanceAndSilentReturn
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30ADeliveryOnTheRoadContinuesAfterClosing
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30CustomersAreResetForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadDupIdenticalRecipe
@@ -193,24 +195,56 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F13DishWithoutEligibleC
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14AReservedTableIsBlockedForTheWholeEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14EventReservedBeforeRegular
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14RegularWithoutTableIsNotReserved
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14ReservedTableStaysBlockedAfterEarlyLeave
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F15BarTablesNeverMerge
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16BarGroupSentAwayRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16CasualGroupSeatedAtMergedTable
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16MergedTablesAreSeparatedForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeatedNextTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16TwoConsecutiveFailuresLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19BusierWaiterUnderTenWins
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19TableHeldBackUntilAllMealsAreCooked
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21VisitServedEscortedAndRated
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularRecurrenceAndGroupSize
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26NoPreferencePicksHighestId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27WholeGroupLeavesAtFive
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28BrowsingRespectsExcludedIngredient
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DeliveryIgnoresTableAvailability
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DriverRemovalPersistsAcrossEvenings
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28HighestRatingDifferenceWins
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TieGoesToLowestId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TypeFilterPrecedesRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F30GroupStillEatingAtClosingRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P02FohFlowThroughEveryStep
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventOrdersFavouriteDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWaiters
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05RegularFailedReservationRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsNeutralExperience
+import de.unisaarland.cs.se.selab.systemtest.selab26.gdelivery.GFourDriversLogOrder
+import de.unisaarland.cs.se.selab.systemtest.selab26.gkitchen.GExpiryBeforeProcurement
+import de.unisaarland.cs.se.selab.systemtest.selab26.gkitchen.GOrderHistoryPlateau
+import de.unisaarland.cs.se.selab.systemtest.selab26.gkitchen.GSauceCookRemovalFallback
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GCasualDeliveryTickTooEarly
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GCasualExcludesEverything
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GCasualHugeDistance
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GDuplicateGroupId
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GEventMissingTypeFavourite
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GEventTypeWithoutRestaurant
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GExcludedAndPreferredSame
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GRegularTickAfterWindow
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GRegularTickBeforeOpen
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GRegularUnknownRestaurant
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GSubgroupExcludesEverything
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GSubgroupSumExceeds
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GTwoSubgroupsOneExcludesAll
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GUnknownExcludedIngredient
+import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GUnknownFavouriteDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32OnlyThatIngredientChanges
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentChangesTheProcuredAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncidentChangesTheProcuredPackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08ExactPackageMultiple
@@ -228,6 +262,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09PlanningEstimate
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09ReservedTableCapacityReducesOtherSeats
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09TenSeatsEstimateOne
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BasicDishesAreQueuedFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BatchesSameDishOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10OneBatchServesSeveralOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ADishWaitsWhileItsOnlyCookIsBusy
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11EachDishGoesToACookOfItsType
@@ -272,6 +307,7 @@ object SystemTestRegistration {
         registerFoodParserTests(testSuite)
         registerRestaurantParserTests(testSuite)
         registerScenarioParserTests(testSuite)
+        registerScenarioValidationTests(testSuite)
         registerFrontOfHouseTests(testSuite)
         registerF06Tests(testSuite)
         registerIncidentTests(testSuite)
@@ -279,6 +315,7 @@ object SystemTestRegistration {
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
         registerDeliveryTests(testSuite)
+        registerMutantTests(testSuite)
     }
 
     /**
@@ -292,6 +329,7 @@ object SystemTestRegistration {
         registerFoodParserTests(testSuite)
         registerRestaurantParserTests(testSuite)
         registerScenarioParserTests(testSuite)
+        registerScenarioValidationTests(testSuite)
         testSuite.registerTest(F06IncidentsValid())
         testSuite.registerTest(F06IncidentUnknownRestaurant())
         testSuite.registerTest(F06IncidentUnknownIngredient())
@@ -362,6 +400,27 @@ object SystemTestRegistration {
         // testSuite.registerTest(F24AGroupGivesUpOnALateDelivery())
         // testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
         testSuite.registerTest(F30CustomersAreResetForTheNextEvening())
+        registerMutantTests(testSuite)
+    }
+
+    /** Fixtures built to kill specific mutation-testing mutants (misc/implementation/tests/mutants-cases.md). */
+    private fun registerMutantTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F32OnlyThatIngredientChanges())
+        testSuite.registerTest(F29ThreeTickDistanceAndSilentReturn())
+        testSuite.registerTest(F24GivesUpThreeTicksAfterVisitingTick())
+        testSuite.registerTest(F28DriverRemovalPersistsAcrossEvenings())
+        testSuite.registerTest(F27WholeGroupLeavesAtFive())
+        testSuite.registerTest(F22RegularRecurrenceAndGroupSize())
+        testSuite.registerTest(F26NoPreferencePicksHighestId())
+        testSuite.registerTest(F16TwoConsecutiveFailuresLeaves())
+        testSuite.registerTest(F14ReservedTableStaysBlockedAfterEarlyLeave())
+        testSuite.registerTest(F19BusierWaiterUnderTenWins())
+        testSuite.registerTest(F28DeliveryIgnoresTableAvailability())
+        testSuite.registerTest(F10BatchesSameDishOrders())
+        testSuite.registerTest(P05RegularFailedReservationRatesNegative())
+        testSuite.registerTest(F15BarTablesNeverMerge())
+        testSuite.registerTest(F28TypeFilterPrecedesRating())
+        testSuite.registerTest(F28BrowsingRespectsExcludedIngredient())
     }
 
     /**
@@ -550,6 +609,10 @@ object SystemTestRegistration {
         testSuite.registerTest(F11TheLowestRankingEligibleCookTakesTheDish())
         testSuite.registerTest(F12TheFinishedMealsAreLoggedInAscendingCookId())
         testSuite.registerTest(F12ATenMinuteDishIsFinishedInTheSameTick())
+        // From tests/giant/gaps/, targeting kitchen/pantry behaviour not covered above.
+        testSuite.registerTest(GSauceCookRemovalFallback())
+        testSuite.registerTest(GExpiryBeforeProcurement())
+        testSuite.registerTest(GOrderHistoryPlateau())
     }
 
     /** F07: what the four statistics lines count, and over which part of the simulation. */
@@ -587,6 +650,33 @@ object SystemTestRegistration {
         testSuite.registerTest(F30ADeliveryOnTheRoadContinuesAfterClosing())
         testSuite.registerTest(F30CustomersAreResetForTheNextEvening())
         testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
+        // From tests/giant/gaps/g4_drivers: regression lock on the current (buggy) delivery log
+        // order, see BUGS-FOUND.md #4/#9. Expected to start failing once #4 is fixed.
+        testSuite.registerTest(GFourDriversLogOrder())
+    }
+
+    /**
+     * Parser-rule rejections from tests/giant/cluster_g, targeting the validation mutants
+     * FoodScarcity, Gourmand, Indie, NormThis: each rule below is enforced in
+     * CustomerGroupSerialiser.kt, not the JSON schema, so a mutant removing the rule needs a
+     * fixture like these to be caught.
+     */
+    private fun registerScenarioValidationTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(GRegularTickAfterWindow())
+        testSuite.registerTest(GRegularTickBeforeOpen())
+        testSuite.registerTest(GRegularUnknownRestaurant())
+        testSuite.registerTest(GDuplicateGroupId())
+        testSuite.registerTest(GCasualDeliveryTickTooEarly())
+        testSuite.registerTest(GEventMissingTypeFavourite())
+        testSuite.registerTest(GEventTypeWithoutRestaurant())
+        testSuite.registerTest(GUnknownFavouriteDish())
+        testSuite.registerTest(GSubgroupSumExceeds())
+        testSuite.registerTest(GUnknownExcludedIngredient())
+        testSuite.registerTest(GExcludedAndPreferredSame())
+        testSuite.registerTest(GCasualHugeDistance())
+        testSuite.registerTest(GCasualExcludesEverything())
+        testSuite.registerTest(GSubgroupExcludesEverything())
+        testSuite.registerTest(GTwoSubgroupsOneExcludesAll())
     }
 
     private fun registerFoodParserTests(testSuite: SELab26TestSuite) {
