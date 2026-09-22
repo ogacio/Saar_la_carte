@@ -1,0 +1,20 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "EVENT",
+      "size": 4,
+      "visitingTick": 3,
+      "foodPreferences": [],
+      "tableType": "COMMON",
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "eventEvening": 3,
+      "favoriteDishes": {
+        "ASIAN": "Rice Bowl"
+      }
+    }
+  ],
+  "incidents": []
+}

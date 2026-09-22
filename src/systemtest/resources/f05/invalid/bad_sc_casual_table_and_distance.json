@@ -1,0 +1,21 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 3,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "tableType": "COMMON",
+      "deliveryDistance": 5
+    }
+  ],
+  "incidents": []
+}
