@@ -26,7 +26,7 @@ class Cook(
         for (meal in batch) {
             if (meal.status == MealStatus.COOKING) meal.status = MealStatus.COOKED
         }
-        val done = batch.toMutableList()
+        val done = batch.filter { it.status == MealStatus.COOKED }.toMutableList()
         batch.clear()
         return done
     }
