@@ -1,0 +1,47 @@
+{
+  "ingredients": [
+    {
+      "name": "zucchini",
+      "unit": "g",
+      "packagingVolume": 10,
+      "bestBefore": 5
+    },
+    {
+      "name": "apple",
+      "unit": "g",
+      "packagingVolume": 10,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Apple Plate",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "apple",
+          "amount": 10
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Zucchini Plate",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "zucchini",
+          "amount": 10
+        }
+      ]
+    }
+  ]
+}

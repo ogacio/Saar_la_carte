@@ -98,6 +98,9 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMissingRecipes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootNotObject
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootRecipesNull
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootSingleIngredientSingleRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResAdjacentOpeningTicks
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResAllCooksZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateDishName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateTableId
@@ -106,6 +109,9 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResEndBeforeStart
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResEndEqualsStart
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResExecTwo
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResExtraKey
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResKnownAndUnknownRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMinimumCardinalities
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMissingBasicDishForType
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMissingName
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResMissingPastry
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResNameEmpty
@@ -127,34 +133,58 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResWaitstaffZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualNoLikelihood
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualSize11
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualTableAndDistance
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDeliveryBarelyInPhase
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDeliveryOneTickTooEarly
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateGroupId
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateIdAcrossGroupTypes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventEveningThree
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventFavouriteForWrongType
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventFavouritesEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventMinimumSize
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventMissingFavouriteForType
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventNoFavourites
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventSizeThree
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventWithLikelihood
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScExcludedAndPreferredOverlap
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScExcludesCompleteIngredientSet
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScExtraKey
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScMissingCustomerGroups
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScMissingIncidents
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScPreferenceSizeZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScPreferenceSizesEqualGroup
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScPreferenceSizesExceedGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScPreferenceWithoutRule
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRatingUnknown
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularLastAllowedTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularNoVisitingStart
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularOneTickTooLate
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularPeriod11
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularUnknownRestaurant
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRegularWithTypes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScRestaurantTypesEmpty
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScUnknownDishReference
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScUnknownIngredientReference
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScUnknownRestaurantType
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingEveningsContainsZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingEveningsEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingTick22
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScVisitingTickZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06AdjacentUnavailabilityPeriods
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06CookWithoutCookType
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06EveningOne
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06EveningZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentDuplicateId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownIngredient
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentUnknownRestaurant
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06IncidentsValid
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06OverlappingUnavailability
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06PackagingUnknownIngredient
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06RecipeUnknownIngredient
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06StaffChangeOfTheExecCook
 import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06StaffChangeWithoutNumber
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06StaffNegativeOne
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06StaffNumberZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f06.F06WaitstaffWithCookType
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01SecondEveningRestartsTickCount
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F01StopsAfterFullEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F07ServedAndDeliveredCountedSeparately
@@ -183,9 +213,20 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsN
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentChangesTheProcuredAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncidentChangesTheProcuredPackages
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08ExactPackageMultiple
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08IngredientWithoutEligibleCookIsProcured
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08PartialStockDeficit
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08SupplierDeliversWholePackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08TheSupplierBuysOnlyWhatIsMissing
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08TwoIngredientsAlphabetical
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09ElevenSeatsEstimateTwo
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09EventFavouritePlanning
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09EveryMenuDishIsPlanned
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09FailedReservationDoesNotReduceOtherSeats
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09KnownRegularUsesLastThreeVisits
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09PlanningEstimatesOneGroupPerTenSeats
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09ReservedTableCapacityReducesOtherSeats
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09TenSeatsEstimateOne
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BasicDishesAreQueuedFirst
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10OneBatchServesSeveralOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ADishWaitsWhileItsOnlyCookIsBusy
@@ -258,6 +299,15 @@ object SystemTestRegistration {
         testSuite.registerTest(F06OverlappingUnavailability())
         testSuite.registerTest(F06StaffChangeWithoutNumber())
         testSuite.registerTest(F06StaffChangeOfTheExecCook())
+        testSuite.registerTest(F06AdjacentUnavailabilityPeriods())
+        testSuite.registerTest(F06StaffNumberZero())
+        testSuite.registerTest(F06StaffNegativeOne())
+        testSuite.registerTest(F06CookWithoutCookType())
+        testSuite.registerTest(F06WaitstaffWithCookType())
+        testSuite.registerTest(F06EveningZero())
+        testSuite.registerTest(F06EveningOne())
+        testSuite.registerTest(F06RecipeUnknownIngredient())
+        testSuite.registerTest(F06PackagingUnknownIngredient())
     }
 
     /**
@@ -269,7 +319,18 @@ object SystemTestRegistration {
         registerFrontOfHouseTests(testSuite)
         registerIncidentTests(testSuite)
         testSuite.registerTest(F08SupplierDeliversWholePackages())
+        testSuite.registerTest(F08ExactPackageMultiple())
+        testSuite.registerTest(F08PartialStockDeficit())
+        testSuite.registerTest(F08TwoIngredientsAlphabetical())
+        testSuite.registerTest(F08IngredientWithoutEligibleCookIsProcured())
         testSuite.registerTest(F09PlanningEstimatesOneGroupPerTenSeats())
+        testSuite.registerTest(F09TenSeatsEstimateOne())
+        testSuite.registerTest(F09ElevenSeatsEstimateTwo())
+        testSuite.registerTest(F09EveryMenuDishIsPlanned())
+        testSuite.registerTest(F09ReservedTableCapacityReducesOtherSeats())
+        testSuite.registerTest(F09FailedReservationDoesNotReduceOtherSeats())
+        testSuite.registerTest(F09EventFavouritePlanning())
+        testSuite.registerTest(F09KnownRegularUsesLastThreeVisits())
         testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
         testSuite.registerTest(F10BasicDishesAreQueuedFirst())
         testSuite.registerTest(F10OneBatchServesSeveralOrders())
@@ -365,6 +426,12 @@ object SystemTestRegistration {
 
     /** F04: every restaurants file rule, from the schema bounds to the cross-file recipe ids. */
     private fun registerRestaurantParserTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ResAdjacentOpeningTicks())
+        testSuite.registerTest(ResMinimumCardinalities())
+        testSuite.registerTest(ResKnownAndUnknownRecipe())
+        testSuite.registerTest(ResDuplicateDishName())
+        testSuite.registerTest(ResMissingBasicDishForType())
+        testSuite.registerTest(ResAllCooksZero())
         testSuite.registerTest(ResEndEqualsStart())
         testSuite.registerTest(ResRootExtraKey())
         testSuite.registerTest(ResRootMissingKey())
@@ -395,6 +462,21 @@ object SystemTestRegistration {
 
     /** F05: every scenario file rule, per customer group type and across files. */
     private fun registerScenarioParserTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(ScDuplicateIdAcrossGroupTypes())
+        testSuite.registerTest(ScPreferenceSizesExceedGroup())
+        testSuite.registerTest(ScPreferenceSizesEqualGroup())
+        testSuite.registerTest(ScExcludedAndPreferredOverlap())
+        testSuite.registerTest(ScExcludesCompleteIngredientSet())
+        testSuite.registerTest(ScUnknownIngredientReference())
+        testSuite.registerTest(ScUnknownDishReference())
+        testSuite.registerTest(ScRegularLastAllowedTick())
+        testSuite.registerTest(ScRegularOneTickTooLate())
+        testSuite.registerTest(ScDeliveryBarelyInPhase())
+        testSuite.registerTest(ScDeliveryOneTickTooEarly())
+        testSuite.registerTest(ScEventMissingFavouriteForType())
+        testSuite.registerTest(ScEventFavouriteForWrongType())
+        testSuite.registerTest(ScEventMinimumSize())
+        testSuite.registerTest(ScVisitingEveningsContainsZero())
         testSuite.registerTest(ScVisitingTickZero())
         testSuite.registerTest(ScCasualSize11())
         testSuite.registerTest(ScVisitingEveningsEmpty())
@@ -423,6 +505,15 @@ object SystemTestRegistration {
 
     /** F06 incident validation: every incident of a scenario file must be applicable. */
     private fun registerF06Tests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F06AdjacentUnavailabilityPeriods())
+        testSuite.registerTest(F06StaffNumberZero())
+        testSuite.registerTest(F06StaffNegativeOne())
+        testSuite.registerTest(F06CookWithoutCookType())
+        testSuite.registerTest(F06WaitstaffWithCookType())
+        testSuite.registerTest(F06EveningZero())
+        testSuite.registerTest(F06EveningOne())
+        testSuite.registerTest(F06RecipeUnknownIngredient())
+        testSuite.registerTest(F06PackagingUnknownIngredient())
         testSuite.registerTest(F06IncidentsValid())
         testSuite.registerTest(F06IncidentUnknownRestaurant())
         testSuite.registerTest(F06IncidentUnknownIngredient())
@@ -435,7 +526,18 @@ object SystemTestRegistration {
     /** F08-F12 and P01: what the kitchen buys, who cooks a dish and when it is reported. */
     private fun registerKitchenTests(testSuite: SELab26TestSuite) {
         testSuite.registerTest(F08SupplierDeliversWholePackages())
+        testSuite.registerTest(F08ExactPackageMultiple())
+        testSuite.registerTest(F08PartialStockDeficit())
+        testSuite.registerTest(F08TwoIngredientsAlphabetical())
+        testSuite.registerTest(F08IngredientWithoutEligibleCookIsProcured())
         testSuite.registerTest(F09PlanningEstimatesOneGroupPerTenSeats())
+        testSuite.registerTest(F09TenSeatsEstimateOne())
+        testSuite.registerTest(F09ElevenSeatsEstimateTwo())
+        testSuite.registerTest(F09EveryMenuDishIsPlanned())
+        testSuite.registerTest(F09ReservedTableCapacityReducesOtherSeats())
+        testSuite.registerTest(F09FailedReservationDoesNotReduceOtherSeats())
+        testSuite.registerTest(F09EventFavouritePlanning())
+        testSuite.registerTest(F09KnownRegularUsesLastThreeVisits())
         testSuite.registerTest(P01IngredientsLastTheirBestBeforeDays())
         testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
         testSuite.registerTest(P01BestBeforeTwoLastsExactlyTwoEvenings())

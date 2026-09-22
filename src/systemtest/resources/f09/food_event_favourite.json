@@ -1,0 +1,27 @@
+{
+  "ingredients": [
+    {
+      "name": "truffle",
+      "unit": "g",
+      "packagingVolume": 10,
+      "bestBefore": 1
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Truffle Feast",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "truffle",
+          "amount": 10
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    }
+  ]
+}

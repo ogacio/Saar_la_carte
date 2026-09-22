@@ -1,0 +1,16 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "REGULAR",
+      "size": 3,
+      "visitingTick": 1,
+      "foodPreferences": [],
+      "tableType": "COMMON",
+      "visitingStart": 1,
+      "visitingPeriod": 1,
+      "restaurant": 1
+    }
+  ],
+  "incidents": []
+}

@@ -1,0 +1,32 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 3,
+      "visitingTick": 3,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "preferredIngredients": [
+            "rice"
+          ]
+        },
+        {
+          "size": 2,
+          "excludedIngredients": [
+            "beef"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": []
+}

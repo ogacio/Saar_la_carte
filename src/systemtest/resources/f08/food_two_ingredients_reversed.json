@@ -1,0 +1,37 @@
+{
+  "ingredients": [
+    {
+      "name": "zucchini",
+      "unit": "g",
+      "packagingVolume": 20,
+      "bestBefore": 5
+    },
+    {
+      "name": "apple",
+      "unit": "g",
+      "packagingVolume": 20,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Fruit and Vegetables",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "zucchini",
+          "amount": 20
+        },
+        {
+          "name": "apple",
+          "amount": 20
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "ingredients": [
+    {
+      "name": "apple",
+      "unit": "g",
+      "packagingVolume": 10,
+      "bestBefore": 1
+    },
+    {
+      "name": "beet",
+      "unit": "g",
+      "packagingVolume": 10,
+      "bestBefore": 1
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Apple Plate",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "apple",
+          "amount": 10
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Beet Plate",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "beet",
+          "amount": 10
+        }
+      ]
+    }
+  ]
+}

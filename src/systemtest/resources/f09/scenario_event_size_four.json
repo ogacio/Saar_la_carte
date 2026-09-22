@@ -1,0 +1,20 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "EVENT",
+      "size": 4,
+      "visitingTick": 1,
+      "foodPreferences": [],
+      "tableType": "COMMON",
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "eventEvening": 4,
+      "favoriteDishes": {
+        "ASIAN": "Truffle Feast"
+      }
+    }
+  ],
+  "incidents": []
+}
