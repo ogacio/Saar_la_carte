@@ -53,9 +53,12 @@ class DiningService {
             }
         }
 
+        // Delivered meals are stamped with the in-evening tick in DeliveryDriver.deliverAccepted,
+        // so the eating deadline has to be measured on the same clock, not on the global one.
+        val deliveryTick = GlobalClock.getTickInEvening()
         for (group in deliveryGroups.sortedBy { it.id() }) {
             for (customer in group.members()) {
-                if (customer.status() == CustomerStatus.SERVED && customer.isDoneEating(tick)) {
+                if (customer.status() == CustomerStatus.SERVED && customer.isDoneEating(deliveryTick)) {
                     customer.doneEating()
                 }
             }

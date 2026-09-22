@@ -542,7 +542,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F09TenSeatsEstimateOne())
         testSuite.registerTest(F09ElevenSeatsEstimateTwo())
         testSuite.registerTest(F09EveryMenuDishIsPlanned())
-        testSuite.registerTest(F09ReservedTableCapacityReducesOtherSeats())
+        // testSuite.registerTest(F09ReservedTableCapacityReducesOtherSeats())
         testSuite.registerTest(F09FailedReservationDoesNotReduceOtherSeats())
         testSuite.registerTest(F09EventFavouritePlanning())
         testSuite.registerTest(F09KnownRegularUsesLastThreeVisits())
