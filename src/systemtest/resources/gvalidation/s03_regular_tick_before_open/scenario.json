@@ -1,0 +1,103 @@
+{
+ "customerGroups": [
+  {
+   "id": 1,
+   "type": "REGULAR",
+   "size": 2,
+   "tableType": "COMMON",
+   "visitingTick": 4,
+   "visitingStart": 1,
+   "visitingPeriod": 2,
+   "restaurant": 2,
+   "foodPreferences": []
+  },
+  {
+   "id": 2,
+   "type": "CASUAL",
+   "size": 2,
+   "tableType": "COMMON",
+   "visitingTick": 8,
+   "restaurantTypes": [
+    "ASIAN"
+   ],
+   "visitingEvenings": [
+    1,
+    2
+   ],
+   "ratingLikelihood": "SOME",
+   "foodPreferences": [
+    {
+     "size": 1,
+     "excludedIngredients": [
+      "pasta"
+     ],
+     "favoriteDishes": [
+      "Rice Bowl"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "type": "CASUAL",
+   "size": 1,
+   "visitingTick": 12,
+   "restaurantTypes": [
+    "EUROPEAN"
+   ],
+   "visitingEvenings": [
+    1
+   ],
+   "ratingLikelihood": "ALWAYS",
+   "deliveryDistance": 5,
+   "foodPreferences": []
+  },
+  {
+   "id": 4,
+   "type": "EVENT",
+   "size": 8,
+   "visitingTick": 5,
+   "restaurantTypes": [
+    "ASIAN",
+    "EUROPEAN"
+   ],
+   "eventEvening": 4,
+   "favoriteDishes": {
+    "ASIAN": "Rice Bowl",
+    "EUROPEAN": "Pasta"
+   },
+   "foodPreferences": []
+  }
+ ],
+ "incidents": [
+  {
+   "id": 1,
+   "type": "STAFF",
+   "evening": 2,
+   "restaurant": 1,
+   "number": -1,
+   "staffType": "WAITSTAFF"
+  },
+  {
+   "id": 2,
+   "type": "UNAVAILABLE",
+   "evening": 2,
+   "ingredient": "rice",
+   "duration": 2
+  },
+  {
+   "id": 3,
+   "type": "PACKAGING",
+   "evening": 3,
+   "ingredient": "pasta",
+   "packagingVolume": 50
+  },
+  {
+   "id": 4,
+   "type": "RECIPE",
+   "evening": 3,
+   "ingredient": "rice",
+   "adaptation": -50
+  }
+ ]
+}

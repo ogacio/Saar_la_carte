@@ -1,0 +1,62 @@
+{
+ "ingredients": [
+  {
+   "name": "rice",
+   "unit": "g",
+   "packagingVolume": 100,
+   "bestBefore": 10
+  },
+  {
+   "name": "pasta",
+   "unit": "g",
+   "packagingVolume": 100,
+   "bestBefore": 10
+  }
+ ],
+ "recipes": [
+  {
+   "id": 1,
+   "dishName": "Rice Bowl",
+   "duration": 10,
+   "cookType": [
+    "EXEC"
+   ],
+   "ingredients": [
+    {
+     "name": "rice",
+     "amount": 1
+    }
+   ],
+   "basicDishFor": "ASIAN"
+  },
+  {
+   "id": 2,
+   "dishName": "Pasta",
+   "duration": 10,
+   "cookType": [
+    "EXEC"
+   ],
+   "ingredients": [
+    {
+     "name": "pasta",
+     "amount": 1
+    }
+   ],
+   "basicDishFor": "EUROPEAN"
+  },
+  {
+   "id": 3,
+   "dishName": "Rice Special",
+   "duration": 20,
+   "cookType": [
+    "EXEC"
+   ],
+   "ingredients": [
+    {
+     "name": "rice",
+     "amount": 2
+    }
+   ]
+  }
+ ]
+}
