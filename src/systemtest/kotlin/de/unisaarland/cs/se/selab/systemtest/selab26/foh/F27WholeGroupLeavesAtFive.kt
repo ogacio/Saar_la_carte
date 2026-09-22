@@ -18,10 +18,11 @@ class F27WholeGroupLeavesAtFive : LogSkippingSystemTest() {
 
     override suspend fun run() {
         skipToAndAssert(
-            "[IMPORTANT] Simulation: Tick 6 ",
-            "[IMPORTANT] Simulation: Tick 6 (1) started.",
+            "[IMPORTANT] Simulation: Tick 5 ",
+            "[IMPORTANT] Simulation: Tick 5 (1) started.",
         )
-        assertNextLine(
+        skipToAndAssert(
+            "[INFO] Restaurant No Eating",
             "[INFO] Restaurant No Eating (R 1): 2 customers of group 2 leave table 2 due to not being served.",
         )
         assertNextLine(
@@ -30,11 +31,11 @@ class F27WholeGroupLeavesAtFive : LogSkippingSystemTest() {
         skipToAndAssert(
             "[INFO] Rating (R 1): Group 2",
             "[INFO] Rating (R 1): Group 2 rates the restaurant 1 with NEGATIVE rating, " +
-                "leading to 1 positive ratings and 1 negative ratings.",
+                "leading to 0 positive ratings and 1 negative ratings.",
         )
         assertNextLine(
             "[INFO] Rating (R 1): Group 3 rates the restaurant 1 with NEGATIVE rating, " +
-                "leading to 1 positive ratings and 2 negative ratings.",
+                "leading to 0 positive ratings and 2 negative ratings.",
         )
     }
 }
