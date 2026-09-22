@@ -70,6 +70,8 @@ object DeliveryService {
             )
             restaurant.getKitchen().enqueue(order)
             restaurant.getFoh().getDeliveryDesk().enqueue(order)
+            // The customer starts waiting when the order is placed, not when a driver later receives it.
+            g.orderPlaced()
         }
         if (failed > 0) {
             Logger.Foh.noOrdering(

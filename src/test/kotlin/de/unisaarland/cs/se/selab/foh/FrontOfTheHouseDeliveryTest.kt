@@ -76,6 +76,7 @@ class FrontOfTheHouseDeliveryTest {
     /** The driver leaves in the current tick with the group's order. */
     private fun sendOut(group: CasualCustomerGroup) {
         val meals = mutableListOf(Meal(null, group.members()[0], recipe(1)))
+        group.orderPlaced()
         driver.receiveOrder(Order(group, RESTAURANT_ID, group.id(), 1, true, meals))
     }
 
@@ -85,6 +86,7 @@ class FrontOfTheHouseDeliveryTest {
         repeat(ticks) {
             GlobalClock.advanceTick()
             foh.callDeliveryDesk()
+            foh.callDiningService()
             foh.callRatingService()
         }
         return logLines(log)
@@ -154,6 +156,22 @@ class FrontOfTheHouseDeliveryTest {
         assertEquals(0, finishedEating(log))
         assertTrue(ratings(log).single().contains("with NEGATIVE rating"))
         assertFalse(group.hasGivenUp())
+    }
+
+    @Test
+    fun aGroupThatGivesUpWhileTheDriverIsStillOnTheRoadRatesImmediately() {
+        val visitingTick = GlobalClock.getTickInEvening()
+        sendOut(deliveryGroup(distance = 30, visitingTick = visitingTick))
+
+        val beforeDeadline = runTicks(3)
+        assertTrue(beforeDeadline.none { it.contains("Delivery Given Up") })
+        assertTrue(ratings(beforeDeadline).isEmpty())
+
+        val giveUpTick = runTicks(1)
+        assertTrue(giveUpTick.any { it.contains("Delivery Given Up") })
+        assertTrue(giveUpTick.none { it.contains("Delivery Failed") })
+        assertEquals(1, ratings(giveUpTick).size)
+        assertTrue(ratings(giveUpTick).single().contains("with NEGATIVE rating"))
     }
 
     @Test

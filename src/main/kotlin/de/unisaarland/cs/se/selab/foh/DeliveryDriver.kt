@@ -1,6 +1,7 @@
 package de.unisaarland.cs.se.selab.foh
 
 import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.simulation.DeliveryService
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
@@ -18,9 +19,12 @@ class DeliveryDriver(private val restaurantId: Int) {
     private var state: DriverState = DriverState.WAITING
     private var travelTicks: Int? = null
     private var distance: Int? = null
-    private var switch: Boolean = false
     private var resolvedOrder: Order? = null
     private var resolvedAsGivenUp: Boolean = false
+    private var switch: Boolean = false
+
+    /** Forum #6: "delivered meals being stored with the delivery driver" until the order is whole. */
+    private val loaded: MutableList<Meal> = mutableListOf()
 
     private companion object {
         const val TICK_DISTANCE = 5
@@ -72,7 +76,8 @@ class DeliveryDriver(private val restaurantId: Int) {
     fun deliverAccepted() {
         if (!atDestination()) return
         val current = checkNotNull(order)
-        if (current.getCustomerGroup().hasGivenUp()) return
+        val group = current.getCustomerGroup()
+        if (group.deliveryWasGivenUp() || group.hasGivenUp()) return
 
         for (meal in current.getMeals()) {
             meal.customer.receive(meal, GlobalClock.getTickInEvening())
@@ -92,7 +97,8 @@ class DeliveryDriver(private val restaurantId: Int) {
     fun deliverRejected() {
         if (!atDestination()) return
         val current = checkNotNull(order)
-        if (!current.getCustomerGroup().hasGivenUp()) return
+        val group = current.getCustomerGroup()
+        if (!group.deliveryWasGivenUp() && !group.hasGivenUp()) return
 
         Logger.Delivery.deliveryFailed(
             restaurantId,
@@ -117,16 +123,54 @@ class DeliveryDriver(private val restaurantId: Int) {
     }
 
     /**
-     * after getting passed an order by a waiter the driver prepares
+     * Forum #6: the desk reserves this driver for [o] as soon as the first meal is loaded. The
+     * driver holds the order and is no longer free, but only drives once every meal has arrived.
      */
-    fun receiveOrder(o: Order) {
+    fun assignOrder(o: Order) {
         order = o
+        loaded.clear()
+        state = DriverState.LOADING
+        distance = o.getCustomerGroup().getDeliveryDistance()
+        travelTicks = DeliveryService.calculateTravelTicks(checkNotNull(distance))
+    }
+
+    /** The meals of the assigned order the waitstaff has not handed over yet. */
+    fun pendingMeals(): List<Meal> {
+        val current = order ?: return emptyList()
+        val outstanding = current.getMeals().toMutableList()
+        for (meal in loaded) {
+            outstanding.remove(meal)
+        }
+        return outstanding
+    }
+
+    /** Stores [batch] with the driver; the last batch starts the journey ("in the tick after"). */
+    fun loadMeals(batch: List<Meal>) {
+        val current = order ?: return
+        loaded.addAll(batch)
+        if (loaded.size < current.getMeals().size) return
+
         departureTick = GlobalClock.getTickInEvening()
         state = DriverState.DELIVERING
-        distance = o.getCustomerGroup().getDeliveryDistance()
-        ticksLeft = DeliveryService.calculateTravelTicks(checkNotNull(distance))
-        travelTicks = checkNotNull(ticksLeft)
-        o.getCustomerGroup().orderPlaced()
+        ticksLeft = checkNotNull(travelTicks)
+    }
+
+    /** Whether the whole order is on board, so the desk can stop offering it to the waitstaff. */
+    fun hasDeparted(): Boolean = state == DriverState.DELIVERING
+
+    /** Gives up a partly loaded order (the group rejected it) without touching the driver's id. */
+    fun releaseLoad() {
+        if (state != DriverState.LOADING) return
+        clearDelivery()
+    }
+
+    /**
+     * After getting passed a complete order by a waiter the driver prepares. Kept so the existing
+     * unit tests and the integration tests still compile: it is assignOrder plus one full load.
+     */
+    fun receiveOrder(o: Order) {
+        assignOrder(o)
+        loadMeals(o.getMeals())
     }
 
     /**
@@ -169,13 +213,14 @@ class DeliveryDriver(private val restaurantId: Int) {
         returningAtStartOfTick = false
         departureTick = null
         order = null
+        loaded.clear()
         ticksLeft = null
         state = DriverState.WAITING
         travelTicks = null
         distance = null
-        switch = false
         resolvedOrder = null
         resolvedAsGivenUp = false
+        switch = false
     }
 
     /**
@@ -208,9 +253,14 @@ class DeliveryDriver(private val restaurantId: Int) {
     fun resetId() { id = null }
 
     /**
-     * bool
+     * bool - the driver holds a complete order and is on the road
      */
     fun isDelivering(): Boolean { return state == DriverState.DELIVERING }
+
+    /**
+     * bool - the driver is reserved for an order but is still collecting its meals
+     */
+    fun isLoading(): Boolean { return state == DriverState.LOADING }
 
     /**
      * bool

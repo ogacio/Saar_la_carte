@@ -2,6 +2,7 @@ package de.unisaarland.cs.se.selab.foh.services
 
 import de.unisaarland.cs.se.selab.foh.ActionType
 import de.unisaarland.cs.se.selab.foh.DeliveryDesk
+import de.unisaarland.cs.se.selab.foh.DeliveryDriver
 import de.unisaarland.cs.se.selab.foh.Table
 import de.unisaarland.cs.se.selab.foh.Waiter
 import de.unisaarland.cs.se.selab.foh.WaiterAssignmentService
@@ -9,6 +10,7 @@ import de.unisaarland.cs.se.selab.foh.visit.AwaitingMealState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
@@ -140,29 +142,41 @@ class ServingService(
      */
     private fun serveDeliveryDesk(carried: MutableMap<Waiter, Int>, sbu: SubUnits) {
         for (order in deliveryDesk.getReady().sortedBy { it.getId() }) {
-            val meals = order.getMeals().sortedWith(mealPriority)
-            // Several waiters may carry one order out together. An order that does not fit into
-            // this tick waits, but it does not block the smaller orders behind it.
-            if (waitstaff.capacity(ActionType.SERVING) < meals.size) continue
-            // Without a free driver no order can go out this tick at all.
-            val driverId = deliveryDesk.sendForOrder(order) ?: return
-            var next = 0
-            while (next < meals.size) {
-                // The capacity check above guarantees a waiter with SERVING actions left.
-                val waiter = checkNotNull(waitstaff.nextServingWaiter())
-                val batch = meals.drop(next).take(waiter.remaining(ActionType.SERVING))
-                waiter.consume(ActionType.SERVING, batch.size)
-                Logger.Foh.deliveryHandover(
-                    sbu.restaurantId,
-                    checkNotNull(waiter.id),
-                    dishCounts(batch),
-                    driverId,
-                    order.getId(),
-                )
-                carried[waiter] = (carried[waiter] ?: 0) + batch.size
-                next += batch.size
-            }
-            // deliveryDesk.logPreparationFor(driverId)
+            if (waitstaff.capacity(ActionType.SERVING) == 0) return
+            // Forum #6: a driver is reserved on the first meal and stores what it already has, so
+            // an order that does not fit into this tick is continued later instead of waiting whole.
+            val driver = deliveryDesk.driverFor(order) ?: continue
+            loadDriver(driver, order, carried, sbu)
+            if (driver.hasDeparted()) deliveryDesk.departed(order)
+        }
+    }
+
+    /**
+     * Hands as many of the order's outstanding meals to [driver] as the waitstaff can still carry
+     * this tick, lowest waiter id first. Every meal is one SERVING action.
+     */
+    private fun loadDriver(
+        driver: DeliveryDriver,
+        order: Order,
+        carried: MutableMap<Waiter, Int>,
+        sbu: SubUnits,
+    ) {
+        var pending = driver.pendingMeals().sortedWith(mealPriority)
+        while (pending.isNotEmpty()) {
+            val waiter = waitstaff.nextServingWaiter() ?: return
+            val batch = pending.take(waiter.remaining(ActionType.SERVING))
+            if (batch.isEmpty()) return
+            waiter.consume(ActionType.SERVING, batch.size)
+            driver.loadMeals(batch)
+            Logger.Foh.deliveryHandover(
+                sbu.restaurantId,
+                checkNotNull(waiter.id),
+                dishCounts(batch),
+                checkNotNull(driver.getId()),
+                order.getId(),
+            )
+            carried[waiter] = (carried[waiter] ?: 0) + batch.size
+            pending = pending.drop(batch.size)
         }
     }
 

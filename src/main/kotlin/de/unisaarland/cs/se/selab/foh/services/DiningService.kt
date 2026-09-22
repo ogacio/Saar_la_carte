@@ -2,6 +2,7 @@ package de.unisaarland.cs.se.selab.foh.services
 
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
+import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerStatus
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
 import de.unisaarland.cs.se.selab.simulation.SubUnits
@@ -18,6 +19,19 @@ class DiningService {
 
     /** Runs the eating step for all [visits], which arrive in group order. */
     fun eat(visits: List<Visit>, sbu: SubUnits) {
+        eat(visits, emptyList(), sbu)
+    }
+
+    /**
+     * Runs the eating step for restaurant visits and delivery groups. Delivery Finished Eating
+     * belongs to this step, before the FOH Eating Status and before the later rating step.
+     * Returns the delivery groups that finished eating in this tick.
+     */
+    fun eat(
+        visits: List<Visit>,
+        deliveryGroups: List<CustomerGroup>,
+        sbu: SubUnits,
+    ): List<CustomerGroup> {
         val tick = GlobalClock.currentTick
         visits.forEach { it.advance(tick) }
 
@@ -39,10 +53,25 @@ class DiningService {
             }
         }
 
+        for (group in deliveryGroups.sortedBy { it.id() }) {
+            for (customer in group.members()) {
+                if (customer.status() == CustomerStatus.SERVED && customer.isDoneEating(tick)) {
+                    customer.doneEating()
+                }
+            }
+        }
+        val finishedDeliveries = deliveryGroups
+            .filter { group -> group.members().all { it.status() == CustomerStatus.DONE_EATING } }
+            .sortedBy { it.id() }
+        for (group in finishedDeliveries) {
+            Logger.Delivery.deliveryFinishedEating(sbu.restaurantId, group.id())
+        }
+
         val stillEating = visits.sumOf { visit ->
             visit.customersInside().count { it.status() == CustomerStatus.SERVED }
         }
         val finishedNow = visits.sumOf { it.finishedEatingThisTick }
         Logger.Customer.eatingStatus(sbu.restaurantId, stillEating, finishedNow)
+        return finishedDeliveries
     }
 }

@@ -87,6 +87,15 @@ abstract class CustomerGroup(
     /** Marks a placed delivery order as resolved, whether delivered or given up on. */
     open fun orderResolved() = Unit
 
+    /** Whether an unresolved delivery has exceeded the group's waiting deadline this tick. */
+    open fun deliveryGiveUpDue(): Boolean = false
+
+    /** Records that this delivery group has actually given up waiting for its current order. */
+    open fun markDeliveryGivenUp() = Unit
+
+    /** Whether the current delivery was previously given up on, even after its rating was handled. */
+    open fun deliveryWasGivenUp(): Boolean = false
+
     /** Records the dishes of a completed order as this group's latest visit. */
     open fun recordVisit(evening: Int, o: Order) {
         history.shiftAndPutNew(o.getMeals().map { it.recipe })
