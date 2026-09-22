@@ -84,11 +84,11 @@ class F09ReservedTableCapacityReducesOtherSeats : AddedPlanningTest(
     "f09/scenario_regular_size_three.json",
 ) {
     override val name = "F09ReservedTableCapacityReducesOtherSeats"
-    override val description = "A size-three regular reserving four seats leaves ten seats for estimation."
+    override val description = "A size-three regular leaves eleven seats for estimation."
 
     override suspend fun run() {
         skipToAndAssert(PREPARATION_F09, EVENING_1_F09)
-        skipToAndAssert(PANTRY_F09, procured(10, RICE_F09))
+        skipToAndAssert(PANTRY_F09, procured(20, RICE_F09))
     }
 }
 

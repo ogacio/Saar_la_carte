@@ -138,7 +138,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDeliveryOneTickTooEar
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateGroupId
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScDuplicateIdAcrossGroupTypes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventEveningThree
-import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventFavouriteForWrongType
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventFavouritesEmpty
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventMinimumSize
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScEventMissingFavouriteForType
@@ -482,7 +481,9 @@ object SystemTestRegistration {
         testSuite.registerTest(ScDeliveryBarelyInPhase())
         testSuite.registerTest(ScDeliveryOneTickTooEarly())
         testSuite.registerTest(ScEventMissingFavouriteForType())
-        testSuite.registerTest(ScEventFavouriteForWrongType())
+        // Forum 352: an event favourite need not be a basic dish of that type, so this
+        // expectation is wrong; it fails against the reference and blocks the mutant run.
+        // testSuite.registerTest(ScEventFavouriteForWrongType())
         testSuite.registerTest(ScEventMinimumSize())
         testSuite.registerTest(ScVisitingEveningsContainsZero())
         testSuite.registerTest(ScVisitingTickZero())
@@ -542,7 +543,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F09TenSeatsEstimateOne())
         testSuite.registerTest(F09ElevenSeatsEstimateTwo())
         testSuite.registerTest(F09EveryMenuDishIsPlanned())
-        // testSuite.registerTest(F09ReservedTableCapacityReducesOtherSeats())
+        testSuite.registerTest(F09ReservedTableCapacityReducesOtherSeats())
         testSuite.registerTest(F09FailedReservationDoesNotReduceOtherSeats())
         testSuite.registerTest(F09EventFavouritePlanning())
         testSuite.registerTest(F09KnownRegularUsesLastThreeVisits())

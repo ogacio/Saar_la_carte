@@ -47,6 +47,9 @@ abstract class CustomerGroup(
     /** The last three visits of this group, if it has visited before. */
     protected fun history(): History = history
 
+    /** Whether a remembered visit of this group produced dishes the kitchen can plan from. */
+    fun hasOrderedBefore(): Boolean = history.hasOrdered()
+
     /** The evening of this group's event, or 0 if it has none. */
     abstract fun getEventEvening(): Int
 

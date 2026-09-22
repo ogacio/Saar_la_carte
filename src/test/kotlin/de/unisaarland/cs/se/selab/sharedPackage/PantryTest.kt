@@ -65,9 +65,11 @@ class PantryTest {
         val kitchen = kitchen(pantry, reservations)
         val dish = recipe(id = 1, ingredient = rice, amount = 40)
         val menu = menu(kitchen, pantry, dish)
-        reservations.bookAhead(eventGroup(id = 1, size = 3, evening = evening), evening)
+        val event = eventGroup(id = 1, size = 3, evening = evening)
+        reservations.bookAhead(event, evening)
 
-        kitchen.planEvening(mutableListOf(), otherSeats = 0, menu)
+        // Restaurant.prepare now passes the groups to plan for; the kitchen no longer looks them up.
+        kitchen.planEvening(mutableListOf(event), otherSeats = 0, menu)
 
         assertEquals(120, pantry.getTotalIngredients(rice))
     }

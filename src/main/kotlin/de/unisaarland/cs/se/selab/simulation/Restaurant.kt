@@ -1,5 +1,6 @@
 package de.unisaarland.cs.se.selab.simulation
 import de.unisaarland.cs.se.selab.foh.FrontOfTheHouse
+import de.unisaarland.cs.se.selab.foh.TableStatus
 import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.kitchen.Kitchen
 import de.unisaarland.cs.se.selab.logging.Logger
@@ -8,6 +9,7 @@ import de.unisaarland.cs.se.selab.sharedPackage.Pantry
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantData
 import de.unisaarland.cs.se.selab.sharedPackage.StaffType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.CustomerGroup
+import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
 
 /** "A restaurant does not accept new customers in the last 3 ticks of their opening time." */
 private const val LAST_TICKS_CLOSED = 3
@@ -37,17 +39,18 @@ class Restaurant(
      prepares the kitchen and the front of the house at the preparation phase
      */
     fun prepare(regulars: MutableList<CustomerGroup>) {
-        var regularsSeats = 0
-        for (r in regulars) {
-            regularsSeats += r.getGroupSize()
-        }
-        var eventSeats = 0
-        val events = foh.getReservationBook().expectedFor(clock.getEvening())
-        for (e in events) {
-            eventSeats += e.getGroupSize()
-        }
         foh.prepareEvening(clock.getEvening(), regulars)
-        kitchen.planEvening(regulars, data.getTotalSeats() - regularsSeats - eventSeats, menu)
+        val book = foh.getReservationBook()
+        val reserved = book.reservedGroupsTonight(clock.getEvening(), regulars)
+        // Forum 328: only groups the kitchen can predict are planned for. A regular that has never
+        // ordered here yet is guessed at like a free table instead.
+        val planned = reserved.filter { it.groupType() == GroupType.EVENT || it.hasOrderedBefore() }
+        val plannedIds = planned.map { it.id() }.toSet()
+        val reservedButUnplanned = book.tablesTonight()
+            .filterKeys { it !in plannedIds }.values.sumOf { it.size }
+        val freeSeats = foh.getTables().getTables()
+            .filter { it.status == TableStatus.FREE }.sumOf { it.size }
+        kitchen.planEvening(planned.toMutableList(), reservedButUnplanned + freeSeats, menu)
     }
 
     /**
