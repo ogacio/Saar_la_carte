@@ -20,6 +20,9 @@ class History {
     /** Whether the group has visited the restaurant at least once. */
     fun isKnown(): Boolean = visits.isNotEmpty()
 
+    /** Whether any remembered visit produced at least one dish (forum 328). */
+    fun hasOrdered(): Boolean = visits.any { it.isNotEmpty() }
+
     private companion object {
         const val MAX_VISITS = 3
     }

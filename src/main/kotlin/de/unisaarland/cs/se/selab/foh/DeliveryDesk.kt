@@ -122,7 +122,12 @@ class DeliveryDesk(private val drivers: MutableList<DeliveryDriver>, private val
     /**
      * returns the amount of currently free available drivers
      */
-    fun amountFreeDrivers(): Int = drivers.count { it.isFree() }
+    /**
+     * For browsing (forum 304): "a driver counts as busy only once they have the complete
+     * order and start the delivery", so a driver still being loaded is still free. Picking a
+     * driver for a new order stays on isFree() alone.
+     */
+    fun amountFreeDrivers(): Int = drivers.count { it.isFree() || it.isLoading() }
 
     /**
      * Removes an order the group gave up on, from whichever queue it is still in. A driver that was
