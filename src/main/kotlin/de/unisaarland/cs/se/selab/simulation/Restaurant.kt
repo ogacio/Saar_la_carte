@@ -1,6 +1,5 @@
 package de.unisaarland.cs.se.selab.simulation
 import de.unisaarland.cs.se.selab.foh.FrontOfTheHouse
-import de.unisaarland.cs.se.selab.foh.TableStatus
 import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.kitchen.Kitchen
 import de.unisaarland.cs.se.selab.logging.Logger
@@ -38,13 +37,17 @@ class Restaurant(
      prepares the kitchen and the front of the house at the preparation phase
      */
     fun prepare(regulars: MutableList<CustomerGroup>) {
-        foh.prepareEvening(clock.getEvening(), regulars)
-        var free = 0
-        val tables = foh.getTables().getTables()
-        for (t in tables) {
-            if (t.status == TableStatus.FREE) free += t.size
+        var regularsSeats = 0
+        for (r in regulars) {
+            regularsSeats += r.getGroupSize()
         }
-        kitchen.planEvening(regulars, free, menu)
+        var eventSeats = 0
+        val events = foh.getReservationBook().expectedFor(clock.getEvening())
+        for (e in events) {
+            eventSeats += e.getGroupSize()
+        }
+        foh.prepareEvening(clock.getEvening(), regulars)
+        kitchen.planEvening(regulars, data.getTotalSeats() - regularsSeats - eventSeats, menu)
     }
 
     /**
