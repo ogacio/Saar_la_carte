@@ -1,0 +1,51 @@
+{
+  "ingredients": [
+    {
+      "name": "chicken",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 1
+    },
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 1
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Chicken Rice",
+      "duration": 2,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "chicken",
+          "amount": 10
+        },
+        {
+          "name": "rice",
+          "amount": 10
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Chicken Soup",
+      "duration": 2,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "chicken",
+          "amount": 20
+        }
+      ]
+    }
+  ]
+}

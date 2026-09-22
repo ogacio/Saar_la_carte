@@ -193,10 +193,13 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F13DishWithoutEligibleC
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14AReservedTableIsBlockedForTheWholeEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14EventReservedBeforeRegular
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F14RegularWithoutTableIsNotReserved
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F15MergedTableIsSplitWhenTheCasualGroupLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16BarGroupSentAwayRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16CasualGroupSeatedAtMergedTable
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16MergedTablesAreSeparatedForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeatedNextTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CurrentLoadDropsWhenTheCustomersLeave
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17WaiterWithTheMostCustomersSeatsTheNextGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19TableHeldBackUntilAllMealsAreCooked
@@ -211,6 +214,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRate
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsNeutralExperience
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentChangesTheProcuredAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncidentChangesTheProcuredPackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08ExactPackageMultiple
@@ -382,6 +386,9 @@ object SystemTestRegistration {
         testSuite.registerTest(F14AReservedTableIsBlockedForTheWholeEvening())
         testSuite.registerTest(F16CasualGroupSeatedAtMergedTable())
         testSuite.registerTest(F16MergedTablesAreSeparatedForTheNextEvening())
+        testSuite.registerTest(F15MergedTableIsSplitWhenTheCasualGroupLeaves())
+        testSuite.registerTest(F17WaiterWithTheMostCustomersSeatsTheNextGroup())
+        testSuite.registerTest(F17CurrentLoadDropsWhenTheCustomersLeave())
         testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
         testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
@@ -422,6 +429,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F31StaffIncidentAddsTheCookThatUnlocksTheDish())
         testSuite.registerTest(F32RecipeIncidentChangesTheProcuredAmount())
         testSuite.registerTest(F33PackagingIncidentChangesTheProcuredPackages())
+        testSuite.registerTest(F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe())
     }
 
     /** F04: every restaurants file rule, from the schema bounds to the cross-file recipe ids. */
