@@ -61,11 +61,11 @@ class AwaitingMealsTest {
         whenever(customerA.servedTick()).thenReturn(3)
         // customerB stays ORDERED, never served
 
-        visit.advance(tick = 7) // waited since order = 6, still < 5 + 2
+        visit.advance(tick = 6) // waited since order = 5, still < 4 + 2
         verify(customerB, never()).leave()
         assertTrue(visit.state is AwaitingMealState)
 
-        visit.advance(tick = 8) // waited = 7 >= 5 + 2
+        visit.advance(tick = 7) // waited = 6 >= 4 + 2
         verify(customerB, times(1)).leave()
         verify(customerA, never()).leave() // only the unserved one is dropped
     }

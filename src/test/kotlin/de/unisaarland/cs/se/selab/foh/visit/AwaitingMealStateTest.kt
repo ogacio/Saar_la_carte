@@ -73,14 +73,38 @@ class AwaitingMealStateTest {
     fun withoutAnyMealTheGroupLeavesAfterFiveTicks() {
         val visit = waitingVisit(regular(1, 2), tick = 1)
 
-        visit.advance(PATIENCE)
+        visit.advance(PATIENCE - 1)
         assertIs<AwaitingMealState>(visit.state)
 
-        visit.advance(1 + PATIENCE)
+        visit.advance(PATIENCE)
 
         assertIs<GoneState>(visit.state)
         assertTrue(visit.failedAttempt)
         assertEquals(2, visit.leftUnservedThisTick)
+    }
+
+    /**
+     * Staff worked example (forum topic 335, post #2, Ciprian): ordered tick 2, "counting
+     * ticks 2-6 gives five waiting ticks, so it leaves during tick 6, not tick 7" — the
+     * 5-tick window is inclusive of the order tick itself.
+     */
+    @Test
+    fun staffWorkedExampleOrderedTickTwoLeavesDuringTickSixNotSeven() {
+        val visit = waitingVisit(regular(1, 2), tick = STAFF_EXAMPLE_ORDERED_TICK)
+
+        visit.advance(STAFF_EXAMPLE_ORDERED_TICK + PATIENCE - 1)
+
+        assertIs<GoneState>(visit.state)
+        assertTrue(visit.failedAttempt)
+    }
+
+    @Test
+    fun theTickBeforeTheStaffWorkedExampleStillWaits() {
+        val visit = waitingVisit(regular(1, 2), tick = STAFF_EXAMPLE_ORDERED_TICK)
+
+        visit.advance(STAFF_EXAMPLE_ORDERED_TICK + PATIENCE - 2)
+
+        assertIs<AwaitingMealState>(visit.state)
     }
 
     @Test
@@ -115,5 +139,6 @@ class AwaitingMealStateTest {
     private companion object {
         const val PATIENCE = 5
         const val EXTRA = 2
+        const val STAFF_EXAMPLE_ORDERED_TICK = 2
     }
 }

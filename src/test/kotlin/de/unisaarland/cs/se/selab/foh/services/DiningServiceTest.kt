@@ -76,7 +76,7 @@ class DiningServiceTest {
     fun groupWithoutFoodStaysUntilTheFifthTick() {
         val ordered = nextTick()
         val visit = waitingVisit(regular(3, 2), ordered)
-        wait(PATIENCE - 1)
+        wait(PATIENCE - 2)
         val log = captureLog()
 
         dining.eat(listOf(visit), sbu)
