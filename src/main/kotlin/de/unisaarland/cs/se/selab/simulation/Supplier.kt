@@ -8,28 +8,22 @@ import de.unisaarland.cs.se.selab.sharedPackage.Pantry
  * provides ingredients to the pantry
  */
 object Supplier {
-    private val unavailableUntil: MutableMap<Ingredient, Pair<Int, Int>> = mutableMapOf()
+    private val unavailableUntil: MutableMap<Ingredient, MutableList<Pair<Int, Int>>> = mutableMapOf()
 
     /**
      * adds to pantry the ingredients in the needed quantities
      */
     fun resupply(p: Pantry, needed: Map<Ingredient, Int>) {
-        needed.entries.sortedBy { it.key.name }
-        for ((ingredient, amount) in needed) {
+        for ((ingredient, amount) in needed.entries.sortedBy { it.key.name }) {
             val evening = GlobalClock.getEvening()
-            // if the ingredient is available, we supply it
-            if (!(
-                    unavailableUntil.containsKey(ingredient) &&
-                        evening >= checkNotNull(unavailableUntil[ingredient]).first &&
-                        evening <= checkNotNull(unavailableUntil[ingredient]).second
-                    )
-            ) {
+            val isUnavailable = unavailableUntil[ingredient]?.any { (from, until) -> evening in from..until } ?: false
+            if (!isUnavailable) {
                 p.restock(ingredient, ingredient.packagesFor(amount) * ingredient.packagingVolume)
                 procured(
                     p.getRestaurantId(),
                     ingredient.packagesFor(amount) * ingredient.packagingVolume,
                     ingredient.unit,
-                    ingredient.name
+                    ingredient.name,
                 )
             }
         }
@@ -40,6 +34,6 @@ object Supplier {
      * triggered by incident, an ingredient might become unavailable
      */
     fun markUnavailable(i: Ingredient, from: Int, duration: Int) {
-        unavailableUntil[i] = Pair(from, from + duration - 1)
+        unavailableUntil.getOrPut(i) { mutableListOf() }.add(Pair(from, from + duration - 1))
     }
 }

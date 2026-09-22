@@ -1,6 +1,5 @@
 package de.unisaarland.cs.se.selab.simulation
 import de.unisaarland.cs.se.selab.foh.FrontOfTheHouse
-import de.unisaarland.cs.se.selab.foh.TableStatus
 import de.unisaarland.cs.se.selab.kitchen.CookType
 import de.unisaarland.cs.se.selab.kitchen.Kitchen
 import de.unisaarland.cs.se.selab.logging.Logger
@@ -39,11 +38,7 @@ class Restaurant(
      */
     fun prepare(regulars: MutableList<CustomerGroup>) {
         foh.prepareEvening(clock.getEvening(), regulars)
-        var free = 0
-        val tables = foh.getTables().getTables()
-        for (t in tables) {
-            if (t.status == TableStatus.FREE) free += t.size
-        }
+        val free = foh.getTables().freeSeats().values.sum()
         kitchen.planEvening(regulars, free, menu)
     }
 
