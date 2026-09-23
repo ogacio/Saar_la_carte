@@ -183,17 +183,23 @@ class F24DeliveryFlowTest {
         )
     }
 
-    /** An order the group gave up on is taken off the desk, so no driver leaves with it later. */
+    /**
+     * An order the group gave up on stays on the desk: "All following delivery attempts of this
+     * order will fail", so a driver still collects it and reports the failure on arrival rather
+     * than the order quietly disappearing.
+     */
     @Test
-    fun anOrderTheGroupGaveUpOnIsTakenOffTheDesk() {
+    fun anOrderTheGroupGaveUpOnStaysOnTheDesk() {
         startEveningAt(2)
         val group = casual(3, 2, deliveryDistance = 5, visitingTick = 3)
         val order = queuedOrderOf(group)
 
         repeat(GIVE_UP_DELAY_TICKS + 2) { tick() }
 
-        assertTrue(desk.getNewOrders().none { it.getId() == order.getId() }, "the order is still queued")
-        assertTrue(desk.getReady().none { it.getId() == order.getId() }, "the order is still ready to go")
+        val stillHeld = desk.getNewOrders().any { it.getId() == order.getId() } ||
+            desk.getReady().any { it.getId() == order.getId() } ||
+            desk.getDrivers().any { it.currentOrder()?.getId() == order.getId() }
+        assertTrue(stillHeld, "the order was withdrawn instead of being sent out to fail")
     }
 
     private companion object {

@@ -305,11 +305,9 @@ class FrontOfTheHouse(
                 gaveUpDeliveries += group
             }
         }
-        for (order in atTheDesk.filter { it.getCustomerGroup().deliveryWasGivenUp() }) {
-            // "It can happen that a customer leaves the restaurant or aborts a delivery. However,
-            // for this there is no synchronization to the kitchen": the meals keep being cooked,
-            // only no driver takes them out anymore.
-            deliveryDesk.drop(order)
-        }
+        // The order is deliberately NOT withdrawn from the desk. "All following delivery attempts
+        // of this order will fail": a driver still collects it and reports Delivery Failed on
+        // arrival, rather than the order quietly disappearing. The no-synchronisation-to-the-kitchen
+        // sentence is about the cooking, not about the hand-over.
     }
 }
