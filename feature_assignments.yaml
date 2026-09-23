@@ -154,7 +154,7 @@ assignments:
     testing_responsible:
       - stma00002
       - fancsaliborka
-    note: ""
+    note: "The EVENT waiter planning in WaiterAssignmentService was co-implemented by ogacio, since P02/P03 call it from his FOH services."
 
   - feature_id: F18   # FOH - Ordering
     implementation_responsible: ogacio
@@ -175,7 +175,7 @@ assignments:
     testing_responsible:
       - Teodor.Vasilev
       - stma00002
-    note: ""
+    note: "The driver classes (DeliveryDesk, DeliveryDriver, DriverState) were implemented by op23no5 together with F24/F29; ogacio implemented the FOH hand-over of meals to the drivers."
 
   - feature_id: F21   # FOH - Escorting
     implementation_responsible: ogacio
@@ -292,11 +292,11 @@ assignments:
 
 
   - feature_id: P03 #FOH - Event Other Actions
-    implementation_responsible: op23no5
+    implementation_responsible: ogacio
     testing_responsible:
-      - ogacio
       - Teodor.Vasilev
-    note: ""
+      - stma00002
+    note: "Reassigned from op23no5 during implementation: the EVENT ordering, serving and escorting live in ogacio's FOH services (F18, F19, F21). Testing follows ogacio's block."
 
 
   - feature_id: P04 # Customer - Events
