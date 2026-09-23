@@ -1,0 +1,50 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 7
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 12,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 3,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 20,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    }
+  ],
+  "incidents": []
+}

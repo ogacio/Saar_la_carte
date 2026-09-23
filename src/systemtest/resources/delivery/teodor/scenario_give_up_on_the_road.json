@@ -1,0 +1,33 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 8,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Slow Bowl"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Slower Bowl"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 15
+    }
+  ],
+  "incidents": []
+}

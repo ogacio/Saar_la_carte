@@ -10,10 +10,14 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F31HiredDriverMake
 import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F34UnavailableIngredientIsNotProcuredForItsDuration
 import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20DriverIdsSurviveAnEveningBoundary
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20KitchenStatusForgetsMealsHandedToTheDriver
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24GroupGivesUpWhileTheDriverIsOnTheRoad
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28SeatsAreReducedAsEachGroupDecides
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29DrivingLogShowsTheDistanceSoFar
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29ReturningDriverIsNotFreeForTheNextGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheDriverTakesASecondOrderAfterReturning
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30CustomersAreResetForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.GiantDeliveryStress
@@ -406,6 +410,7 @@ object SystemTestRegistration {
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
         registerDeliveryTests(testSuite)
+        registerDeliveryTimingTests(testSuite)
         registerOpenQuestionProbes(testSuite)
         registerMutantTests(testSuite)
         registerBorkasTests(testSuite)
@@ -448,6 +453,7 @@ object SystemTestRegistration {
      */
     fun registerSystemTestsMutantSimulation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
+        registerDeliveryTimingTests(testSuite)
         registerFrontOfHouseTests(testSuite)
         registerIncidentTests(testSuite)
         registerCoverageTests(testSuite)
@@ -843,6 +849,18 @@ object SystemTestRegistration {
         // pass. Promote them once it does; a failing mutant-registered test blocks the whole run.
         testSuite.registerTest(F11ACookIsBusyUntilTheTickAfterItsBatchFinishes())
         testSuite.registerTest(F31RemovingMoreCooksThanExistStopsAtZero())
+    }
+
+    /**
+     * F20, F24, F29 (Teodor as tester): driving distance, Kitchen Status after the hand-over, the
+     * give-up tick while the driver is on the road, and the returning driver not being free. Aimed
+     * at the Impatience and Arbeitszeitbetrug mutants and at the tutors' hints for 23 Sep.
+     */
+    private fun registerDeliveryTimingTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F20KitchenStatusForgetsMealsHandedToTheDriver())
+        testSuite.registerTest(F29DrivingLogShowsTheDistanceSoFar())
+        testSuite.registerTest(F24GroupGivesUpWhileTheDriverIsOnTheRoad())
+        testSuite.registerTest(F29ReturningDriverIsNotFreeForTheNextGroup())
     }
 
     /** F24, F28-F30: deliveries, browsing and the end of the opening time. */
