@@ -178,8 +178,10 @@ class CustomerGroupSerialiser(private val model: ParsedModel) {
         val restaurantTypes = restaurantTypesOf(dto) ?: return false
         val favourites = favouriteDishesOf(dto.favoriteDishes) ?: return false
         if (dto.eventEvening == null) return false
+        // Forum 352 (staff): the favourite only has to be an existing dish, not a basic dish of
+        // that restaurant type.
         return favourites.keys.containsAll(restaurantTypes) &&
-            favourites.all { (type, dish) -> model.basicDishesFor(type).contains(dish) }
+            favourites.values.all { model.allDishNames().contains(it) }
     }
 
     private fun deliveryOrderInPhase(visitingTick: Int, distance: Int): Boolean =

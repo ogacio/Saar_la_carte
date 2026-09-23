@@ -23,6 +23,7 @@ import org.mockito.kotlin.mock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 /** Checks customer-group conversion and validation of references, preferences and scheduling. */
@@ -181,9 +182,11 @@ class CustomerGroupSerialiserTest {
     }
 
     @Test
-    fun eventWithFavouriteFromWrongRestaurantTypeIsRejected() {
+    fun eventWithFavouriteFromAnotherRestaurantTypeIsAccepted() {
+        // Forum 352 (staff): the favourite only has to exist as a dish, not be a basic dish of
+        // that restaurant type.
         val favourites = mapOf("ASIAN" to "Potato Soup", "EUROPEAN" to "Potato Soup")
-        assertNull(serialiser.serialise(event().copy(favoriteDishes = favourites)))
+        assertNotNull(serialiser.serialise(event().copy(favoriteDishes = favourites)))
     }
 
     private fun assertInvalidPreference(preference: FoodPreferenceDto) {
