@@ -12,6 +12,9 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThr
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20KitchenStatusForgetsMealsHandedToTheDriver
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24GroupGivesUpWhileTheDriverIsOnTheRoad
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F25DeliveryBrowsingUsesTheLiveRating
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F25DeliveryDecidesEarlyAndSkipsTheBusyRestaurant
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F25TheDriverFilterAppliesToDeliveriesOnly
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28SeatsAreReducedAsEachGroupDecides
@@ -239,6 +242,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularStopsAfterTwo
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22SuccessBetweenFailuresPreservesFutureVisits
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22TwoSeatingFailuresStopVisitsAfterStaffReturns
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22TwoUnservedVisitsStopVisitsAfterFoodReturns
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F23CasualVisitsOnlyItsListedEvenings
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F23SparseEveningsDecideOnlyAtVisitingTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25EventUsesFutureOpeningAndReservationCapacity
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25EveryMemberNeedsAnEdibleDish
@@ -255,6 +259,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27DeliveryRejectedAfte
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27LastWaitingTickStillAllowsServing
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27MixedGroupFinishesEatingAndLosesUnservedMember
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27PatienceUnservedGroupLeavesInTheFifthWaitingTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27TheFourthTickIsNeutralSoSomeDoesNotRate
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27WholeGroupLeavesAtFive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DeliveryIgnoresTableAvailability
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DriverRemovalPersistsAcrossEvenings
@@ -267,6 +272,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.NoPreferenceTakesHighes
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P02FohFlowThroughEveryStep
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventOrdersFavouriteDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWaiters
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AFailedReservationRatesAtTheOpeningTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05BacklashFailedEventReservationRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05BacklashFailedReservationRatesNegativeInTickOne
@@ -332,6 +338,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncid
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.GiantIncidentOrderingStress
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08ExactPackageMultiple
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08IngredientWithoutEligibleCookIsProcured
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08LeftoversSuppressProcurementUntilTheBatchExpires
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08PartialStockDeficit
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08SupplierDeliversWholePackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08TheSupplierBuysOnlyWhatIsMissing
@@ -354,6 +361,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11CookIdsRestartTh
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11EachDishGoesToACookOfItsType
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11LaterBatchOfTheSameDishUsesAnotherCook
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11TheLowestRankingEligibleCookTakesTheDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12AFortyMinuteDishOccupiesTheCookForFourTicks
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12ATenMinuteDishIsFinishedInTheSameTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12ElevenMinuteBatchFinishesAndIsServedNextTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12KitchenStatusIsLoggedEveryTick
@@ -515,7 +523,19 @@ object SystemTestRegistration {
     }
 
     /** Fixtures built to kill specific mutation-testing mutants (misc/implementation/tests/mutants-cases.md). */
+    /**
+     * Probes that were held back as reference-only until a report confirmed them. All three
+     * reported Success against the reference at e4324ac, so they cannot block the mutant run.
+     * F11A targets Arbeitszeitbetrug, F31 targets ShortStaffed.
+     */
+    private fun registerPromotedProbes(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F11ACookIsBusyUntilTheTickAfterItsBatchFinishes())
+        testSuite.registerTest(F31RemovingMoreCooksThanExistStopsAtZero())
+        testSuite.registerTest(F21ExtraPatienceAfterPartialServe())
+    }
+
     private fun registerMutantTests(testSuite: SELab26TestSuite) {
+        registerPromotedProbes(testSuite)
         // Promoted 2026-09-23: both already ran in the reference report and passed there, so they
         // cannot block the mutant run. GSauce covers STAFF cook removal, GFourDrivers the delivery
         // log order - neither was reachable from a mutant entry point before.
@@ -845,11 +865,16 @@ object SystemTestRegistration {
      * to fail, and a failing mutant-registered test blocks the whole mutant detection run.
      */
     private fun registerOpenQuestionProbes(testSuite: SELab26TestSuite) {
-        testSuite.registerTest(F21ExtraPatienceAfterPartialServe())
+        testSuite.registerTest(F25DeliveryDecidesEarlyAndSkipsTheBusyRestaurant())
+        testSuite.registerTest(F25DeliveryBrowsingUsesTheLiveRating())
+        testSuite.registerTest(F25TheDriverFilterAppliesToDeliveriesOnly())
+        testSuite.registerTest(F08LeftoversSuppressProcurementUntilTheBatchExpires())
+        testSuite.registerTest(F12AFortyMinuteDishOccupiesTheCookForFourTicks())
+        testSuite.registerTest(F23CasualVisitsOnlyItsListedEvenings())
+        testSuite.registerTest(F27TheFourthTickIsNeutralSoSomeDoesNotRate())
         // Candidates for registerMutantTests, held here until the reference report confirms they
         // pass. Promote them once it does; a failing mutant-registered test blocks the whole run.
-        testSuite.registerTest(F11ACookIsBusyUntilTheTickAfterItsBatchFinishes())
-        testSuite.registerTest(F31RemovingMoreCooksThanExistStopsAtZero())
+        testSuite.registerTest(P05AFailedReservationRatesAtTheOpeningTick())
     }
 
     /**

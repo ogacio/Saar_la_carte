@@ -1,0 +1,49 @@
+{
+ "customerGroups": [
+  {
+   "id": 1,
+   "type": "CASUAL",
+   "size": 2,
+   "tableType": "COMMON",
+   "visitingTick": 3,
+   "foodPreferences": [
+    {
+     "size": 2,
+     "favoriteDishes": [
+      "Long Braise"
+     ]
+    }
+   ],
+   "restaurantTypes": [
+    "ASIAN"
+   ],
+   "visitingEvenings": [
+    1
+   ],
+   "ratingLikelihood": "SOME"
+  },
+  {
+   "id": 2,
+   "type": "CASUAL",
+   "size": 2,
+   "tableType": "COMMON",
+   "visitingTick": 3,
+   "foodPreferences": [
+    {
+     "size": 2,
+     "favoriteDishes": [
+      "Quick Bowl"
+     ]
+    }
+   ],
+   "restaurantTypes": [
+    "ASIAN"
+   ],
+   "visitingEvenings": [
+    1
+   ],
+   "ratingLikelihood": "SOME"
+  }
+ ],
+ "incidents": []
+}

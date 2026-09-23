@@ -1,0 +1,11 @@
+{
+  "customerGroups": [
+    {"id": 1, "type": "CASUAL", "size": 2, "visitingTick": 10,
+     "foodPreferences": [{"size": 2, "favoriteDishes": ["Rice Bowl"]}],
+     "restaurantTypes": ["ASIAN"], "visitingEvenings": [1], "ratingLikelihood": "ALWAYS", "deliveryDistance": 5},
+    {"id": 2, "type": "CASUAL", "size": 2, "tableType": "COMMON", "visitingTick": 10,
+     "foodPreferences": [{"size": 2, "favoriteDishes": ["Rice Bowl"]}],
+     "restaurantTypes": ["ASIAN"], "visitingEvenings": [1], "ratingLikelihood": "ALWAYS"}
+  ],
+  "incidents": []
+}

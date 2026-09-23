@@ -1,0 +1,8 @@
+{
+  "customerGroups": [
+    {"id": 1, "type": "CASUAL", "size": 2, "tableType": "COMMON", "visitingTick": 3,
+     "foodPreferences": [{"size": 2, "favoriteDishes": ["Quick Bowl"]}],
+     "restaurantTypes": ["ASIAN"], "visitingEvenings": [1, 3], "ratingLikelihood": "ALWAYS"}
+  ],
+  "incidents": []
+}
