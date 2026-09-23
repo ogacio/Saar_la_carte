@@ -75,6 +75,9 @@ class F27DeliveryDriverTest {
             setOf(RestaurantType.EUROPEAN), listOf(1), DeliveryPreference(21, RatingLikelihood.NEVER),
         )
         val order = buildOrder(group, 1)
+        // DeliveryService.placeOrder does this in the real flow; without it deliveryOrderPending
+        // stays false and the group can never become due to give up.
+        group.orderPlaced()
         val driver = DeliveryDriver(restaurantId = 1)
         driver.setId(1)
         driver.receiveOrder(order) // distance 21 -> travelTicks = (21 + 4) / 5 = 5
