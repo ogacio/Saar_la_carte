@@ -204,6 +204,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHigh
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19BusierWaiterUnderTenWins
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19TableHeldBackUntilAllMealsAreCooked
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21ExtraPatienceAfterPartialServe
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21VisitServedEscortedAndRated
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22DinnerForOneEveryCustomerChoosesAndEatsAlone
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22MoeAndBarneyRegularStartTwoPeriodThree
@@ -276,6 +277,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondRest
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondRestaurantWithoutCooks
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondTypeWithUnlistedBasicDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondTypeWithoutBasicDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31RemovingMoreCooksThanExistStopsAtZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32OnlyThatIngredientChanges
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe
@@ -298,6 +300,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09TenSeatsEstimate
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BasicDishesAreQueuedFirst
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BatchesSameDishOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10OneBatchServesSeveralOrders
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ACookIsBusyUntilTheTickAfterItsBatchFinishes
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ADishWaitsWhileItsOnlyCookIsBusy
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11EachDishGoesToACookOfItsType
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11TheLowestRankingEligibleCookTakesTheDish
@@ -320,9 +323,6 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07SentAwayGroup
 // RootEmptyFile and RootMalformedJson unregistered below, see the note there — imports removed too.
 // F01FirstTickLogOrder, F13DishWithoutEligibleCookIsNotOrdered, F28NoNewCustomersInLastThreeTicks
 // and F20DeliveryOverSevenKilometres unregistered below, see the notes there — imports removed too.
-// F24GivesUpThreeTicksAfterVisitingTick, F29ThreeTickDistanceAndSilentReturn,
-// F28BrowsingRespectsExcludedIngredient and GourmandEventFavouriteNotBasicIsValid unregistered
-// below, see the notes there — imports removed too.
 
 // import de.unisaarland.cs.se.selab.systemtest.selab26.f03.EmptyRecipesArray
 // import de.unisaarland.cs.se.selab.systemtest.selab26.f03.ProbeRecIngExtraKey
@@ -352,6 +352,7 @@ object SystemTestRegistration {
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
         registerDeliveryTests(testSuite)
+        registerOpenQuestionProbes(testSuite)
         registerMutantTests(testSuite)
     }
 
@@ -442,11 +443,12 @@ object SystemTestRegistration {
 
     /** Fixtures built to kill specific mutation-testing mutants (misc/implementation/tests/mutants-cases.md). */
     private fun registerMutantTests(testSuite: SELab26TestSuite) {
+        // Promoted 2026-09-23: both already ran in the reference report and passed there, so they
+        // cannot block the mutant run. GSauce covers STAFF cook removal, GFourDrivers the delivery
+        // log order - neither was reachable from a mutant entry point before.
+        testSuite.registerTest(GSauceCookRemovalFallback())
+        testSuite.registerTest(GFourDriversLogOrder())
         testSuite.registerTest(F32OnlyThatIngredientChanges())
-        // F29ThreeTickDistanceAndSilentReturn and F24GivesUpThreeTicksAfterVisitingTick unregistered
-        // 2026-09-23: both fail against the real reference (origin/results @ 97c2bc8), blocking the
-        // mutant run. Not yet diagnosed whether the fixtures or the production delivery-timing logic
-        // is wrong.
         // testSuite.registerTest(F29ThreeTickDistanceAndSilentReturn())
         // testSuite.registerTest(F24GivesUpThreeTicksAfterVisitingTick())
         testSuite.registerTest(F28DriverRemovalPersistsAcrossEvenings())
@@ -462,9 +464,6 @@ object SystemTestRegistration {
         testSuite.registerTest(P05RegularFailedReservationRatesNegative())
         testSuite.registerTest(F15BarTablesNeverMerge())
         testSuite.registerTest(F28TypeFilterPrecedesRating())
-        // F28BrowsingRespectsExcludedIngredient unregistered 2026-09-23: fails against the real
-        // reference (origin/results @ 97c2bc8), blocking the mutant run. Not yet diagnosed whether
-        // the fixture or the browsing/rating decision logic is wrong.
         // testSuite.registerTest(F28BrowsingRespectsExcludedIngredient())
         testSuite.registerTest(F22DinnerForOneEveryCustomerChoosesAndEatsAlone())
         testSuite.registerTest(F26DinnerForOnePreferenceSizeCoversEveryMember())
@@ -487,10 +486,6 @@ object SystemTestRegistration {
         testSuite.registerTest(GourmandSecondPreferenceFavouritesAll())
         testSuite.registerTest(GourmandEventFavouriteUnknownDish())
         testSuite.registerTest(GourmandEventMissesAFavouriteForAType())
-        // GourmandEventFavouriteNotBasicIsValid unregistered 2026-09-23: fails against the real
-        // reference (origin/results @ 97c2bc8), blocking the mutant run, even though it follows the
-        // forum 352 staff quote that an event favourite need not be a basic dish of its restaurant
-        // type. Needs re-checking against the reference's actual behaviour before re-registering.
         // testSuite.registerTest(GourmandEventFavouriteNotBasicIsValid())
         testSuite.registerTest(GourmandEventPreferenceFavouritesAll())
         testSuite.registerTest(GourmandRegularFavouritesAll())
@@ -733,6 +728,19 @@ object SystemTestRegistration {
         testSuite.registerTest(F13CustomersFallBackToTheNextAvailableDish())
         testSuite.registerTest(F13ADishWithoutAnEligibleCookIsNotOnTheMenu())
         testSuite.registerTest(F13AnUnavailableIngredientEmptiesTheMenuForOneEvening())
+    }
+
+    /**
+     * Probes for spec questions the forum answers twice over. These run against the reference
+     * implementation only and are never registered for the mutants: a probe is expected to be able
+     * to fail, and a failing mutant-registered test blocks the whole mutant detection run.
+     */
+    private fun registerOpenQuestionProbes(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F21ExtraPatienceAfterPartialServe())
+        // Candidates for registerMutantTests, held here until the reference report confirms they
+        // pass. Promote them once it does; a failing mutant-registered test blocks the whole run.
+        testSuite.registerTest(F11ACookIsBusyUntilTheTickAfterItsBatchFinishes())
+        testSuite.registerTest(F31RemovingMoreCooksThanExistStopsAtZero())
     }
 
     /** F24, F28-F30: deliveries, browsing and the end of the opening time. */
