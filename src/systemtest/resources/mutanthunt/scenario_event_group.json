@@ -1,0 +1,19 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "EVENT",
+      "size": 4,
+      "visitingTick": 5,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "eventEvening": 4,
+      "favoriteDishes": {
+        "ASIAN": "Saffron Rice"
+      }
+    }
+  ],
+  "incidents": []
+}

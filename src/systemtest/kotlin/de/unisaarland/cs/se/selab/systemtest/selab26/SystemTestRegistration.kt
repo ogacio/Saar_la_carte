@@ -372,6 +372,12 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13AnUnavailableIngred
 import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13CustomersFallBackToTheNextAvailableDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13ReservedIngredientsAreNotAvailable
 import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13TheLastPortionLeavesTheSecondCustomerWithNothing
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F07OnlyTheMemberWhoOrderedEatsAndIsCounted
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F16RetryingGroupIsSeatedWithoutArrivingAgain
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F18FewerFavouritesOrderFirstAtEqualExclusions
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F28EventGroupOnlyChoosesARestaurantThatHostsEvents
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F30DeliveryStillOnTheRoadAtTheEndOfTheEveningIsAborted
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.P05GroupWithAMemberWhoCouldNotOrderRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07CountsAddUpOverTheWholeSimulation
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07DeliveredCountsCustomersNotOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07EachRestaurantCountsOnlyItsOwn
@@ -411,6 +417,7 @@ object SystemTestRegistration {
         registerMenuTests(testSuite)
         registerDeliveryTests(testSuite)
         registerDeliveryTimingTests(testSuite)
+        registerMutantHuntTests(testSuite)
         registerOpenQuestionProbes(testSuite)
         registerMutantTests(testSuite)
         registerBorkasTests(testSuite)
@@ -454,6 +461,7 @@ object SystemTestRegistration {
     fun registerSystemTestsMutantSimulation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
         registerDeliveryTimingTests(testSuite)
+        registerMutantHuntTests(testSuite)
         registerFrontOfHouseTests(testSuite)
         registerIncidentTests(testSuite)
         registerCoverageTests(testSuite)
@@ -849,6 +857,19 @@ object SystemTestRegistration {
         // pass. Promote them once it does; a failing mutant-registered test blocks the whole run.
         testSuite.registerTest(F11ACookIsBusyUntilTheTickAfterItsBatchFinishes())
         testSuite.registerTest(F31RemovingMoreCooksThanExistStopsAtZero())
+    }
+
+    /**
+     * Teodor as tester of F07, F16, F18, F28, F30 and P05: one test per mutant still not found on
+     * d4ef9e0 (Arbeitszeitbetrug, FreeForAll, Backlash, DinnerForOne, KingOfTheHill, ShortStaffed).
+     */
+    private fun registerMutantHuntTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F30DeliveryStillOnTheRoadAtTheEndOfTheEveningIsAborted())
+        testSuite.registerTest(F28EventGroupOnlyChoosesARestaurantThatHostsEvents())
+        testSuite.registerTest(P05GroupWithAMemberWhoCouldNotOrderRatesNegative())
+        testSuite.registerTest(F07OnlyTheMemberWhoOrderedEatsAndIsCounted())
+        testSuite.registerTest(F18FewerFavouritesOrderFirstAtEqualExclusions())
+        testSuite.registerTest(F16RetryingGroupIsSeatedWithoutArrivingAgain())
     }
 
     /**
