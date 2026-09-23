@@ -1,0 +1,55 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 1000,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 5,
+      "dishName": "High Plate",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "dishName": "Low Plate",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "dishName": "Basic Bowl",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    }
+  ]
+}

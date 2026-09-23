@@ -1,0 +1,38 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 3,
+      "visitingTick": 1,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "High Plate"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Low Plate"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Basic Bowl"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": []
+}

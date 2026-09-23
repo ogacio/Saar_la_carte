@@ -1,0 +1,61 @@
+{
+  "ingredients": [
+    {
+      "name": "chicken",
+      "unit": "X",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    },
+    {
+      "name": "egg",
+      "unit": "X",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    },
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 20,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Chicken Rice",
+      "duration": 2,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "chicken",
+          "amount": 1
+        },
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Egg Rice",
+      "duration": 2,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "egg",
+          "amount": 1
+        },
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

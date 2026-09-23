@@ -18,10 +18,10 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 /**
- * F27: hold-back window - fully-cooked order is served immediately even in the tick it finished cooking,
- * but a partially cooked order sits in the window and experience()
+ * Tests Visit's hold-back window for serving and the experience()/rating outcome.
+ * Covers F27, no waiter/table assignment logic.
  */
-class VisitTests {
+class F27VisitTest {
 
     private lateinit var group: CustomerGroup
     private lateinit var customer: Customer

@@ -1,6 +1,14 @@
 package de.unisaarland.cs.se.selab.systemtest.selab26
 
 import de.unisaarland.cs.se.selab.systemtest.selab26.basictests.ExampleSystemTest
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F20DeliveryOfTwoMealsFromOrderToRating
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F22RegularVisitsEverySecondEvening
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F25OnlyRestaurantsOfTheWantedTypeAreConsidered
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F26CustomerWithMoreExclusionsOrdersFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F28DecidedGroupTakesTheLastSeats
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F31HiredDriverMakesTheRestaurantAvailableForDelivery
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F34UnavailableIngredientIsNotProcuredForItsDuration
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20DriverIdsSurviveAnEveningBoundary
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
@@ -200,6 +208,10 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeat
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16RetryInLastThreeTicksIsRefused
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16TwoConsecutiveFailuresLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CurrentLoadDropsWhenTheCustomersLeave
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CustomersWhoCannotOrderLeaveTheLoad
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EventCustomersDoNotCountTowardTheLoad
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EventIsSeatedByTheMostLoadedWaiterFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EverybodyBusyTheLeastLoadedWaiterSeats
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17WaiterWithTheMostCustomersSeatsTheNextGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
@@ -208,14 +220,27 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19TableHeldBackUntilAl
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21ExtraPatienceAfterPartialServe
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21VisitServedEscortedAndRated
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22DinnerForOneEveryCustomerChoosesAndEatsAlone
-import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22MoeAndBarneyRegularStartTwoPeriodThree
-import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22MoeAndBarneyRegularStopsAfterTwoFailedAttempts
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularRecurrenceAndGroupSize
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularStartTwoPeriodThree
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularStopsAfterTwoFailedAttempts
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22SuccessBetweenFailuresPreservesFutureVisits
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22TwoSeatingFailuresStopVisitsAfterStaffReturns
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22TwoUnservedVisitsStopVisitsAfterFoodReturns
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F23SparseEveningsDecideOnlyAtVisitingTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25EventUsesFutureOpeningAndReservationCapacity
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25EveryMemberNeedsAnEdibleDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25FailedSeatingDoesNotTriggerAnotherRestaurantDecision
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26DinnerForOnePreferenceSizeCoversEveryMember
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26EventFavouriteOverridesPersonalRanking
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26IngredientAmountsAndTiesRespectSubgroups
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26KingOfTheHillExcludedIngredientBeatsFavourite
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26KingOfTheHillFirstFavouriteInListOrder
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26KingOfTheHillMostPreferredIngredientsBeatHighestId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26NoPreferencePicksHighestId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27DeliveryAcceptedAtLastWaitingTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27DeliveryRejectedAfterActualGiveUp
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27LastWaitingTickStillAllowsServing
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27MixedGroupFinishesEatingAndLosesUnservedMember
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27PatienceUnservedGroupLeavesInTheFifthWaitingTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27WholeGroupLeavesAtFive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DeliveryIgnoresTableAvailability
@@ -305,11 +330,15 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09TenSeatsEstimate
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BasicDishesAreQueuedFirst
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BatchesSameDishOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10OneBatchServesSeveralOrders
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10RecipeIdsBreakTiesWithinOneOrder
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ACookIsBusyUntilTheTickAfterItsBatchFinishes
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ADishWaitsWhileItsOnlyCookIsBusy
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11CookIdsRestartThroughEveningPreparation
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11EachDishGoesToACookOfItsType
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11LaterBatchOfTheSameDishUsesAnotherCook
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11TheLowestRankingEligibleCookTakesTheDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12ATenMinuteDishIsFinishedInTheSameTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12ElevenMinuteBatchFinishesAndIsServedNextTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12KitchenStatusIsLoggedEveryTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12MealCookedReportsTheBatchAndTheWaitingTime
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12TheFinishedMealsAreLoggedInAscendingCookId
@@ -353,6 +382,7 @@ object SystemTestRegistration {
         registerFrontOfHouseTests(testSuite)
         registerF06Tests(testSuite)
         registerIncidentTests(testSuite)
+        registerCoverageTests(testSuite)
         registerKitchenTests(testSuite)
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
@@ -399,6 +429,7 @@ object SystemTestRegistration {
         testSuite.registerTest(ExampleSystemTest())
         registerFrontOfHouseTests(testSuite)
         registerIncidentTests(testSuite)
+        registerCoverageTests(testSuite)
         testSuite.registerTest(F08SupplierDeliversWholePackages())
         testSuite.registerTest(F08ExactPackageMultiple())
         testSuite.registerTest(F08PartialStockDeficit())
@@ -413,6 +444,10 @@ object SystemTestRegistration {
         testSuite.registerTest(F09EventFavouritePlanning())
         testSuite.registerTest(F09KnownRegularUsesLastThreeVisits())
         testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
+        testSuite.registerTest(F10RecipeIdsBreakTiesWithinOneOrder())
+        testSuite.registerTest(F11LaterBatchOfTheSameDishUsesAnotherCook())
+        testSuite.registerTest(F11CookIdsRestartThroughEveningPreparation())
+        testSuite.registerTest(F12ElevenMinuteBatchFinishesAndIsServedNextTick())
         testSuite.registerTest(F10BasicDishesAreQueuedFirst())
         testSuite.registerTest(F10OneBatchServesSeveralOrders())
         testSuite.registerTest(F11EachDishGoesToACookOfItsType())
@@ -478,8 +513,8 @@ object SystemTestRegistration {
         testSuite.registerTest(F27PatienceUnservedGroupLeavesInTheFifthWaitingTick())
         testSuite.registerTest(P05BacklashFailedReservationRatesNegativeInTickOne())
         testSuite.registerTest(P05BacklashFailedEventReservationRatesNegative())
-        testSuite.registerTest(F22MoeAndBarneyRegularStartTwoPeriodThree())
-        testSuite.registerTest(F22MoeAndBarneyRegularStopsAfterTwoFailedAttempts())
+        testSuite.registerTest(F22RegularStartTwoPeriodThree())
+        testSuite.registerTest(F22RegularStopsAfterTwoFailedAttempts())
         testSuite.registerTest(GourmandFavouritesAreEveryDish())
         testSuite.registerTest(GourmandFavouritesAllButOneDish())
         testSuite.registerTest(GourmandPreferredAreEveryIngredient())
@@ -516,6 +551,19 @@ object SystemTestRegistration {
      * Registers the simulation scenario tests of F01, F07, F13, F14, F16, F18-F21, F28, F30, P03 and P05.
      */
     private fun registerFrontOfHouseTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F26EventFavouriteOverridesPersonalRanking())
+        testSuite.registerTest(F26IngredientAmountsAndTiesRespectSubgroups())
+        testSuite.registerTest(F27DeliveryAcceptedAtLastWaitingTick())
+        testSuite.registerTest(F27DeliveryRejectedAfterActualGiveUp())
+        testSuite.registerTest(F27LastWaitingTickStillAllowsServing())
+        testSuite.registerTest(F27MixedGroupFinishesEatingAndLosesUnservedMember())
+        testSuite.registerTest(F22SuccessBetweenFailuresPreservesFutureVisits())
+        testSuite.registerTest(F22TwoSeatingFailuresStopVisitsAfterStaffReturns())
+        testSuite.registerTest(F22TwoUnservedVisitsStopVisitsAfterFoodReturns())
+        testSuite.registerTest(F23SparseEveningsDecideOnlyAtVisitingTick())
+        testSuite.registerTest(F25EventUsesFutureOpeningAndReservationCapacity())
+        testSuite.registerTest(F25EveryMemberNeedsAnEdibleDish())
+        testSuite.registerTest(F25FailedSeatingDoesNotTriggerAnotherRestaurantDecision())
         // F01FirstTickLogOrder unregistered 2026-09-18: fails on a missing
         // "[INFO] Pantry (R 1): Restocked ingredients." line. Logger.Kitchen.restocked() exists but
         // has zero callers — the call belongs at the end of Kitchen.planEvening (Biborka's file,
@@ -533,6 +581,10 @@ object SystemTestRegistration {
         testSuite.registerTest(F15MergedTableIsSplitWhenTheCasualGroupLeaves())
         testSuite.registerTest(F17WaiterWithTheMostCustomersSeatsTheNextGroup())
         testSuite.registerTest(F17CurrentLoadDropsWhenTheCustomersLeave())
+        testSuite.registerTest(F17EverybodyBusyTheLeastLoadedWaiterSeats())
+        testSuite.registerTest(F17CustomersWhoCannotOrderLeaveTheLoad())
+        testSuite.registerTest(F17EventCustomersDoNotCountTowardTheLoad())
+        testSuite.registerTest(F17EventIsSeatedByTheMostLoadedWaiterFirst())
         testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
         testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
@@ -568,6 +620,20 @@ object SystemTestRegistration {
     /**
      * Registers the F03 food file validation tests covering the root and ingredient fixtures.
      */
+
+    /**
+     * Registers the simulation tests for the features with the lowest system test coverage.
+     */
+    private fun registerCoverageTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F34UnavailableIngredientIsNotProcuredForItsDuration())
+        testSuite.registerTest(F31HiredDriverMakesTheRestaurantAvailableForDelivery())
+        testSuite.registerTest(F20DeliveryOfTwoMealsFromOrderToRating())
+        testSuite.registerTest(F22RegularVisitsEverySecondEvening())
+        testSuite.registerTest(F28DecidedGroupTakesTheLastSeats())
+        testSuite.registerTest(F25OnlyRestaurantsOfTheWantedTypeAreConsidered())
+        testSuite.registerTest(F26CustomerWithMoreExclusionsOrdersFirst())
+        testSuite.registerTest(P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening())
+    }
 
     /** F31-F33: the incidents that change staff, recipes and packaging while the simulation runs. */
     private fun registerIncidentTests(testSuite: SELab26TestSuite) {
@@ -699,6 +765,10 @@ object SystemTestRegistration {
         testSuite.registerTest(P01IngredientsLastTheirBestBeforeDays())
         testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
         testSuite.registerTest(P01BestBeforeTwoLastsExactlyTwoEvenings())
+        testSuite.registerTest(F10RecipeIdsBreakTiesWithinOneOrder())
+        testSuite.registerTest(F11LaterBatchOfTheSameDishUsesAnotherCook())
+        testSuite.registerTest(F11CookIdsRestartThroughEveningPreparation())
+        testSuite.registerTest(F12ElevenMinuteBatchFinishesAndIsServedNextTick())
         testSuite.registerTest(F10BasicDishesAreQueuedFirst())
         testSuite.registerTest(F10OneBatchServesSeveralOrders())
         testSuite.registerTest(F11EachDishGoesToACookOfItsType())
@@ -754,6 +824,10 @@ object SystemTestRegistration {
 
     /** F24, F28-F30: deliveries, browsing and the end of the opening time. */
     private fun registerDeliveryTests(testSuite: SELab26TestSuite) {
+        // Unregistered 2026-09-22 20:30: these three fail against the REFERENCE, which makes the
+        // server skip the whole mutant detection run (results for ef2d6aa: "The mutant detection was
+        // not run, as not all of your registered tests pass against the reference"). Fix the
+        // expectations and register them again, one at a time.
         testSuite.registerTest(F24ADeliveredGroupEatsAndRates())
         // F24AGroupGivesUpOnALateDelivery re-unregistered 2026-09-22: fails against the real
         // reference for 5 consecutive scored commits (ab417c3..607305c), confirmed still failing
