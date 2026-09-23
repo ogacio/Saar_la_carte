@@ -1,0 +1,38 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 3,
+      "visitingTick": 1,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "First Bowl"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Middle Bowl"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Last Bowl"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": []
+}

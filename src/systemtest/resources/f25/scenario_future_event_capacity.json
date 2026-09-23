@@ -1,0 +1,14 @@
+{
+  "customerGroups": [
+    {"id": 1, "type": "EVENT", "size": 4, "tableType": "COMMON", "visitingTick": 5,
+     "foodPreferences": [], "restaurantTypes": ["ASIAN"], "eventEvening": 4,
+     "favoriteDishes": {"ASIAN": "Quick Bowl"}},
+    {"id": 2, "type": "EVENT", "size": 4, "tableType": "COMMON", "visitingTick": 5,
+     "foodPreferences": [], "restaurantTypes": ["ASIAN"], "eventEvening": 4,
+     "favoriteDishes": {"ASIAN": "Quick Bowl"}},
+    {"id": 3, "type": "EVENT", "size": 4, "tableType": "COMMON", "visitingTick": 5,
+     "foodPreferences": [], "restaurantTypes": ["ASIAN"], "eventEvening": 5,
+     "favoriteDishes": {"ASIAN": "Quick Bowl"}}
+  ],
+  "incidents": []
+}

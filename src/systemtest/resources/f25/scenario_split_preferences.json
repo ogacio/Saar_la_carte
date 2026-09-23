@@ -1,0 +1,9 @@
+{
+  "customerGroups": [
+    {"id": 1, "type": "CASUAL", "size": 2, "visitingTick": 1,
+     "foodPreferences": [{"size": 1, "excludedIngredients": ["fish"]},
+                         {"size": 1, "excludedIngredients": ["rice"]}],
+     "restaurantTypes": ["ASIAN"], "visitingEvenings": [1], "ratingLikelihood": "ALWAYS"}
+  ],
+  "incidents": []
+}

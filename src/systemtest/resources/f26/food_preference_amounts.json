@@ -1,0 +1,71 @@
+{
+  "ingredients": [
+    {
+      "name": "salt",
+      "unit": "g",
+      "packagingVolume": 1000,
+      "bestBefore": 5
+    },
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 1000,
+      "bestBefore": 5
+    },
+    {
+      "name": "egg",
+      "unit": "g",
+      "packagingVolume": 1000,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Plain Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Egg Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "egg",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "dishName": "Large Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 100
+        }
+      ]
+    }
+  ]
+}

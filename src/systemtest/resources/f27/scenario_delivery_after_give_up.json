@@ -1,0 +1,51 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "REGULAR",
+      "size": 2,
+      "visitingTick": 1,
+      "tableType": "COMMON",
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "First Bowl"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Middle Bowl"
+          ]
+        }
+      ],
+      "restaurant": 1,
+      "visitingStart": 1,
+      "visitingPeriod": 1
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 6,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Last Bowl"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    }
+  ],
+  "incidents": []
+}

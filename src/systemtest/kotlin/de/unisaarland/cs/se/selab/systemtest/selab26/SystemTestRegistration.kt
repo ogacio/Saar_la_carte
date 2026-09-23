@@ -219,14 +219,27 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F19TableHeldBackUntilAl
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21ExtraPatienceAfterPartialServe
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F21VisitServedEscortedAndRated
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22DinnerForOneEveryCustomerChoosesAndEatsAlone
-import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22MoeAndBarneyRegularStartTwoPeriodThree
-import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22MoeAndBarneyRegularStopsAfterTwoFailedAttempts
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularRecurrenceAndGroupSize
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularStartTwoPeriodThree
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22RegularStopsAfterTwoFailedAttempts
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22SuccessBetweenFailuresPreservesFutureVisits
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22TwoSeatingFailuresStopVisitsAfterStaffReturns
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F22TwoUnservedVisitsStopVisitsAfterFoodReturns
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F23SparseEveningsDecideOnlyAtVisitingTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25EventUsesFutureOpeningAndReservationCapacity
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25EveryMemberNeedsAnEdibleDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F25FailedSeatingDoesNotTriggerAnotherRestaurantDecision
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26DinnerForOnePreferenceSizeCoversEveryMember
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26EventFavouriteOverridesPersonalRanking
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26IngredientAmountsAndTiesRespectSubgroups
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26KingOfTheHillExcludedIngredientBeatsFavourite
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26KingOfTheHillFirstFavouriteInListOrder
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26KingOfTheHillMostPreferredIngredientsBeatHighestId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F26NoPreferencePicksHighestId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27DeliveryAcceptedAtLastWaitingTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27DeliveryRejectedAfterActualGiveUp
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27LastWaitingTickStillAllowsServing
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27MixedGroupFinishesEatingAndLosesUnservedMember
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27PatienceUnservedGroupLeavesInTheFifthWaitingTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27WholeGroupLeavesAtFive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DeliveryIgnoresTableAvailability
@@ -312,11 +325,15 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F09TenSeatsEstimate
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BasicDishesAreQueuedFirst
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10BatchesSameDishOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10OneBatchServesSeveralOrders
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F10RecipeIdsBreakTiesWithinOneOrder
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ACookIsBusyUntilTheTickAfterItsBatchFinishes
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11ADishWaitsWhileItsOnlyCookIsBusy
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11CookIdsRestartThroughEveningPreparation
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11EachDishGoesToACookOfItsType
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11LaterBatchOfTheSameDishUsesAnotherCook
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F11TheLowestRankingEligibleCookTakesTheDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12ATenMinuteDishIsFinishedInTheSameTick
+import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12ElevenMinuteBatchFinishesAndIsServedNextTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12KitchenStatusIsLoggedEveryTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12MealCookedReportsTheBatchAndTheWaitingTime
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F12TheFinishedMealsAreLoggedInAscendingCookId
@@ -422,6 +439,10 @@ object SystemTestRegistration {
         testSuite.registerTest(F09EventFavouritePlanning())
         testSuite.registerTest(F09KnownRegularUsesLastThreeVisits())
         testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
+        testSuite.registerTest(F10RecipeIdsBreakTiesWithinOneOrder())
+        testSuite.registerTest(F11LaterBatchOfTheSameDishUsesAnotherCook())
+        testSuite.registerTest(F11CookIdsRestartThroughEveningPreparation())
+        testSuite.registerTest(F12ElevenMinuteBatchFinishesAndIsServedNextTick())
         testSuite.registerTest(F10BasicDishesAreQueuedFirst())
         testSuite.registerTest(F10OneBatchServesSeveralOrders())
         testSuite.registerTest(F11EachDishGoesToACookOfItsType())
@@ -487,8 +508,8 @@ object SystemTestRegistration {
         testSuite.registerTest(F27PatienceUnservedGroupLeavesInTheFifthWaitingTick())
         testSuite.registerTest(P05BacklashFailedReservationRatesNegativeInTickOne())
         testSuite.registerTest(P05BacklashFailedEventReservationRatesNegative())
-        testSuite.registerTest(F22MoeAndBarneyRegularStartTwoPeriodThree())
-        testSuite.registerTest(F22MoeAndBarneyRegularStopsAfterTwoFailedAttempts())
+        testSuite.registerTest(F22RegularStartTwoPeriodThree())
+        testSuite.registerTest(F22RegularStopsAfterTwoFailedAttempts())
         testSuite.registerTest(GourmandFavouritesAreEveryDish())
         testSuite.registerTest(GourmandFavouritesAllButOneDish())
         testSuite.registerTest(GourmandPreferredAreEveryIngredient())
@@ -525,6 +546,19 @@ object SystemTestRegistration {
      * Registers the simulation scenario tests of F01, F07, F13, F14, F16, F18-F21, F28, F30, P03 and P05.
      */
     private fun registerFrontOfHouseTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F26EventFavouriteOverridesPersonalRanking())
+        testSuite.registerTest(F26IngredientAmountsAndTiesRespectSubgroups())
+        testSuite.registerTest(F27DeliveryAcceptedAtLastWaitingTick())
+        testSuite.registerTest(F27DeliveryRejectedAfterActualGiveUp())
+        testSuite.registerTest(F27LastWaitingTickStillAllowsServing())
+        testSuite.registerTest(F27MixedGroupFinishesEatingAndLosesUnservedMember())
+        testSuite.registerTest(F22SuccessBetweenFailuresPreservesFutureVisits())
+        testSuite.registerTest(F22TwoSeatingFailuresStopVisitsAfterStaffReturns())
+        testSuite.registerTest(F22TwoUnservedVisitsStopVisitsAfterFoodReturns())
+        testSuite.registerTest(F23SparseEveningsDecideOnlyAtVisitingTick())
+        testSuite.registerTest(F25EventUsesFutureOpeningAndReservationCapacity())
+        testSuite.registerTest(F25EveryMemberNeedsAnEdibleDish())
+        testSuite.registerTest(F25FailedSeatingDoesNotTriggerAnotherRestaurantDecision())
         // F01FirstTickLogOrder unregistered 2026-09-18: fails on a missing
         // "[INFO] Pantry (R 1): Restocked ingredients." line. Logger.Kitchen.restocked() exists but
         // has zero callers — the call belongs at the end of Kitchen.planEvening (Biborka's file,
@@ -722,6 +756,10 @@ object SystemTestRegistration {
         testSuite.registerTest(P01IngredientsLastTheirBestBeforeDays())
         testSuite.registerTest(F08TheSupplierBuysOnlyWhatIsMissing())
         testSuite.registerTest(P01BestBeforeTwoLastsExactlyTwoEvenings())
+        testSuite.registerTest(F10RecipeIdsBreakTiesWithinOneOrder())
+        testSuite.registerTest(F11LaterBatchOfTheSameDishUsesAnotherCook())
+        testSuite.registerTest(F11CookIdsRestartThroughEveningPreparation())
+        testSuite.registerTest(F12ElevenMinuteBatchFinishesAndIsServedNextTick())
         testSuite.registerTest(F10BasicDishesAreQueuedFirst())
         testSuite.registerTest(F10OneBatchServesSeveralOrders())
         testSuite.registerTest(F11EachDishGoesToACookOfItsType())
