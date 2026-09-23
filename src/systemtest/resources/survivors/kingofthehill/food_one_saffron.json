@@ -1,0 +1,81 @@
+{
+  "ingredients": [
+    {
+      "name": "tofu",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "egg",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "saffron",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Tofu Bowl",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "tofu",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Egg Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "egg",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "dishName": "Saffron Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "saffron",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -377,6 +377,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07DeliveredCoun
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07EachRestaurantCountsOnlyItsOwn
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07RatingsCountRatingsNotCustomers
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07SentAwayGroupIsARatingButNotACustomer
+import de.unisaarland.cs.se.selab.systemtest.selab26.survivors.SurvivorTestRegistration
 // RootEmptyFile and RootMalformedJson unregistered below, see the note there — imports removed too.
 // F01FirstTickLogOrder, F13DishWithoutEligibleCookIsNotOrdered, F28NoNewCustomersInLastThreeTicks
 // and F20DeliveryOverSevenKilometres unregistered below, see the notes there — imports removed too.
@@ -415,6 +416,8 @@ object SystemTestRegistration {
         registerOpenQuestionProbes(testSuite)
         registerMutantTests(testSuite)
         registerBorkasTests(testSuite)
+        // Reference-only until the report confirms them (see SurvivorTestRegistration).
+        SurvivorTestRegistration.register(testSuite)
     }
 
     /**

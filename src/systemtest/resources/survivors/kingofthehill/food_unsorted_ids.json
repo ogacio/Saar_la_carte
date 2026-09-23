@@ -1,0 +1,75 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "egg",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "tofu",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 3,
+      "dishName": "Rice Bowl",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 12,
+      "dishName": "Tofu Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "tofu",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "dishName": "Egg Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "egg",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

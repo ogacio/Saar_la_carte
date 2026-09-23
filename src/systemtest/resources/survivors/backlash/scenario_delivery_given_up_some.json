@@ -1,0 +1,33 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 3,
+      "visitingTick": 10,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Rice Bowl"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Slow Stew"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "SOME",
+      "deliveryDistance": 25
+    }
+  ],
+  "incidents": []
+}

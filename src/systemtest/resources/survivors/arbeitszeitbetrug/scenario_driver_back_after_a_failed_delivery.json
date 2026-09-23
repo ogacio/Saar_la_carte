@@ -1,0 +1,78 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 3,
+      "visitingTick": 6,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Rice Bowl"
+          ]
+        },
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Slow Stew"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 10
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 16,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 3,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 17,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 4,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 18,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    }
+  ],
+  "incidents": []
+}

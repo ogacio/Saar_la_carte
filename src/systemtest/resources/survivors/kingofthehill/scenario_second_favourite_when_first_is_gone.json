@@ -1,0 +1,38 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 1,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "preferredIngredients": [
+            "tofu"
+          ],
+          "favoriteDishes": [
+            "Saffron Rice",
+            "Egg Rice"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "type": "UNAVAILABLE",
+      "evening": 1,
+      "ingredient": "saffron",
+      "duration": 1
+    }
+  ]
+}

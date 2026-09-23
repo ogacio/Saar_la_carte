@@ -1,0 +1,46 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 2,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "preferredIngredients": [
+            "tofu"
+          ],
+          "favoriteDishes": [
+            "Saffron Rice"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    },
+    {
+      "id": 5,
+      "type": "REGULAR",
+      "size": 2,
+      "visitingTick": 2,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Saffron Rice"
+          ]
+        }
+      ],
+      "visitingStart": 1,
+      "visitingPeriod": 1,
+      "restaurant": 1
+    }
+  ],
+  "incidents": []
+}

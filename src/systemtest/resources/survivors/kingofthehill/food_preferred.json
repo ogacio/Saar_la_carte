@@ -1,0 +1,131 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "egg",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "chives",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    },
+    {
+      "name": "noodles",
+      "unit": "g",
+      "packagingVolume": 100,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Rice Bowl",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Egg Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "egg",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "dishName": "Egg Plate",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "egg",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "dishName": "Egg Chive Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "egg",
+          "amount": 1
+        },
+        {
+          "name": "chives",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "dishName": "Big Omelette",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "egg",
+          "amount": 5
+        },
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "dishName": "Plain Noodles",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "noodles",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}
