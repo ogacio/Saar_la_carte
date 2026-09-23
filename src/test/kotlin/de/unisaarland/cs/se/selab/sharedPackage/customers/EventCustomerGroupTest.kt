@@ -138,7 +138,6 @@ class EventCustomerGroupTest {
         val group = eventGroup(size = 6, favourites = mapOf(RestaurantType.EUROPEAN to favourite.getDishName()))
 
         val expected = group.expectedDishes(listOf(other, favourite), RestaurantType.EUROPEAN)
-
         assertEquals(mapOf(favourite to 6), expected)
     }
 
