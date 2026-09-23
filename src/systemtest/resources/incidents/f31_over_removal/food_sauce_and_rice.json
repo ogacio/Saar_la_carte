@@ -1,0 +1,24 @@
+{
+  "ingredients": [
+    {"name": "beef", "unit": "g", "packagingVolume": 10, "bestBefore": 10},
+    {"name": "sauce", "unit": "mL", "packagingVolume": 10, "bestBefore": 10},
+    {"name": "rice", "unit": "g", "packagingVolume": 10, "bestBefore": 10}
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Rice Bowl",
+      "duration": 10,
+      "cookType": ["EXEC"],
+      "ingredients": [{"name": "rice", "amount": 2}],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Saucy Beef",
+      "duration": 10,
+      "cookType": ["SAUCE"],
+      "ingredients": [{"name": "beef", "amount": 2}, {"name": "sauce", "amount": 2}]
+    }
+  ]
+}
