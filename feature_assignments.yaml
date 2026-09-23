@@ -1,0 +1,315 @@
+# Structured feature assignment file for the implementation plan and implementation report submissions.
+# Keep this file in the repository root.
+#
+# HOW TO EDIT THIS FILE
+#   1. `implementation_responsible` comes from the split the group agreed on: everyone implements
+#      the part of the design they worked on themselves.
+#   2. `testing_responsible` is assigned in blocks, not per feature. Every member tests the whole
+#      output of two other members instead of single features scattered across the system, so the
+#      tester only has to learn one coherent slice of the design at a time:
+#         Ognjen's features       -> Teodor, Stefan
+#         Teodor's features       -> Stefan, Biborka
+#         Stefan's features       -> Biborka, Constantin
+#         Biborka's features      -> Constantin, Ognjen
+#         Constantin's features   -> Ognjen, Teodor
+#   3. `note` is optional free text for workload/dependency rationale. The feature name from
+#      Table 1 of the project specification (p. 41) is kept as a comment on each entry.
+#
+# Rules the file must keep satisfying:
+#   - exactly one implementation_responsible per feature
+#   - exactly two testing_responsible per feature, never the implementer
+#   - for F01-F07, every member is implementation_responsible for 1-2 features
+group:
+  name: Group 17
+  members:
+    # Use your GitLab user names as identifiers
+    - gitlab_user: ogacio
+      name: Ognjen Stojicic
+    - gitlab_user: Teodor.Vasilev
+      name: Teodor Vasilev
+    - gitlab_user: stma00002
+      name: Stefan Marinkov
+    - gitlab_user: fancsaliborka
+      name: Biborka Timea Fancsali
+    - gitlab_user: op23no5
+      name: Constantin Hartmann
+
+assignments:
+  # One entry per feature ID from the project specification (F01-F34, Table 1, p. 41).
+
+  - feature_id: F01   # Simulation
+    implementation_responsible: ogacio
+    testing_responsible:
+      - Teodor.Vasilev
+      - stma00002
+    note: ""
+
+  - feature_id: F02   # Logging
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: F03   # Parse Ingredients & Recipes
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: F04   # Parse Restaurants
+    implementation_responsible: fancsaliborka
+    testing_responsible:
+      - op23no5
+      - ogacio
+    note: "Swapped with stma00002 during implementation; originally assigned to stma00002 in the design plan."
+
+  - feature_id: F05   # Parse Customers
+    implementation_responsible: stma00002
+    testing_responsible:
+      - fancsaliborka
+      - op23no5
+    note: ""
+
+  - feature_id: F06   # Parse Incidents
+    implementation_responsible: stma00002
+    testing_responsible:
+      - fancsaliborka
+      - op23no5
+    note: "Swapped with fancsaliborka during implementation; originally assigned to fancsaliborka in the design plan."
+
+  - feature_id: F07   # Statistics
+    implementation_responsible: op23no5
+    testing_responsible:
+      - ogacio
+      - Teodor.Vasilev
+    note: ""
+
+  - feature_id: F08   # Supplier
+    implementation_responsible: fancsaliborka
+    testing_responsible:
+      - op23no5
+      - ogacio
+    note: ""
+
+  - feature_id: F09   # Pantry - Buying Ingredients
+    implementation_responsible: fancsaliborka
+    testing_responsible:
+      - op23no5
+      - ogacio
+    note: ""
+
+  - feature_id: F10   # Cooking - Order Queue
+    implementation_responsible: fancsaliborka
+    testing_responsible:
+      - op23no5
+      - ogacio
+    note: ""
+
+  - feature_id: F11   # Cooking - Staff & Staff Management
+    implementation_responsible: fancsaliborka
+    testing_responsible:
+      - op23no5
+      - ogacio
+    note: ""
+
+  - feature_id: F12   # Cooking - Cooking
+    implementation_responsible: fancsaliborka
+    testing_responsible:
+      - op23no5
+      - ogacio
+    note: ""
+
+  - feature_id: F13   # Restaurant - Menue
+    implementation_responsible: op23no5
+    testing_responsible:
+      - ogacio
+      - Teodor.Vasilev
+    note: ""
+
+  - feature_id: F14   # FOH - Evening Table Reservation
+    implementation_responsible: ogacio
+    testing_responsible:
+      - Teodor.Vasilev
+      - stma00002
+    note: ""
+
+  - feature_id: F15   # FOH - Table Merging & Tables
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: F16   # FOH - Seating
+    implementation_responsible: ogacio
+    testing_responsible:
+      - Teodor.Vasilev
+      - stma00002
+    note: ""
+
+  - feature_id: F17   # FOH - Staff Management
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: F18   # FOH - Ordering
+    implementation_responsible: ogacio
+    testing_responsible:
+      - Teodor.Vasilev
+      - stma00002
+    note: ""
+
+  - feature_id: F19   # FOH - Serving
+    implementation_responsible: ogacio
+    testing_responsible:
+      - Teodor.Vasilev
+      - stma00002
+    note: ""
+
+  - feature_id: F20   # FOH - Delivery
+    implementation_responsible: ogacio
+    testing_responsible:
+      - Teodor.Vasilev
+      - stma00002
+    note: ""
+
+  - feature_id: F21   # FOH - Escorting
+    implementation_responsible: ogacio
+    testing_responsible:
+      - Teodor.Vasilev
+      - stma00002
+    note: ""
+
+  - feature_id: F22   # Customer - Regulars
+    implementation_responsible: stma00002
+    testing_responsible:
+      - fancsaliborka
+      - op23no5
+    note: ""
+
+  - feature_id: F23   # Customer - Casual
+    implementation_responsible: stma00002
+    testing_responsible:
+      - fancsaliborka
+      - op23no5
+    note: ""
+
+  - feature_id: F24   # Customer - Casual Delivery
+    implementation_responsible: op23no5
+    testing_responsible:
+      - ogacio
+      - Teodor.Vasilev
+    note: ""
+
+  - feature_id: F25   # Customer - Restaurant Decision
+    implementation_responsible: stma00002
+    testing_responsible:
+      - fancsaliborka
+      - op23no5
+    note: ""
+
+  - feature_id: F26   # Customer - Food Preferences
+    implementation_responsible: stma00002
+    testing_responsible:
+      - fancsaliborka
+      - op23no5
+    note: ""
+
+  - feature_id: F27   # Customer - Waiting for Food
+    implementation_responsible: stma00002
+    testing_responsible:
+      - fancsaliborka
+      - op23no5
+    note: ""
+
+  - feature_id: F28   # Browsing Service
+    implementation_responsible: op23no5
+    testing_responsible:
+      - ogacio
+      - Teodor.Vasilev
+    note: ""
+
+  - feature_id: F29   # Delivery Service
+    implementation_responsible: op23no5
+    testing_responsible:
+      - ogacio
+      - Teodor.Vasilev
+    note: ""
+
+  - feature_id: F30   # End of Evening
+    implementation_responsible: op23no5
+    testing_responsible:
+      - ogacio
+      - Teodor.Vasilev
+    note: ""
+
+  - feature_id: F31   # Incident - Staff Change
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: F32   # Incident - Recipe Change
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: F33   # Incident - Packaging Change
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: F34   # Incident - Ingredient Unavailability
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+  - feature_id: P01 #Pantry - Best before, reservation
+    implementation_responsible: fancsaliborka
+    testing_responsible:
+      - op23no5
+      - ogacio
+    note: ""
+
+
+  - feature_id: P02  #FOH - Event Seating
+    implementation_responsible: ogacio
+    testing_responsible:
+        - fancsaliborka
+        - op23no5
+    note: ""
+
+
+  - feature_id: P03 #FOH - Event Other Actions
+    implementation_responsible: op23no5
+    testing_responsible:
+      - ogacio
+      - Teodor.Vasilev
+    note: ""
+
+
+  - feature_id: P04 # Customer - Events
+    implementation_responsible: Teodor.Vasilev
+    testing_responsible:
+      - stma00002
+      - fancsaliborka
+    note: ""
+
+
+  - feature_id: P05 #Customer - Rating
+    implementation_responsible: stma00002
+    testing_responsible:
+      - Teodor.Vasilev
+      - ogacio
+    note: ""
