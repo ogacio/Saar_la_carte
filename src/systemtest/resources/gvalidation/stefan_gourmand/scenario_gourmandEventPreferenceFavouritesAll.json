@@ -1,0 +1,29 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "EVENT",
+      "size": 4,
+      "tableType": "COMMON",
+      "visitingTick": 3,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Egg Rice",
+            "Chicken Rice",
+            "Plain Rice"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "eventEvening": 4,
+      "favoriteDishes": {
+        "ASIAN": "Egg Rice"
+      }
+    }
+  ],
+  "incidents": []
+}
