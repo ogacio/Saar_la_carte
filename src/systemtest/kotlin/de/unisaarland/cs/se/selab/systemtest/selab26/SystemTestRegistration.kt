@@ -1,6 +1,14 @@
 package de.unisaarland.cs.se.selab.systemtest.selab26
 
 import de.unisaarland.cs.se.selab.systemtest.selab26.basictests.ExampleSystemTest
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F20DeliveryOfTwoMealsFromOrderToRating
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F22RegularVisitsEverySecondEvening
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F25OnlyRestaurantsOfTheWantedTypeAreConsidered
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F26CustomerWithMoreExclusionsOrdersFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F28DecidedGroupTakesTheLastSeats
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F31HiredDriverMakesTheRestaurantAvailableForDelivery
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F34UnavailableIngredientIsNotProcuredForItsDuration
+import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
@@ -199,6 +207,10 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16NoFreeWaiterThenSeat
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16RetryInLastThreeTicksIsRefused
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F16TwoConsecutiveFailuresLeaves
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CurrentLoadDropsWhenTheCustomersLeave
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17CustomersWhoCannotOrderLeaveTheLoad
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EventCustomersDoNotCountTowardTheLoad
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EventIsSeatedByTheMostLoadedWaiterFirst
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17EverybodyBusyTheLeastLoadedWaiterSeats
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F17WaiterWithTheMostCustomersSeatsTheNextGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18FavouriteDishAndHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F18SecondCustomerFindsNoDishAndLeaves
@@ -348,6 +360,7 @@ object SystemTestRegistration {
         registerFrontOfHouseTests(testSuite)
         registerF06Tests(testSuite)
         registerIncidentTests(testSuite)
+        registerCoverageTests(testSuite)
         registerKitchenTests(testSuite)
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
@@ -394,6 +407,7 @@ object SystemTestRegistration {
         testSuite.registerTest(ExampleSystemTest())
         registerFrontOfHouseTests(testSuite)
         registerIncidentTests(testSuite)
+        registerCoverageTests(testSuite)
         testSuite.registerTest(F08SupplierDeliversWholePackages())
         testSuite.registerTest(F08ExactPackageMultiple())
         testSuite.registerTest(F08PartialStockDeficit())
@@ -528,13 +542,10 @@ object SystemTestRegistration {
         testSuite.registerTest(F15MergedTableIsSplitWhenTheCasualGroupLeaves())
         testSuite.registerTest(F17WaiterWithTheMostCustomersSeatsTheNextGroup())
         testSuite.registerTest(F17CurrentLoadDropsWhenTheCustomersLeave())
-        // Unregistered 2026-09-23: these four Stonks tests (df2df7a) have never been through a
-        // reference run (not in the report for e7337db), and a single one failing there makes the
-        // server skip the whole mutant run. Register them again once a reference run has passed them.
-        // testSuite.registerTest(F17EverybodyBusyTheLeastLoadedWaiterSeats())
-        // testSuite.registerTest(F17CustomersWhoCannotOrderLeaveTheLoad())
-        // testSuite.registerTest(F17EventCustomersDoNotCountTowardTheLoad())
-        // testSuite.registerTest(F17EventIsSeatedByTheMostLoadedWaiterFirst())
+        testSuite.registerTest(F17EverybodyBusyTheLeastLoadedWaiterSeats())
+        testSuite.registerTest(F17CustomersWhoCannotOrderLeaveTheLoad())
+        testSuite.registerTest(F17EventCustomersDoNotCountTowardTheLoad())
+        testSuite.registerTest(F17EventIsSeatedByTheMostLoadedWaiterFirst())
         testSuite.registerTest(F16NoFreeWaiterThenSeatedNextTick())
         testSuite.registerTest(F16BarGroupSentAwayRatesNegative())
         testSuite.registerTest(P05NeverLikelihoodLeavesNoRating())
@@ -570,19 +581,19 @@ object SystemTestRegistration {
      * Registers the F03 food file validation tests covering the root and ingredient fixtures.
      */
 
-    // registerCoverageTests removed 2026-09-23: its eight simulation tests (coverage/CoverageSimulationTests.kt,
-    // c1aece2) have never been through a reference run (not in the report for e7337db), and a single one
-    // failing there makes the server skip the whole mutant run. Once a reference run has passed them,
-    // restore the helper and call it from registerSystemTestsForReferenceImplementation and
-    // registerSystemTestsMutantSimulation again:
-    //     testSuite.registerTest(F34UnavailableIngredientIsNotProcuredForItsDuration())
-    //     testSuite.registerTest(F31HiredDriverMakesTheRestaurantAvailableForDelivery())
-    //     testSuite.registerTest(F20DeliveryOfTwoMealsFromOrderToRating())
-    //     testSuite.registerTest(F22RegularVisitsEverySecondEvening())
-    //     testSuite.registerTest(F28DecidedGroupTakesTheLastSeats())
-    //     testSuite.registerTest(F25OnlyRestaurantsOfTheWantedTypeAreConsidered())
-    //     testSuite.registerTest(F26CustomerWithMoreExclusionsOrdersFirst())
-    //     testSuite.registerTest(P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening())
+    /**
+     * Registers the simulation tests for the features with the lowest system test coverage.
+     */
+    private fun registerCoverageTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F34UnavailableIngredientIsNotProcuredForItsDuration())
+        testSuite.registerTest(F31HiredDriverMakesTheRestaurantAvailableForDelivery())
+        testSuite.registerTest(F20DeliveryOfTwoMealsFromOrderToRating())
+        testSuite.registerTest(F22RegularVisitsEverySecondEvening())
+        testSuite.registerTest(F28DecidedGroupTakesTheLastSeats())
+        testSuite.registerTest(F25OnlyRestaurantsOfTheWantedTypeAreConsidered())
+        testSuite.registerTest(F26CustomerWithMoreExclusionsOrdersFirst())
+        testSuite.registerTest(P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening())
+    }
 
     /** F31-F33: the incidents that change staff, recipes and packaging while the simulation runs. */
     private fun registerIncidentTests(testSuite: SELab26TestSuite) {
