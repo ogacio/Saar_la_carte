@@ -136,6 +136,82 @@ class DeliveryDeskTest {
         DeliveryService.rmDriver(DRIVER_RESTAURANT)
     }
 
+    @Test
+    fun driverForReturnsTheSameDriverAlreadyLoadingThatOrder() {
+        val desk = DeliveryDesk(mutableListOf(), DRIVER_RESTAURANT)
+        registerWithDeliveryService(desk)
+        DeliveryService.addDriver(DRIVER_RESTAURANT)
+        val order = Order(casual(4, 2, deliveryDistance = 7), DRIVER_RESTAURANT, 4, 1, true, mutableListOf())
+        desk.enqueue(order)
+        desk.readyOrder(order)
+        captureLog()
+        val first = desk.driverFor(order)
+
+        val second = desk.driverFor(order)
+
+        assertEquals(first, second)
+        DeliveryService.rmDriver(DRIVER_RESTAURANT)
+    }
+
+    @Test
+    fun dropRemovesAnOrderStillQueuedAsNew() {
+        val desk = desk()
+        val order = mock<Order>()
+        desk.enqueue(order)
+
+        desk.drop(order)
+
+        assertTrue(desk.getNewOrders().isEmpty())
+    }
+
+    @Test
+    fun dropRemovesAnOrderThatIsAlreadyReady() {
+        val desk = desk()
+        val order = mock<Order>()
+        desk.enqueue(order)
+        desk.readyOrder(order)
+
+        desk.drop(order)
+
+        assertTrue(desk.getReady().isEmpty())
+    }
+
+    @Test
+    fun dropReleasesAPartiallyLoadedDriverWithoutTouchingItsId() {
+        val desk = DeliveryDesk(mutableListOf(), DRIVER_RESTAURANT)
+        registerWithDeliveryService(desk)
+        DeliveryService.addDriver(DRIVER_RESTAURANT)
+        val order = Order(casual(4, 2, deliveryDistance = 7), DRIVER_RESTAURANT, 4, 1, true, mutableListOf())
+        desk.enqueue(order)
+        desk.readyOrder(order)
+        captureLog()
+        val driver = checkNotNull(desk.driverFor(order))
+
+        desk.drop(order)
+
+        assertTrue(driver.isWaiting())
+        assertEquals(1, driver.getId())
+        DeliveryService.rmDriver(DRIVER_RESTAURANT)
+    }
+
+    @Test
+    fun dropDoesNotTouchADriverThatHasAlreadyDeparted() {
+        val desk = DeliveryDesk(mutableListOf(), DRIVER_RESTAURANT)
+        registerWithDeliveryService(desk)
+        DeliveryService.addDriver(DRIVER_RESTAURANT)
+        val order = Order(casual(4, 2, deliveryDistance = 7), DRIVER_RESTAURANT, 4, 1, true, mutableListOf())
+        desk.enqueue(order)
+        desk.readyOrder(order)
+        captureLog()
+        desk.sendForOrder(order)
+        val driver = desk.getDrivers().single()
+
+        desk.drop(order)
+
+        assertTrue(driver.isDelivering())
+        DeliveryService.rmDriver(DRIVER_RESTAURANT)
+    }
+
     // BUG (DeliveryDesk.sendForOrder / DeliveryService.chooseDriverForOrder, Constantin): the drivers of the
     // restaurants file live only in the desk, while the driver is chosen from DeliveryService's own list,
     // which only DeliveryService.addDriver fills. A desk built by the RestaurantParser therefore never sends

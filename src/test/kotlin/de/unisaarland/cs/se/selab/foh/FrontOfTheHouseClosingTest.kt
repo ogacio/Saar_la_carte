@@ -6,6 +6,8 @@ import de.unisaarland.cs.se.selab.foh.services.OrderingService
 import de.unisaarland.cs.se.selab.foh.services.RatingService
 import de.unisaarland.cs.se.selab.foh.services.SeatingService
 import de.unisaarland.cs.se.selab.foh.services.ServingService
+import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.TableType
 import de.unisaarland.cs.se.selab.simulation.GlobalClock
@@ -13,8 +15,10 @@ import de.unisaarland.cs.se.selab.simulation.ReservationBook
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.RESTAURANT_ID
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.captureLog
+import de.unisaarland.cs.se.selab.testsupport.Fixtures.casual
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.event
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.logLines
+import de.unisaarland.cs.se.selab.testsupport.Fixtures.recipe
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.regular
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.subUnits
 import org.mockito.kotlin.mock
@@ -100,5 +104,96 @@ class FrontOfTheHouseClosingTest {
         foh.closeEvening()
 
         assertEquals(listOf(group), reservations.expectedFor(later))
+    }
+
+    /**
+     * Regression for the double `resetForEvening()` call (fixed in `d25ba0a`): a driver still
+     * RETURNING when the evening closes must keep its RETURNING/id state through exactly one
+     * `closeEvening()` and, once home, drop its stale id via a single `switch()` toggle. Two
+     * resets (the old bug) would flip `switch` back off and the id would survive incorrectly.
+     */
+    @Test
+    fun aReturningDriverDropsItsIdAfterExactlyOneReset() {
+        val realDesk = DeliveryDesk(mutableListOf(), RESTAURANT_ID)
+        val driver = DeliveryDriver(RESTAURANT_ID).also { it.setId(1) }
+        realDesk.addDriver(driver)
+        driver.receiveOrder(orderFor(9))
+        deliverAndStartReturning(driver)
+
+        realDesk.resetForEvening()
+        arriveHome(driver)
+
+        assertTrue(driver.isWaiting())
+        assertNull(driver.getId(), "one reset must let the returning driver shed its stale id on arrival")
+    }
+
+    @Test
+    fun twoResetsOnAReturningDriverWronglyKeepItsStaleId() {
+        val realDesk = DeliveryDesk(mutableListOf(), RESTAURANT_ID)
+        val driver = DeliveryDriver(RESTAURANT_ID).also { it.setId(1) }
+        realDesk.addDriver(driver)
+        driver.receiveOrder(orderFor(9))
+        deliverAndStartReturning(driver)
+
+        realDesk.resetForEvening()
+        realDesk.resetForEvening()
+        arriveHome(driver)
+
+        assertEquals(
+            1,
+            driver.getId(),
+            "documents the exact bug this pair guards against: a second resetForEvening() call " +
+                "toggles switch back off, so the driver wrongly keeps id 1 into the next evening",
+        )
+    }
+
+    /**
+     * The reproduction of the corruption at full simulation scale: two drivers, one returning
+     * across the evening boundary. Before the fix this collapses to one driver id and silently
+     * drops whichever order that stale driver was holding.
+     */
+    @Test
+    fun twoDriversStayDistinctAcrossOneEveningBoundary() {
+        val realDesk = DeliveryDesk(mutableListOf(), RESTAURANT_ID)
+        val returning = DeliveryDriver(RESTAURANT_ID).also { it.setId(1) }
+        val fresh = DeliveryDriver(RESTAURANT_ID)
+        realDesk.addDriver(returning)
+        realDesk.addDriver(fresh)
+        returning.receiveOrder(orderFor(9))
+        deliverAndStartReturning(returning)
+
+        realDesk.resetForEvening()
+        arriveHome(returning)
+        fresh.setId(realDesk.grantDriverId())
+        fresh.receiveOrder(orderFor(10))
+        captureLog()
+        fresh.prepare()
+
+        assertEquals(1, fresh.getId(), "the fresh driver must be granted a distinct id, not reuse the stale one")
+        assertNull(returning.getId())
+    }
+
+    private fun orderFor(groupId: Int): Order {
+        val group = casual(groupId, 1, deliveryDistance = 5)
+        val meals = group.members().map { Meal(null, it, recipe(1)) }.toMutableList()
+        val order = Order(group, RESTAURANT_ID, groupId, GlobalClock.currentTick, true, meals)
+        meals.forEach { it.orderId = order.getId() }
+        return order
+    }
+
+    private fun deliverAndStartReturning(driver: DeliveryDriver) {
+        captureLog()
+        driver.prepare()
+        GlobalClock.advanceTick()
+        driver.prepare()
+        driver.drive()
+        driver.arrive()
+        driver.deliverAccepted()
+    }
+
+    private fun arriveHome(driver: DeliveryDriver) {
+        GlobalClock.advanceTick()
+        driver.prepare()
+        driver.returnHome()
     }
 }

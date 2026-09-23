@@ -1,6 +1,7 @@
 package de.unisaarland.cs.se.selab.systemtest.selab26
 
 import de.unisaarland.cs.se.selab.systemtest.selab26.basictests.ExampleSystemTest
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20DriverIdsSurviveAnEveningBoundary
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
@@ -226,6 +227,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F30GroupStillEatingAtCl
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P02FohFlowThroughEveryStep
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventOrdersFavouriteDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWaiters
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P04EventGroupNoMatchingRestaurantType
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05BacklashFailedEventReservationRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05BacklashFailedReservationRatesNegativeInTickOne
@@ -277,12 +279,15 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondRest
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondRestaurantWithoutCooks
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondTypeWithUnlistedBasicDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondTypeWithoutBasicDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F02LogLevelDebugIncludesDebugLines
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F02LogLevelImportantSuppressesDebugLines
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31RemovingMoreCooksThanExistStopsAtZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32OnlyThatIngredientChanges
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentChangesTheProcuredAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncidentChangesTheProcuredPackages
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F34IngredientUnavailabilityBlocksProcurement
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08ExactPackageMultiple
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08IngredientWithoutEligibleCookIsProcured
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08PartialStockDeficit
@@ -556,6 +561,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F30GroupStillEatingAtClosingRatesNegative())
         testSuite.registerTest(F07ServedAndDeliveredCountedSeparately())
         testSuite.registerTest(P03EventSeatedByTwoWaiters())
+        testSuite.registerTest(P04EventGroupNoMatchingRestaurantType())
         testSuite.registerTest(P02FohFlowThroughEveryStep())
     }
 
@@ -569,6 +575,9 @@ object SystemTestRegistration {
         testSuite.registerTest(F32RecipeIncidentChangesTheProcuredAmount())
         testSuite.registerTest(F33PackagingIncidentChangesTheProcuredPackages())
         testSuite.registerTest(F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe())
+        testSuite.registerTest(F34IngredientUnavailabilityBlocksProcurement())
+        testSuite.registerTest(F02LogLevelDebugIncludesDebugLines())
+        testSuite.registerTest(F02LogLevelImportantSuppressesDebugLines())
     }
 
     /** F04: every restaurants file rule, from the schema bounds to the cross-file recipe ids. */
@@ -757,6 +766,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F28AClosedRestaurantIsNotOffered())
         testSuite.registerTest(F28SeatsAreReducedAsEachGroupDecides())
         testSuite.registerTest(F29TheDriverTakesASecondOrderAfterReturning())
+        testSuite.registerTest(F20DriverIdsSurviveAnEveningBoundary())
         // F30NoNewCustomersInTheLastThreeTicks unregistered 2026-09-21: fails locally only because
         // libs/selab.jar is a copy of our own build, not the real reference (see the evidence
         // warning in misc/implementation/tests/giant/BUGS-FOUND.md). Passes against the actual

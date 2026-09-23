@@ -303,4 +303,43 @@ class DeliveryDriverTest {
         assertNull(driver.getId())
         assertTrue(driver.isWaiting())
     }
+
+    @Test
+    fun pendingMealsExcludesMealsAlreadyLoadedInAnEarlierTick() {
+        val group = casual(3, 2, deliveryDistance = 7)
+        val order = orderFor(group)
+        driver.assignOrder(order)
+        val firstMeal = order.getMeals().first()
+        captureLog()
+        driver.loadMeals(listOf(firstMeal))
+
+        assertEquals(order.getMeals() - firstMeal, driver.pendingMeals())
+    }
+
+    @Test
+    fun pendingMealsIsEmptyForADriverWithoutAnAssignedOrder() {
+        assertTrue(driver.pendingMeals().isEmpty())
+    }
+
+    @Test
+    fun releaseLoadDropsAPartiallyLoadedOrderWithoutTouchingTheId() {
+        val order = orderFor(casual(3, 2, deliveryDistance = 7))
+        driver.assignOrder(order)
+        captureLog()
+        driver.loadMeals(listOf(order.getMeals().first()))
+
+        driver.releaseLoad()
+
+        assertTrue(driver.isWaiting())
+        assertEquals(1, driver.getId())
+        assertTrue(driver.pendingMeals().isEmpty())
+    }
+
+    @Test
+    fun releaseLoadIsANoOpForADriverThatIsNotLoading() {
+        driver.releaseLoad()
+
+        assertTrue(driver.isWaiting())
+        assertEquals(1, driver.getId())
+    }
 }

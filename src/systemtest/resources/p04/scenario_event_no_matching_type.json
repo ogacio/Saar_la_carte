@@ -1,0 +1,19 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "EVENT",
+      "size": 4,
+      "visitingTick": 5,
+      "foodPreferences": [],
+      "restaurantTypes": [
+        "AFRICAN"
+      ],
+      "eventEvening": 4,
+      "favoriteDishes": {
+        "AFRICAN": "Rice Bowl"
+      }
+    }
+  ],
+  "incidents": []
+}

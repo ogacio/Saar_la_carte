@@ -25,7 +25,7 @@ import org.mockito.kotlin.whenever
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-// import kotlin.test.assertTrue — only used by the two commented-out tests below, see their notes
+import kotlin.test.assertTrue
 
 /** F31-F34: the four incidents - staff, recipe, packaging and ingredient unavailability changes. */
 class IncidentsTest {
@@ -184,19 +184,17 @@ class IncidentsTest {
         assertEquals(40, ing.packagingVolume)
     }
 
-    // BUG (Supplier.resupply, Constantin): the unavailability-window check collapses to
-    // `evening >= to`, so it never blocks the window's early evenings. Uncomment once fixed.
-    // @Test
-    // fun ingredientUnavailabilityBlocksPurchasingDuringTheWindowIncludingTheOccurringEvening() {
-    //     val ing = ingredient("rice")
-    //     val pantry = Pantry(restaurantId = 1)
-    //     val evening = GlobalClock.getEvening()
-    //
-    //     IngredientUnavailability(1, evening, ing, 3).apply(emptySim())
-    //     Supplier.resupply(pantry, mapOf(ing to 50))
-    //
-    //     assertEquals(0, pantry.getTotalIngredients(ing))
-    // }
+    @Test
+    fun ingredientUnavailabilityBlocksPurchasingDuringTheWindowIncludingTheOccurringEvening() {
+        val ing = ingredient("rice")
+        val pantry = Pantry(restaurantId = 1)
+        val evening = GlobalClock.getEvening()
+
+        IngredientUnavailability(1, evening, ing, 3).apply(emptySim())
+        Supplier.resupply(pantry, mapOf(ing to 50))
+
+        assertEquals(0, pantry.getTotalIngredients(ing))
+    }
 
     @Test
     fun ingredientUnavailabilityBlocksThroughTheLastEveningOfItsDuration() {
@@ -212,22 +210,20 @@ class IncidentsTest {
         assertEquals(0, pantry.getTotalIngredients(ing))
     }
 
-    // BUG (Supplier.resupply, Constantin, same root cause as above):
-    // once triggered the window never lifts, so purchasing never resumes. Uncomment once fixed.
-    // @Test
-    // fun ingredientUnavailabilityResumesPurchasingTheEveningAfterTheWindow() {
-    //     val ing = ingredient("rice")
-    //     val pantry = Pantry(restaurantId = 1)
-    //     val evening = GlobalClock.getEvening()
-    //
-    //     IngredientUnavailability(1, evening, ing, 3).apply(emptySim())
-    //     GlobalClock.advanceEvening()
-    //     GlobalClock.advanceEvening()
-    //     GlobalClock.advanceEvening()
-    //     Supplier.resupply(pantry, mapOf(ing to 50))
-    //
-    //     assertTrue(pantry.getTotalIngredients(ing) > 0)
-    // }
+    @Test
+    fun ingredientUnavailabilityResumesPurchasingTheEveningAfterTheWindow() {
+        val ing = ingredient("rice")
+        val pantry = Pantry(restaurantId = 1)
+        val evening = GlobalClock.getEvening()
+
+        IngredientUnavailability(1, evening, ing, 3).apply(emptySim())
+        GlobalClock.advanceEvening()
+        GlobalClock.advanceEvening()
+        GlobalClock.advanceEvening()
+        Supplier.resupply(pantry, mapOf(ing to 50))
+
+        assertTrue(pantry.getTotalIngredients(ing) > 0)
+    }
 
     @Test
     fun ingredientUnavailabilityLeavesExistingStockUsable() {
