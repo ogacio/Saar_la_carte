@@ -119,7 +119,7 @@ class Restaurant(
      * so delivery hand-off (step 4) and rating (step 7, which a delivery resolving this tick needs) both
      * run regardless of [open]; dine-in eating/escorting do not, since no dine-in visit survives past closing.
      */
-    fun runRestaurantTick(arrivals: List<CustomerGroup>, tick: Int) {
+    fun runRestaurantTick(arrivals: List<CustomerGroup>, tick: Int, deliveries: List<CustomerGroup> = emptyList()) {
         Logger.restaurantStart(id)
         // "In the ticks before a restaurant's openingTickStart, the simulation will not log any
         // action or action status messages." Afterwards the deliveries, the eating and the ratings
@@ -128,7 +128,11 @@ class Restaurant(
             val open = isOpen()
             if (open) {
                 foh.beginTick()
-                foh.callSeatingAndOrdering(arrivals, acceptsCustomers = tick <= closingTick - LAST_TICKS_CLOSED)
+                foh.callSeatingAndOrdering(
+                    arrivals,
+                    acceptsCustomers = tick <= closingTick - LAST_TICKS_CLOSED,
+                    deliveries = deliveries,
+                ) { group -> DeliveryService.placeOrder(group, this)?.getMeals()?.size ?: 0 }
                 val cookedThisTick = kitchen.cook()
                 if (cookedThisTick > 0) Statistics.recordCooked(id, cookedThisTick)
                 foh.callServingService()

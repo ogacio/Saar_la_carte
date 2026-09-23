@@ -1,0 +1,27 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 4,
+      "visitingTick": 3,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "favoriteDishes": [
+            "Egg Rice",
+            "Chicken Rice"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": []
+}

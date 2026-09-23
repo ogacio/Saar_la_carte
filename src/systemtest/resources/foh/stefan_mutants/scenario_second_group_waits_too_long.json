@@ -1,0 +1,47 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 2,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Slow Stew"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    },
+    {
+      "id": 2,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 3,
+      "foodPreferences": [
+        {
+          "size": 2,
+          "favoriteDishes": [
+            "Slow Soup"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": []
+}

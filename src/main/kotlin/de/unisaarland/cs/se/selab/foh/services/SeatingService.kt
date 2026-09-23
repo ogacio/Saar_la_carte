@@ -100,6 +100,8 @@ class SeatingService(
             return emptyList()
         }
         plan.forEach { (waiter, customers) -> waiter.consume(ActionType.SEATING, customers) }
+        // The waiter who seated them also takes their orders, so the ordering step needs the blocks.
+        visit.eventSeatingPlan = plan
         val waiters = plan.keys.toList()
 
         if (table.isMerged) {

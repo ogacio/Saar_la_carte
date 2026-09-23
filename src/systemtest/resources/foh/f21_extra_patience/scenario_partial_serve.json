@@ -1,0 +1,7 @@
+{"customerGroups":[
+{"id":1,"type":"CASUAL","size":2,"visitingTick":3,"foodPreferences":[{"size":2,"favoriteDishes":["Stew One"]}],
+ "restaurantTypes":["ASIAN"],"visitingEvenings":[1],"ratingLikelihood":"ALWAYS"},
+{"id":2,"type":"CASUAL","size":2,"visitingTick":3,
+ "foodPreferences":[{"size":1,"favoriteDishes":["Quick Bowl"]},{"size":1,"favoriteDishes":["Stew Two"]}],
+ "restaurantTypes":["ASIAN"],"visitingEvenings":[1],"ratingLikelihood":"ALWAYS"}],
+"incidents":[]}

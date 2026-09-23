@@ -91,22 +91,42 @@ class FrontOfTheHouse(
     /**
      * Step 1: arrivals, seating and ordering. The spec runs these per group: arrival,
      * then seating, then ordering, before the next group. Groups that found no waiter
-     * last tick try again here without arriving again. The two status lines come last.
+     * last tick try again here without arriving again. [deliveries] only order, with
+     * [placeDelivery], in the same group order (they are CASUAL groups); it returns how many
+     * customers ordered. The two status lines come last.
      */
-    fun callSeatingAndOrdering(arrivals: List<CustomerGroup>, acceptsCustomers: Boolean = true) {
+    fun callSeatingAndOrdering(
+        arrivals: List<CustomerGroup>,
+        acceptsCustomers: Boolean = true,
+        deliveries: List<CustomerGroup> = emptyList(),
+        placeDelivery: (CustomerGroup) -> Int = { 0 },
+    ) {
         val tick = GlobalClock.currentTick
         val arrived = arrivals.filter { it.id() !in cancelledTonight }.map { Visit(it) }
         visits += arrived
         visits.sortWith(compareBy<Visit> { it.group.groupType().ordinal }.thenBy { it.group.id() })
+        val groupOrder = compareBy<CustomerGroup>({ it.groupType().ordinal }, { it.id() })
+        val waitingDeliveries = ArrayDeque(deliveries.sortedWith(groupOrder))
 
         for (visit in visits) {
+            // "This step is performed for both restaurant visits and deliveries": a delivery orders at
+            // its place in the group order, so its order id and log line sit between the in-house groups.
+            while (waitingDeliveries.isNotEmpty() && groupOrder.compare(waitingDeliveries.first(), visit.group) < 0) {
+                services.ordering.countDeliveryCustomers(placeDelivery(waitingDeliveries.removeFirst()))
+            }
             if (visit.state !is AwaitingSeatState) continue
             if (visit in arrived) Logger.Customer.arrival(sbu.restaurantId, visit.group.id())
-            // The last-three-ticks rule applies only to new arrivals. A group that already arrived
-            // last tick but found no free waiter still gets its one retry in this tick.
-            if (!acceptsCustomers && visit in arrived) continue
+            // Forum 345 (staff): the last-three-ticks rule also refuses the retry of a group that
+            // already arrived in a previous tick. It leaves now and rates in this tick.
+            if (!acceptsCustomers) {
+                if (visit !in arrived) visit.sentAway(tick)
+                continue
+            }
             services.seating.seat(visit, sbu, tick)
             services.ordering.takeOrder(visit, sbu, tick)
+        }
+        while (waitingDeliveries.isNotEmpty()) {
+            services.ordering.countDeliveryCustomers(placeDelivery(waitingDeliveries.removeFirst()))
         }
         services.seating.logStatus(sbu)
         services.ordering.logStatus(sbu)

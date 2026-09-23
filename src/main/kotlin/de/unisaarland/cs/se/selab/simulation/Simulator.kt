@@ -51,12 +51,12 @@ class Simulator(
 
         browsingService.refresh(restaurants.map { it.snapshot() }.toMutableList())
         bookEventsThreeEveningsAhead(tick)
-        val walkIns = decideWalkIns(tick)
+        val (walkIns, deliveries) = decideWalkIns(tick)
 
         for (restaurant in restaurants.sortedBy { it.getId() }) {
             val arrivals = customers.arriving(restaurant.getId(), GlobalClock.getEvening(), tick) +
                 walkIns[restaurant.getId()].orEmpty()
-            restaurant.runRestaurantTick(arrivals, tick)
+            restaurant.runRestaurantTick(arrivals, tick, deliveries[restaurant.getId()].orEmpty())
         }
     }
 
@@ -79,11 +79,13 @@ class Simulator(
     }
 
     /**
-     * "Restaurant Decision", CASUAL part: deliveries place their order, the other groups walk in.
-     * Returns the walk-ins per restaurant id.
+     * "Restaurant Decision", CASUAL part. Returns the walk-ins and the delivery groups per restaurant
+     * id; both only order later, in step 1 of their restaurant ("This step is performed for both
+     * restaurant visits and deliveries").
      */
-    private fun decideWalkIns(tick: Int): Map<Int, List<CustomerGroup>> {
+    private fun decideWalkIns(tick: Int): Pair<Map<Int, List<CustomerGroup>>, Map<Int, List<CustomerGroup>>> {
         val walkIns = mutableMapOf<Int, MutableList<CustomerGroup>>()
+        val deliveries = mutableMapOf<Int, MutableList<CustomerGroup>>()
         val casualGroups = customers.deciding(GlobalClock.getEvening(), tick).filter { it !is EventCustomerGroup }
         for (group in casualGroups) {
             val restaurant = browsingService.choose(group)?.let { restaurantsById(it) }
@@ -93,12 +95,12 @@ class Simulator(
             }
             Logger.Customer.restaurantDecision(group.id(), restaurant.getId())
             if (group.isDelivery()) {
-                DeliveryService.placeOrder(group, restaurant)
+                deliveries.getOrPut(restaurant.getId()) { mutableListOf() } += group
             } else {
                 walkIns.getOrPut(restaurant.getId()) { mutableListOf() } += group
             }
         }
-        return walkIns
+        return walkIns to deliveries
     }
 
     /** Logs and applies the incidents of this evening, in ascending id. */

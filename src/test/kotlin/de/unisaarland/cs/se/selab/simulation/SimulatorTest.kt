@@ -133,8 +133,8 @@ class SimulatorTest {
         val first = mockRestaurant(5)
         val second = mockRestaurant(2)
         val calls = mutableListOf<Int>()
-        whenever(first.runRestaurantTick(any(), any())).then { calls.add(5) }
-        whenever(second.runRestaurantTick(any(), any())).then { calls.add(2) }
+        whenever(first.runRestaurantTick(any(), any(), any())).then { calls.add(5) }
+        whenever(second.runRestaurantTick(any(), any(), any())).then { calls.add(2) }
 
         simulator(startTick + 1, mutableListOf(first, second)).run()
 
@@ -259,7 +259,7 @@ class SimulatorTest {
             groups = mutableListOf(walkIn),
         ).run()
 
-        verify(restaurant).runRestaurantTick(arrivals.capture(), any())
+        verify(restaurant).runRestaurantTick(arrivals.capture(), any(), any())
         assertTrue(arrivals.firstValue.contains(walkIn))
     }
 
@@ -278,8 +278,11 @@ class SimulatorTest {
             groups = mutableListOf(deliveryGroup),
         ).run()
 
-        verify(restaurant, times(5)).runRestaurantTick(arrivals.capture(), any())
+        val deliveries = argumentCaptor<List<CustomerGroup>>()
+        verify(restaurant, times(5)).runRestaurantTick(arrivals.capture(), any(), deliveries.capture())
         assertTrue(arrivals.allValues.none { it.contains(deliveryGroup) })
+        // The delivery orders inside its restaurant's tick (step 1), not at the decision.
+        assertTrue(deliveries.allValues.any { it.contains(deliveryGroup) })
         assertTrue(logLines(log).any { it.contains("Restaurant Decision") })
     }
 

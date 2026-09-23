@@ -76,7 +76,7 @@ class SimulatorDecisionTest {
 
         assertTrue(logLines(log).contains("[DEBUG] Restaurant No Decision: Group 1 could not decide for a restaurant."))
         assertTrue(logLines(log).none { it.contains("Group 1 decided") })
-        verify(restaurant).runRestaurantTick(arrivals.capture(), any())
+        verify(restaurant).runRestaurantTick(arrivals.capture(), any(), any())
         assertTrue(arrivals.firstValue.isEmpty())
     }
 
