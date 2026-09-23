@@ -72,7 +72,7 @@ class FrontOfTheHouseClosingTest {
         assertNull(reservations.claim(1))
         assertEquals(mapOf(TableType.COMMON to 4), tables.freeSeats())
         assertTrue(waiters.all { it.id == null && it.currentLoad == 0 })
-        verify(desk, times(2)).resetForEvening()
+        verify(desk, times(1)).resetForEvening()
     }
 
     @Test

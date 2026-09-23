@@ -61,7 +61,6 @@ class FrontOfTheHouse(
         cancelledTonight.clear()
         tables.splitAllMerged()
         waitstaff.resetEvening()
-        deliveryDesk.resetForEvening()
         reservations.clearTonight()
         sendCustomersAway(reservations.openEvening(evening, regulars))
     }
