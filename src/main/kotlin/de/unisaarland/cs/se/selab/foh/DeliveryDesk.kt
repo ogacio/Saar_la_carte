@@ -59,9 +59,12 @@ class DeliveryDesk(private val drivers: MutableList<DeliveryDriver>, private val
     }
 
     /**
-     * Resets drivers and desk after an evening. "Drivers immediately go home and return the next
-     * evening": neither an aborted outbound delivery nor a return trip carries into the new
-     * evening, and the ids start at 1 again because they are granted on receiving meals.
+     * Resets drivers and desk after an evening. An outbound delivery still under way is aborted;
+     * a driver already on the way back keeps returning into the new evening (forum thread 286)
+     * but sheds its stale id once home, since ids start at 1 again and are granted on receiving
+     * meals. Called exactly once per evening boundary, from [FrontOfTheHouse.closeEvening] only —
+     * calling it again from the next evening's preparation would toggle a returning driver's
+     * pending id-drop back off before it takes effect.
      */
     fun resetForEvening() {
         for (i in drivers) {
