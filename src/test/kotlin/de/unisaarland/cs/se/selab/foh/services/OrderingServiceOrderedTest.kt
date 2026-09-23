@@ -152,6 +152,10 @@ class OrderingServiceOrderedTest {
         val second = Waiter()
         val visit = Visit(group)
         visit.seated(Table(4, 12, TableType.COMMON), emptyList(), 1)
+        // The waiters who seated the group take its orders, each the block it seated (forum 266).
+        first.id = 1
+        second.id = 2
+        visit.eventSeatingPlan = linkedMapOf(first to 10, second to 2)
         val service = OrderingService(WaiterAssignmentService(mutableListOf(first, second)), RestaurantType.EUROPEAN)
         val log = captureLog()
 

@@ -34,6 +34,12 @@ class Visit(val group: CustomerGroup) {
     /** REGULAR and CASUAL: the permanent waiter. EVENT: empty, the manager picks waiters per action. */
     var waiters: List<Waiter> = emptyList()
 
+    /**
+     * EVENT only: how many customers each waiter seated, in seating order. The ordering step hands
+     * every customer's order to the waiter who seated them (forum thread 266).
+     */
+    var eventSeatingPlan: Map<Waiter, Int> = emptyMap()
+
     /** Whether the group ever sat down. */
     var wasSeated: Boolean = false
 

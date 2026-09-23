@@ -37,13 +37,13 @@ class OrderingService(
         if (visit.state !is SeatedState) return
         sbu.menu.refresh()
         val atTable = visit.customersInside().size
-        val choices = chooseDishes(visit, sbu)
+        val (choices, placed) = chooseDishes(visit, sbu)
         if (choices.isEmpty()) {
             Logger.Foh.noOrdering(sbu.restaurantId, visit.group.id(), atTable)
             visit.orderingFailed(tick)
             return
         }
-        val waiters = bookWaiters(visit, choices.size)
+        val waiters = bookWaiters(visit, choices.size, placed)
         val order = buildOrder(visit, sbu, tick, choices)
         Logger.Foh.ordering(
             sbu.restaurantId,
@@ -62,6 +62,14 @@ class OrderingService(
         customers += choices.size
     }
 
+    /**
+     * Adds the [ordered] customers of a delivery to the status line: "the number of customers ordering a
+     * meal, either in the restaurant or for a delivery". Deliveries have no waiter.
+     */
+    fun countDeliveryCustomers(ordered: Int) {
+        customers += ordered
+    }
+
     /** Writes the ordering summary of this tick and starts counting afresh. */
     fun logStatus(sbu: SubUnits) {
         Logger.Foh.orderingStatus(sbu.restaurantId, customers, busyWaiters.size)
@@ -74,8 +82,11 @@ class OrderingService(
      * then fewest favourite dishes; ties keep the order of the group's food preferences
      * (the sort is stable). Returns who ordered what; customers who found nothing have left.
      */
-    private fun chooseDishes(visit: Visit, sbu: SubUnits): List<Pair<Customer, Recipe>> {
+    private fun chooseDishes(visit: Visit, sbu: SubUnits): Pair<List<Pair<Customer, Recipe>>, List<Boolean>> {
         val choices = mutableListOf<Pair<Customer, Recipe>>()
+        // Per position of the ordering sequence: did that customer place an order? An EVENT group
+        // needs it to know which waiter's block a failed order belonged to (forum thread 266).
+        val placed = mutableListOf<Boolean>()
         val customers = visit.customersInside().sortedWith(
             compareByDescending<Customer> { it.preference()?.excluded()?.size ?: 0 }
                 .thenBy { it.preference()?.favouriteDishNames()?.size ?: 0 },
@@ -84,13 +95,15 @@ class OrderingService(
             val dish = chooseFor(customer, visit, sbu)
             if (dish == null || !sbu.pantry.reserve(dish)) {
                 visit.leaveUnserved(listOf(customer))
+                placed += false
                 continue
             }
             customer.choose(dish)
             choices += customer to dish
+            placed += true
             sbu.menu.refresh()
         }
-        return choices
+        return choices to placed
     }
 
     /**
@@ -130,13 +143,17 @@ class OrderingService(
      * REGULAR and CASUAL: "the waiter who seated them also TAKE THEIR ORDERS".
      * EVENT: the manager's plan for [customers] orders.
      */
-    private fun bookWaiters(visit: Visit, customers: Int): List<Waiter> {
+    private fun bookWaiters(visit: Visit, customers: Int, placed: List<Boolean>): List<Waiter> {
         if (visit.group.groupType() != GroupType.EVENT) {
             visit.waiters.forEach { it.consume(ActionType.ORDERING, customers) }
             return visit.waiters
         }
-        val plan = waitstaff.assignEvent(customers, ActionType.ORDERING).orEmpty()
-        plan.forEach { (waiter, count) -> waiter.consume(ActionType.ORDERING, count) }
-        return plan.keys.toList()
+        // The waiters who seated the group take its orders, each the block it seated (thread 266).
+        val orders = waitstaff.assignEventOrders(visit.eventSeatingPlan, placed)
+        orders.forEach { (waiter, count) -> waiter.consume(ActionType.ORDERING, count) }
+        // A waiter whose customers all failed takes no orders and is not logged (thread 266, post 6).
+        // Staff said the opposite in office hours (post 6 vs. post 7, thread never resolved this): if
+        // that is right, drop this filter and consume the seating block sizes above instead.
+        return orders.filterValues { it > 0 }.keys.toList()
     }
 }
