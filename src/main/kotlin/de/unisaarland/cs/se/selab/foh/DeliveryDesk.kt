@@ -1,5 +1,6 @@
 package de.unisaarland.cs.se.selab.foh
 import de.unisaarland.cs.se.selab.sharedPackage.Order
+import de.unisaarland.cs.se.selab.simulation.DeliveryService
 
 /**
  * Manages delivery orders for a restaurant, including queued and
@@ -20,8 +21,8 @@ class DeliveryDesk(private val drivers: MutableList<DeliveryDriver>, private val
         val alreadyLoading = drivers.firstOrNull { it.currentOrder() === o }
         if (alreadyLoading != null) return alreadyLoading
 
-        val driver = drivers.firstOrNull { it.isFree() } ?: return null
-        if (driver.getId() == null) driver.setId(grantDriverId())
+        val id = DeliveryService.chooseDriverForOrder(restaurantId) ?: return null
+        val driver = drivers.first { it.getId() == id }
         driver.assignOrder(o)
         return driver
     }

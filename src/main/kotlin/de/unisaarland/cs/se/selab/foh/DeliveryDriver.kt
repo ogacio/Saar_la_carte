@@ -232,14 +232,13 @@ class DeliveryDriver(private val restaurantId: Int) {
     }
 
     /**
-     * calculates the drivenDistance for logging
+     * The distance covered so far, not the distance of this tick: the log reads "drove
+     * $delivery:distance km", and the reference counts up 5, 10, 15 ... to the total, where the
+     * last tick is capped at the delivery's own distance.
      */
     private fun drivenDistance(): Int {
-        return if (ticksLeft == 0 && checkNotNull(distance) % TICK_DISTANCE != 0) {
-            checkNotNull(distance) % TICK_DISTANCE
-        } else {
-            TICK_DISTANCE
-        }
+        val covered = (checkNotNull(travelTicks) - checkNotNull(ticksLeft)) * TICK_DISTANCE
+        return minOf(covered, checkNotNull(distance))
     }
 
     /**
