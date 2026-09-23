@@ -1,0 +1,18 @@
+{
+  "ingredients": [
+    { "name": "rice", "unit": "g", "packagingVolume": 500, "bestBefore": 3 },
+    { "name": "potato", "unit": "g", "packagingVolume": 500, "bestBefore": 3 },
+    { "name": "chicken", "unit": "g", "packagingVolume": 300, "bestBefore": 2 },
+    { "name": "beef", "unit": "g", "packagingVolume": 300, "bestBefore": 2 }
+  ],
+  "recipes": [
+    { "id": 1, "dishName": "Rice Bowl", "duration": 2, "cookType": ["EXEC"],
+      "ingredients": [{ "name": "rice", "amount": 50 }], "basicDishFor": "ASIAN" },
+    { "id": 2, "dishName": "Chicken Rice", "duration": 2, "cookType": ["EXEC"],
+      "ingredients": [{ "name": "rice", "amount": 50 }, { "name": "chicken", "amount": 40 }] },
+    { "id": 3, "dishName": "Potato Soup", "duration": 2, "cookType": ["EXEC"],
+      "ingredients": [{ "name": "potato", "amount": 60 }], "basicDishFor": "EUROPEAN" },
+    { "id": 4, "dishName": "Beef Stew", "duration": 2, "cookType": ["EXEC"],
+      "ingredients": [{ "name": "beef", "amount": 50 }, { "name": "potato", "amount": 30 }] }
+  ]
+}

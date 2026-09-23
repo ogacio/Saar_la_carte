@@ -1,0 +1,288 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "REGULAR",
+      "size": 2,
+      "tableType": "COMMON",
+      "visitingTick": 5,
+      "visitingStart": 1,
+      "visitingPeriod": 2,
+      "restaurant": 1,
+      "foodPreferences": []
+    },
+    {
+      "id": 2,
+      "type": "REGULAR",
+      "size": 2,
+      "tableType": "COMMON",
+      "visitingTick": 4,
+      "visitingStart": 1,
+      "visitingPeriod": 3,
+      "restaurant": 2,
+      "foodPreferences": []
+    },
+    {
+      "id": 10,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [1],
+      "ratingLikelihood": "NEVER",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 11,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [1],
+      "ratingLikelihood": "SOME",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 12,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [1],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 13,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 12,
+      "foodPreferences": [],
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [1],
+      "ratingLikelihood": "NEVER",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 14,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 12,
+      "foodPreferences": [],
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [1],
+      "ratingLikelihood": "SOME",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 15,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 12,
+      "foodPreferences": [],
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [1],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 16,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 8,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [2],
+      "ratingLikelihood": "NEVER",
+      "deliveryDistance": 20
+    },
+    {
+      "id": 17,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 8,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [2],
+      "ratingLikelihood": "SOME",
+      "deliveryDistance": 20
+    },
+    {
+      "id": 18,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 8,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [2],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 20
+    },
+    {
+      "id": 20,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 15,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [3],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 20
+    },
+    {
+      "id": 21,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 15,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [3],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 25
+    },
+    {
+      "id": 22,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 9,
+      "foodPreferences": [],
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [3],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 23,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 13,
+      "foodPreferences": [],
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [3],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 30,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 20,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [4],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 40
+    },
+    {
+      "id": 31,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 8,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [5],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 40,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 12,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [6],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 41,
+      "type": "EVENT",
+      "size": 4,
+      "tableType": "COMMON",
+      "visitingTick": 6,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "eventEvening": 6,
+      "favoriteDishes": { "ASIAN": "Rice Bowl" }
+    },
+    {
+      "id": 50,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [{ "size": 1, "excludedIngredients": ["chicken"] }],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [7],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 51,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [],
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [7],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 60,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 12,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [8],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 70,
+      "type": "REGULAR",
+      "size": 2,
+      "tableType": "COMMON",
+      "visitingTick": 5,
+      "visitingStart": 9,
+      "visitingPeriod": 1,
+      "restaurant": 1,
+      "foodPreferences": []
+    },
+    {
+      "id": 80,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"],
+      "visitingEvenings": [10],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    },
+    {
+      "id": 81,
+      "type": "CASUAL",
+      "size": 1,
+      "visitingTick": 10,
+      "foodPreferences": [],
+      "restaurantTypes": ["EUROPEAN"],
+      "visitingEvenings": [10],
+      "ratingLikelihood": "ALWAYS",
+      "deliveryDistance": 5
+    }
+  ],
+  "incidents": [
+    { "id": 1, "type": "STAFF", "evening": 4, "restaurant": 1, "number": -1, "staffType": "DRIVER" },
+    { "id": 2, "type": "STAFF", "evening": 6, "restaurant": 2, "number": 1, "staffType": "DRIVER" },
+    { "id": 3, "type": "RECIPE", "evening": 3, "ingredient": "rice", "adaptation": -60 },
+    { "id": 4, "type": "UNAVAILABLE", "evening": 5, "ingredient": "rice", "duration": 2 },
+    { "id": 5, "type": "PACKAGING", "evening": 7, "ingredient": "potato", "packagingVolume": 100 },
+    { "id": 6, "type": "STAFF", "evening": 8, "restaurant": 1, "number": -1, "staffType": "COOK", "cookType": "SOUS" },
+    { "id": 7, "type": "STAFF", "evening": 9, "restaurant": 1, "number": 1, "staffType": "COOK", "cookType": "SOUS" }
+  ]
+}

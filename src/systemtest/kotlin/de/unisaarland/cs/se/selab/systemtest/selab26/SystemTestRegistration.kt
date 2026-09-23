@@ -16,6 +16,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnly
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28SeatsAreReducedAsEachGroupDecides
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheDriverTakesASecondOrderAfterReturning
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30CustomersAreResetForTheNextEvening
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.GiantDeliveryStress
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadDupIdenticalRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDishLowercase
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.BadRecBasicDishUnknown
@@ -841,6 +842,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F28SeatsAreReducedAsEachGroupDecides())
         testSuite.registerTest(F29TheDriverTakesASecondOrderAfterReturning())
         testSuite.registerTest(F20DriverIdsSurviveAnEveningBoundary())
+        testSuite.registerTest(GiantDeliveryStress())
         // F30NoNewCustomersInTheLastThreeTicks unregistered 2026-09-21: fails locally only because
         // libs/selab.jar is a copy of our own build, not the real reference (see the evidence
         // warning in misc/implementation/tests/giant/BUGS-FOUND.md). Passes against the actual
