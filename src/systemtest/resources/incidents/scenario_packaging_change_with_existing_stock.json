@@ -1,0 +1,12 @@
+{
+  "customerGroups": [],
+  "incidents": [
+    {
+      "id": 1,
+      "type": "PACKAGING",
+      "evening": 3,
+      "ingredient": "rice",
+      "packagingVolume": 5
+    }
+  ]
+}

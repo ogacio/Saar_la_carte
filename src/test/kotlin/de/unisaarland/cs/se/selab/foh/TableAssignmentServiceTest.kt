@@ -226,16 +226,14 @@ class TableAssignmentServiceTest {
         assertEquals(mapOf(TableType.BAR to 2, TableType.SEPARATED to 5), service.freeSeats())
     }
 
-    // BUG (TableAssignmentService.totalSeats, Teodor): returns 0 while any merge is active,
-    // contradicting its own doc comment. Uncomment once fixed.
-    // @Test
-    // fun totalSeatsExcludesMergedTablesSoSeatsAreNotDoubleCounted() {
-    //     val service = serviceWith(Table(1, 3, TableType.COMMON), Table(2, 3, TableType.COMMON))
-    //
-    //     assertEquals(6, service.totalSeats())
-    //     service.assign(6, TableType.COMMON, liftRule = false)
-    //     assertEquals(6, service.totalSeats())
-    // }
+    @Test
+    fun totalSeatsExcludesMergedTablesSoSeatsAreNotDoubleCounted() {
+        val service = serviceWith(Table(1, 3, TableType.COMMON), Table(2, 3, TableType.COMMON))
+
+        assertEquals(6, service.totalSeats())
+        service.assign(6, TableType.COMMON, liftRule = false)
+        assertEquals(6, service.totalSeats())
+    }
 
     @Test
     fun threeQuarterBoundaryExactlyAtSevenFiftyPercentIsCovered() {

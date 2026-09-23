@@ -52,6 +52,58 @@ class FoodParserTest {
     }
 
     @Test
+    fun duplicateIngredientNameWithDifferingFieldsRejectsTheFile() {
+        val model = ParsedModel()
+        val food = """
+            {
+              "ingredients": [
+                {"name": "rice", "unit": "g", "packagingVolume": 100, "bestBefore": 5},
+                {"name": "rice", "unit": "g", "packagingVolume": 200, "bestBefore": 3}
+              ],
+              "recipes": [
+                {
+                  "id": 1,
+                  "dishName": "Rice Bowl",
+                  "duration": 10,
+                  "cookType": ["EXEC"],
+                  "ingredients": [{"name": "rice", "amount": 50}]
+                }
+              ]
+            }
+        """.trimIndent()
+
+        assertFalse(FoodParser(model).parse(write("food.json", food)))
+    }
+
+    @Test
+    fun duplicateRecipeIdWithDifferingFieldsRejectsTheFile() {
+        val model = ParsedModel()
+        val food = """
+            {
+              "ingredients": [{"name": "rice", "unit": "g", "packagingVolume": 100, "bestBefore": 5}],
+              "recipes": [
+                {
+                  "id": 1,
+                  "dishName": "Rice Bowl",
+                  "duration": 10,
+                  "cookType": ["EXEC"],
+                  "ingredients": [{"name": "rice", "amount": 50}]
+                },
+                {
+                  "id": 1,
+                  "dishName": "Rice Porridge",
+                  "duration": 12,
+                  "cookType": ["EXEC"],
+                  "ingredients": [{"name": "rice", "amount": 30}]
+                }
+              ]
+            }
+        """.trimIndent()
+
+        assertFalse(FoodParser(model).parse(write("food.json", food)))
+    }
+
+    @Test
     fun unknownUnitRejectsTheFile() {
         val model = ParsedModel()
         val food = foodWith(
