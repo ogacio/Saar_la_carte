@@ -150,14 +150,14 @@ class F24DeliveryFlowTest {
         queuedOrderOf(group)
 
         val waiting = captureLog()
-        repeat(GIVE_UP_DELAY_TICKS + 1) { tick() } // ticks 3, 4, 5 and 6 = visitingTick + 3
+        repeat(GIVE_UP_DELAY_TICKS) { tick() } // ticks 3, 4 and 5, still before visitingTick + 3
         assertTrue(
             logLines(waiting).none { it.contains("Delivery Given Up") },
-            "the group still waits in tick 6: ${logLines(waiting)}",
+            "the group still waits in tick 5: ${logLines(waiting)}",
         )
 
         val rejecting = captureLog()
-        tick() // tick 7
+        tick() // tick 6 = visitingTick + 3, the tick the group gives up in
 
         assertTrue(
             logLines(rejecting).any { it.contains("Delivery Given Up") },

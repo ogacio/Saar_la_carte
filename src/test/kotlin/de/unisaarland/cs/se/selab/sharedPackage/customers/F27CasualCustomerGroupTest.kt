@@ -39,11 +39,11 @@ class F27CasualCustomerGroupTest {
     }
 
     @Test
-    fun casualGroupHasNotGivenUpAtExactDeadlineTick() {
+    fun casualGroupHasGivenUpAtExactDeadlineTick() {
         val g = group(visitingTick = 1)
         g.orderPlaced()
-        repeat(4) { GlobalClock.advanceTick() } // tickInEvening = 4, exactly the deadline, not exceeded
-        assertTrue(!g.hasGivenUp())
+        repeat(4) { GlobalClock.advanceTick() } // tickInEvening = 4, the deadline tick itself
+        assertTrue(g.hasGivenUp())
     }
 
     @Test

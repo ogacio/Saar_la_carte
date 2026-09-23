@@ -105,6 +105,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootMissingRecipes
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootNotObject
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootRecipesNull
 import de.unisaarland.cs.se.selab.systemtest.selab26.f03.RootSingleIngredientSingleRecipe
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.AdaptedBasicDishInOtherRestaurantIsValid
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResAdjacentOpeningTicks
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResAllCooksZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResDuplicateDishName
@@ -137,6 +138,15 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResTypeLowercase
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResUnknownCookType
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResUnknownRecipe
 import de.unisaarland.cs.se.selab.systemtest.selab26.f04.ResWaitstaffZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.SameRecipeInTwoRestaurantsIsValid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f04.SameTableIdsInTwoRestaurantsIsValid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ExcludedCoveringEveryIngredientIsInvalid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.FavouriteDishUnknownIsInvalid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.FavouriteDishesDuplicatedIsInvalid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.FavouritesCoveringAllButOneDishIsValid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.FavouritesCoveringEveryDishIsInvalid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.PreferredCoveringAllButOneIngredientIsValid
+import de.unisaarland.cs.se.selab.systemtest.selab26.f05.PreferredCoveringEveryIngredientIsInvalid
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualNoLikelihood
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualSize11
 import de.unisaarland.cs.se.selab.systemtest.selab26.f05.ScCasualTableAndDistance
@@ -250,6 +260,8 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28HighestRatingDiffere
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TieGoesToLowestId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TypeFilterPrecedesRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F30GroupStillEatingAtClosingRatesNegative
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.MostPreferredIngredientsBeatHighestRecipeId
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.NoPreferenceTakesHighestRecipeId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P02FohFlowThroughEveryStep
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventOrdersFavouriteDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWaiters
@@ -260,6 +272,10 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05BacklashFailedReserv
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05RegularFailedReservationRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05SomeLikelihoodSkipsNeutralExperience
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.PreferenceSizeCoversEveryMemberItApplesTo
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.RegularStartTwoPeriodThreeVisitsOnlyOnScheduledEvenings
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.ThreeMergedTablesAreSplitAfterLeaving
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.UnservedGroupLeavesInTheFifthWaitingTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.gdelivery.GFourDriversLogOrder
 import de.unisaarland.cs.se.selab.systemtest.selab26.gkitchen.GSauceCookRemovalFallback
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.GCasualDeliveryTickTooEarly
@@ -305,6 +321,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondRest
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondRestaurantWithoutCooks
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondTypeWithUnlistedBasicDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondTypeWithoutBasicDish
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.ChickenAndRiceChangesStackOnThePriorAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F02LogLevelDebugIncludesDebugLines
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F02LogLevelImportantSuppressesDebugLines
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31RemovingMoreCooksThanExistStopsAtZero
@@ -390,6 +407,7 @@ object SystemTestRegistration {
         registerDeliveryTests(testSuite)
         registerOpenQuestionProbes(testSuite)
         registerMutantTests(testSuite)
+        registerBorkasTests(testSuite)
     }
 
     /**
@@ -420,6 +438,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F06EveningOne())
         testSuite.registerTest(F06RecipeUnknownIngredient())
         testSuite.registerTest(F06PackagingUnknownIngredient())
+        registerBorkasValidationTests(testSuite)
     }
 
     /**
@@ -480,6 +499,7 @@ object SystemTestRegistration {
         // testSuite.registerTest(F29TheHandOverIsLoggedBeforeTheDriverPrepares())
         testSuite.registerTest(F30CustomersAreResetForTheNextEvening())
         registerMutantTests(testSuite)
+        registerBorkasSystemTests(testSuite)
     }
 
     /** Fixtures built to kill specific mutation-testing mutants (misc/implementation/tests/mutants-cases.md). */
@@ -1052,5 +1072,58 @@ object SystemTestRegistration {
         // again, or the probes' expectations are deliberately updated.
         // testSuite.registerTest(ProbeRecIngUnitMismatch())
         // testSuite.registerTest(ProbeRecIngExtraKey())
+    }
+
+    private fun registerBorkasTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(FavouritesCoveringEveryDishIsInvalid())
+        testSuite.registerTest(FavouritesCoveringAllButOneDishIsValid())
+        testSuite.registerTest(PreferredCoveringEveryIngredientIsInvalid())
+        testSuite.registerTest(PreferredCoveringAllButOneIngredientIsValid())
+        testSuite.registerTest(ExcludedCoveringEveryIngredientIsInvalid())
+        testSuite.registerTest(FavouriteDishUnknownIsInvalid())
+        testSuite.registerTest(FavouriteDishesDuplicatedIsInvalid())
+        testSuite.registerTest(SameTableIdsInTwoRestaurantsIsValid())
+        testSuite.registerTest(SameRecipeInTwoRestaurantsIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.SecondTypeWithoutBasicDishIsInvalid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.SecondTypeWithUnlistedBasicDishIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.EmptyRecipesListIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.DuplicateTableIdsInOneRestaurantIsInvalid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.DuplicateDishNameInOneRestaurantIsInvalid())
+        testSuite.registerTest(PreferenceSizeCoversEveryMemberItApplesTo())
+        testSuite.registerTest(NoPreferenceTakesHighestRecipeId())
+        testSuite.registerTest(MostPreferredIngredientsBeatHighestRecipeId())
+        testSuite.registerTest(UnservedGroupLeavesInTheFifthWaitingTick())
+        testSuite.registerTest(ChickenAndRiceChangesStackOnThePriorAmount())
+        testSuite.registerTest(RegularStartTwoPeriodThreeVisitsOnlyOnScheduledEvenings())
+        testSuite.registerTest(ThreeMergedTablesAreSplitAfterLeaving())
+    }
+
+    private fun registerBorkasValidationTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(FavouritesCoveringEveryDishIsInvalid())
+        testSuite.registerTest(FavouritesCoveringAllButOneDishIsValid())
+        testSuite.registerTest(PreferredCoveringEveryIngredientIsInvalid())
+        testSuite.registerTest(PreferredCoveringAllButOneIngredientIsValid())
+        testSuite.registerTest(ExcludedCoveringEveryIngredientIsInvalid())
+        testSuite.registerTest(FavouriteDishUnknownIsInvalid())
+        testSuite.registerTest(FavouriteDishesDuplicatedIsInvalid())
+        testSuite.registerTest(SameTableIdsInTwoRestaurantsIsValid())
+        testSuite.registerTest(SameRecipeInTwoRestaurantsIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.SecondTypeWithoutBasicDishIsInvalid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.SecondTypeWithUnlistedBasicDishIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.EmptyRecipesListIsValid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.DuplicateTableIdsInOneRestaurantIsInvalid())
+        testSuite.registerTest(AdaptedBasicDishInOtherRestaurantIsValid.DuplicateDishNameInOneRestaurantIsInvalid())
+    }
+
+    private fun registerBorkasSystemTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(PreferenceSizeCoversEveryMemberItApplesTo())
+        testSuite.registerTest(NoPreferenceTakesHighestRecipeId())
+        testSuite.registerTest(MostPreferredIngredientsBeatHighestRecipeId())
+        testSuite.registerTest(UnservedGroupLeavesInTheFifthWaitingTick())
+        testSuite.registerTest(ChickenAndRiceChangesStackOnThePriorAmount())
+        testSuite.registerTest(RegularStartTwoPeriodThreeVisitsOnlyOnScheduledEvenings())
+        testSuite.registerTest(ThreeMergedTablesAreSplitAfterLeaving())
     }
 }

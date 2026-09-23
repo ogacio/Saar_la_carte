@@ -163,7 +163,7 @@ class FrontOfTheHouseDeliveryTest {
         val visitingTick = GlobalClock.getTickInEvening()
         sendOut(deliveryGroup(distance = 30, visitingTick = visitingTick))
 
-        val beforeDeadline = runTicks(3)
+        val beforeDeadline = runTicks(2)
         assertTrue(beforeDeadline.none { it.contains("Delivery Given Up") })
         assertTrue(ratings(beforeDeadline).isEmpty())
 

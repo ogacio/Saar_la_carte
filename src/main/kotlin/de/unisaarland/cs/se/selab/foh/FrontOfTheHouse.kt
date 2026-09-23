@@ -150,9 +150,9 @@ class FrontOfTheHouse(
         drivers.forEach { it.arrive() } // Arrival
         drivers.forEach { it.deliverAccepted() } // Finished
         drivers.forEach { it.deliverRejected() } // Failed
-        dropGivenUpOrders() // Given Up
-        drivers.forEach { it.returnHome() } // Returned
-
+        // Before the Given Up sweep: an order handed over in this very tick is no longer pending,
+        // so the group does not also "give up" on food it has just received. Neither this loop nor
+        // the sweep reorders any log line.
         for (driver in drivers) {
             val (order, gaveUp) = driver.takeResolvedOrder() ?: continue
             if (!gaveUp) {
@@ -162,6 +162,8 @@ class FrontOfTheHouse(
                 if (group !in eatingDeliveries) eatingDeliveries += group
             }
         }
+        dropGivenUpOrders() // Given Up
+        drivers.forEach { it.returnHome() } // Returned
     }
 
     /** Step 5: eating; waiting deadlines and finished eaters, including delivered food. */

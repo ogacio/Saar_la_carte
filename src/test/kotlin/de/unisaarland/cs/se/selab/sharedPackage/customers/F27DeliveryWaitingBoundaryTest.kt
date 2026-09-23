@@ -13,7 +13,7 @@ class F27DeliveryWaitingBoundaryTest {
         GlobalClock.advanceEvening()
         val group = casual(1, 2, deliveryDistance = 5, visitingTick = 5)
         group.orderPlaced()
-        repeat(8) {
+        repeat(7) {
             GlobalClock.advanceTick()
             assertFalse(group.deliveryGiveUpDue(), "Still within the delivery waiting window")
         }

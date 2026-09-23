@@ -80,11 +80,12 @@ class CasualCustomerGroup(
     }
 
     /**
-     * A placed delivery order stays acceptable through the third tick after [visitingTick].
-     * It becomes due for give-up in the following tick.
+     * The group gives up in the third tick after [visitingTick], not after it: the rating rule says
+     * they rate "in case they didn't get food at the end of the 3rd tick after the tick where their
+     * food should have arrived", so the decision is made in that tick itself.
      */
     override fun deliveryGiveUpDue(): Boolean =
-        deliveryOrderPending && GlobalClock.getTickInEvening() > visitingTick() + GIVE_UP_DELAY_TICKS
+        deliveryOrderPending && GlobalClock.getTickInEvening() >= visitingTick() + GIVE_UP_DELAY_TICKS
 
     /** The time-based due check is kept for existing callers that ask whether the pending order timed out. */
     override fun hasGivenUp(): Boolean = deliveryGiveUpDue()

@@ -78,14 +78,25 @@ class F22TwoSeatingFailuresStopVisitsAfterStaffReturns : AddedCustomerBoundaryTe
 
 /** F22: nobody receiving food counts as a failed attempt even though seating succeeded. */
 class F22TwoUnservedVisitsStopVisitsAfterFoodReturns : AddedCustomerBoundaryTest() {
-    override val name = "F22TwoUnservedVisitsStopVisitsAfterFoodReturns"
-    override val description = "Two evenings without rice end the regular's visits, including after rice returns."
+    override val name = "F22NothingOrderableDoesNotEndTheRegularsVisits"
+    override val description = "Two evenings with an empty menu are not failed attempts, so the regular returns."
     override val scenario = "f22/scenario_two_unserved_visits.json"
     override val maxTicks = 96
 
     override suspend fun run() {
+        // A group seated with nothing it can order is none of the three failure kinds, so the
+        // series never starts and evenings 3 and 4 go ahead once the rice is back.
         assertCustomerTrace(
-            listOf(ARRIVAL_FIRST_EVENING, "1/1 rating 1 1 NEGATIVE", ARRIVAL_SECOND_EVENING, "2/1 rating 1 1 NEGATIVE"),
+            listOf(
+                ARRIVAL_FIRST_EVENING,
+                "1/1 rating 1 1 NEGATIVE",
+                ARRIVAL_SECOND_EVENING,
+                "2/1 rating 1 1 NEGATIVE",
+                "3/1 arrival 1 1",
+                "3/3 rating 1 1 POSITIVE",
+                "4/1 arrival 1 1",
+                "4/3 rating 1 1 POSITIVE",
+            ),
         )
     }
 }

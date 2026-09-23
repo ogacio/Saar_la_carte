@@ -183,7 +183,7 @@ class DeliveryDriverTest {
     fun groupThatGaveUpDoesNotReceiveTheDelivery() {
         val gaveUp = mock<CustomerGroup> {
             on { id() } doReturn 3
-            on { hasGivenUp() } doReturn true
+            on { deliveryWasGivenUp() } doReturn true
             on { getDeliveryDistance() } doReturn 5
             on { members() } doReturn emptyList()
         }

@@ -19,12 +19,14 @@ class SeatedState : VisitState() {
     }
 
     /**
-     * Nobody found a dish, so the whole group leaves. This counts as a failed attempt for a REGULAR
-     * group: "the whole group leaving the restaurant because no one was served food".
+     * Nobody found a dish, so the whole group leaves. This is NOT one of a REGULAR group's three
+     * failed attempts: the spec counts "failed reservations, failures to be seated by the waitstaff
+     * or the whole group leaving the restaurant because no one was served food", and that last kind
+     * is a group that ordered and was never served, which AwaitingMealState handles. A group that
+     * could not order at all never got that far.
      */
     override fun onOrderingFailed(visit: Visit, tick: Int) {
         visit.leaveUnserved(visit.customersInside())
-        visit.failedAttempt = true
         visit.state = GoneState()
     }
 }
