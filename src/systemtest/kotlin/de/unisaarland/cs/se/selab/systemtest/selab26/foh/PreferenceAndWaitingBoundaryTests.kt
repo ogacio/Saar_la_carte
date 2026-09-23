@@ -136,11 +136,16 @@ class F27DeliveryAcceptedAtLastWaitingTick : PreferenceAndWaitingBoundaryTest() 
     }
 }
 
-/** F27: the deadline is exceeded in tick ten; arrival in eleven cannot undo the actual give-up. */
+/**
+ * F27: the group gives up in tick nine = visitingTick + 3 while its order is still at the desk. The
+ * order still goes out once cooked: "the delivery still continues normally until the driver arrives
+ * at the group", which then logs Delivery Failed (forum 353, staff). The reference rejected the
+ * version of this test that expected the desk to drop the order.
+ */
 class F27DeliveryRejectedAfterActualGiveUp : PreferenceAndWaitingBoundaryTest() {
-    override val name = "F27AnOrderStillAtTheDeskIsWithdrawnOnGiveUp"
+    override val name = "F27AnOrderAtTheDeskStillGoesOutAfterGiveUp"
     override val description =
-        "The group gives up in tick nine while its order is still at the desk, so no driver takes it."
+        "The group gives up in tick nine; the order still leaves in tick ten and fails on arrival in eleven."
     override val food = "f27/food_delivery_after_give_up.json"
     override val restaurants = "f27/restaurants_delivery_after_give_up.json"
     override val scenario = "f27/scenario_delivery_after_give_up.json"
@@ -148,10 +153,9 @@ class F27DeliveryRejectedAfterActualGiveUp : PreferenceAndWaitingBoundaryTest() 
     override suspend fun run() {
         assertTrace(
             listOf(
-                // The meals are only ready in tick 10. By then the group has given up and the
-                // desk has dropped the order, so it is never handed to a driver: "the meals keep
-                // being cooked, only no driver takes them out anymore".
                 "1/9 Delivery Given Up (R 1): Group 2 gave up on waiting for delivery of order 2.",
+                "1/11 Delivery Arrival (R 1): Driver 1 arrived at group 2 with order 2.",
+                "1/11 Delivery Failed (R 1): Driver 1 failed to deliver order 2 to group 2.",
             ),
             deliveryOnly = true,
         )

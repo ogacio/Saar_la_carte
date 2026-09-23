@@ -10,6 +10,7 @@ import de.unisaarland.cs.se.selab.foh.visit.AwaitingMealState
 import de.unisaarland.cs.se.selab.foh.visit.Visit
 import de.unisaarland.cs.se.selab.logging.Logger
 import de.unisaarland.cs.se.selab.sharedPackage.Meal
+import de.unisaarland.cs.se.selab.sharedPackage.MealStatus
 import de.unisaarland.cs.se.selab.sharedPackage.Order
 import de.unisaarland.cs.se.selab.sharedPackage.RestaurantType
 import de.unisaarland.cs.se.selab.sharedPackage.customers.GroupType
@@ -167,6 +168,10 @@ class ServingService(
             val batch = pending.take(waiter.remaining(ActionType.SERVING))
             if (batch.isEmpty()) return
             waiter.consume(ActionType.SERVING, batch.size)
+            // Handing a meal to a driver serves it, exactly like putting it on a table. Without
+            // this the meal stays COOKED and the kitchen keeps reporting it under "meals can be
+            // served by the waitstaff" for the rest of the evening.
+            batch.forEach { it.status = MealStatus.SERVED }
             driver.loadMeals(batch)
             Logger.Foh.deliveryHandover(
                 sbu.restaurantId,

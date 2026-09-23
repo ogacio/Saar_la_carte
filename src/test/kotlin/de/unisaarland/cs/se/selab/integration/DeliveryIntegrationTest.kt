@@ -89,7 +89,7 @@ class DeliveryIntegrationTest {
                 "[INFO] Delivery Preparation (R 811): Driver 1 prepares driving order ${order.getId()} to group 1, " +
                     "which will take 2 ticks.",
                 "[DEBUG] Delivery Driving (R 811): Driver 1 drove 5 km and needs 1 more ticks.",
-                "[DEBUG] Delivery Driving (R 811): Driver 1 drove 2 km and needs 0 more ticks.",
+                "[DEBUG] Delivery Driving (R 811): Driver 1 drove 7 km and needs 0 more ticks.",
                 "[INFO] Delivery Arrival (R 811): Driver 1 arrived at group 1 with order ${order.getId()}.",
                 "[IMPORTANT] Delivery Finished (R 811): Driver 1 gave delivery of order ${order.getId()} to group 1.",
                 "[INFO] Delivery Returned (R 811): Driver 1 has returned.",

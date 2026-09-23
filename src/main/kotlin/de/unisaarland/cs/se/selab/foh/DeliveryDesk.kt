@@ -20,6 +20,10 @@ class DeliveryDesk(private val drivers: MutableList<DeliveryDriver>, private val
         val alreadyLoading = drivers.firstOrNull { it.currentOrder() === o }
         if (alreadyLoading != null) return alreadyLoading
 
+        // Pick the driver object directly. Looking it up again by id is unsafe across an evening
+        // boundary: resetForEvening lets a returning driver keep its id while nextDriverId restarts
+        // at 1, so two drivers can hold id 1 and the lookup would hand the order to the one still
+        // on the road, wiping its return trip.
         val driver = drivers.firstOrNull { it.isFree() } ?: return null
         if (driver.getId() == null) driver.setId(grantDriverId())
         driver.assignOrder(o)

@@ -10,10 +10,14 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F31HiredDriverMake
 import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F34UnavailableIngredientIsNotProcuredForItsDuration
 import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20DriverIdsSurviveAnEveningBoundary
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20KitchenStatusForgetsMealsHandedToTheDriver
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24GroupGivesUpWhileTheDriverIsOnTheRoad
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28AClosedRestaurantIsNotOffered
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28ADeliveryIsOnlyOfferedWhileADriverIsFree
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F28SeatsAreReducedAsEachGroupDecides
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29DrivingLogShowsTheDistanceSoFar
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29ReturningDriverIsNotFreeForTheNextGroup
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F29TheDriverTakesASecondOrderAfterReturning
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F30CustomersAreResetForTheNextEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.GiantDeliveryStress
@@ -368,6 +372,12 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13AnUnavailableIngred
 import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13CustomersFallBackToTheNextAvailableDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13ReservedIngredientsAreNotAvailable
 import de.unisaarland.cs.se.selab.systemtest.selab26.menu.F13TheLastPortionLeavesTheSecondCustomerWithNothing
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F07OnlyTheMemberWhoOrderedEatsAndIsCounted
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F16RetryingGroupIsSeatedWithoutArrivingAgain
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F18FewerFavouritesOrderFirstAtEqualExclusions
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F28EventGroupOnlyChoosesARestaurantThatHostsEvents
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.F30DeliveryStillOnTheRoadAtTheEndOfTheEveningIsAborted
+import de.unisaarland.cs.se.selab.systemtest.selab26.mutants.P05GroupWithAMemberWhoCouldNotOrderRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07CountsAddUpOverTheWholeSimulation
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07DeliveredCountsCustomersNotOrders
 import de.unisaarland.cs.se.selab.systemtest.selab26.statistics.F07EachRestaurantCountsOnlyItsOwn
@@ -406,6 +416,8 @@ object SystemTestRegistration {
         registerStatisticsTests(testSuite)
         registerMenuTests(testSuite)
         registerDeliveryTests(testSuite)
+        registerDeliveryTimingTests(testSuite)
+        registerMutantHuntTests(testSuite)
         registerOpenQuestionProbes(testSuite)
         registerMutantTests(testSuite)
         registerBorkasTests(testSuite)
@@ -448,6 +460,8 @@ object SystemTestRegistration {
      */
     fun registerSystemTestsMutantSimulation(testSuite: SELab26TestSuite) {
         testSuite.registerTest(ExampleSystemTest())
+        registerDeliveryTimingTests(testSuite)
+        registerMutantHuntTests(testSuite)
         registerFrontOfHouseTests(testSuite)
         registerIncidentTests(testSuite)
         registerCoverageTests(testSuite)
@@ -843,6 +857,31 @@ object SystemTestRegistration {
         // pass. Promote them once it does; a failing mutant-registered test blocks the whole run.
         testSuite.registerTest(F11ACookIsBusyUntilTheTickAfterItsBatchFinishes())
         testSuite.registerTest(F31RemovingMoreCooksThanExistStopsAtZero())
+    }
+
+    /**
+     * Teodor as tester of F07, F16, F18, F28, F30 and P05: one test per mutant still not found on
+     * d4ef9e0 (Arbeitszeitbetrug, FreeForAll, Backlash, DinnerForOne, KingOfTheHill, ShortStaffed).
+     */
+    private fun registerMutantHuntTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F30DeliveryStillOnTheRoadAtTheEndOfTheEveningIsAborted())
+        testSuite.registerTest(F28EventGroupOnlyChoosesARestaurantThatHostsEvents())
+        testSuite.registerTest(P05GroupWithAMemberWhoCouldNotOrderRatesNegative())
+        testSuite.registerTest(F07OnlyTheMemberWhoOrderedEatsAndIsCounted())
+        testSuite.registerTest(F18FewerFavouritesOrderFirstAtEqualExclusions())
+        testSuite.registerTest(F16RetryingGroupIsSeatedWithoutArrivingAgain())
+    }
+
+    /**
+     * F20, F24, F29 (Teodor as tester): driving distance, Kitchen Status after the hand-over, the
+     * give-up tick while the driver is on the road, and the returning driver not being free. Aimed
+     * at the Impatience and Arbeitszeitbetrug mutants and at the tutors' hints for 23 Sep.
+     */
+    private fun registerDeliveryTimingTests(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F20KitchenStatusForgetsMealsHandedToTheDriver())
+        testSuite.registerTest(F29DrivingLogShowsTheDistanceSoFar())
+        testSuite.registerTest(F24GroupGivesUpWhileTheDriverIsOnTheRoad())
+        testSuite.registerTest(F29ReturningDriverIsNotFreeForTheNextGroup())
     }
 
     /** F24, F28-F30: deliveries, browsing and the end of the opening time. */

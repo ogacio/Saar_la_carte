@@ -1,0 +1,39 @@
+{
+  "customerGroups": [
+    {
+      "id": 1,
+      "type": "CASUAL",
+      "size": 2,
+      "visitingTick": 1,
+      "foodPreferences": [
+        {
+          "size": 1,
+          "excludedIngredients": [
+            "egg"
+          ],
+          "favoriteDishes": [
+            "Saffron Rice",
+            "Chicken Rice"
+          ]
+        },
+        {
+          "size": 1,
+          "excludedIngredients": [
+            "chicken"
+          ],
+          "favoriteDishes": [
+            "Saffron Rice"
+          ]
+        }
+      ],
+      "restaurantTypes": [
+        "ASIAN"
+      ],
+      "visitingEvenings": [
+        1
+      ],
+      "ratingLikelihood": "ALWAYS"
+    }
+  ],
+  "incidents": []
+}

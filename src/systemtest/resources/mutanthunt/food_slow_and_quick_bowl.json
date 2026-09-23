@@ -1,0 +1,69 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Slow Bowl",
+      "duration": 40,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "dishName": "Slower Bowl",
+      "duration": 40,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "dishName": "Quick Bowl",
+      "duration": 20,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "dishName": "Rice Bowl",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    }
+  ]
+}

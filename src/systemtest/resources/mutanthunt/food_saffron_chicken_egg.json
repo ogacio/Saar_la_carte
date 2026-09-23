@@ -1,0 +1,89 @@
+{
+  "ingredients": [
+    {
+      "name": "rice",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    },
+    {
+      "name": "saffron",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    },
+    {
+      "name": "chicken",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    },
+    {
+      "name": "egg",
+      "unit": "g",
+      "packagingVolume": 1,
+      "bestBefore": 5
+    }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "dishName": "Saffron Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "saffron",
+          "amount": 1
+        }
+      ],
+      "basicDishFor": "ASIAN"
+    },
+    {
+      "id": 2,
+      "dishName": "Chicken Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "chicken",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "dishName": "Chicken Egg Rice",
+      "duration": 10,
+      "cookType": [
+        "EXEC"
+      ],
+      "ingredients": [
+        {
+          "name": "rice",
+          "amount": 1
+        },
+        {
+          "name": "chicken",
+          "amount": 1
+        },
+        {
+          "name": "egg",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}
