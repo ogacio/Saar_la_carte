@@ -87,6 +87,9 @@ class F27DeliveryDriverTest {
             GlobalClock.advanceTick()
             driver.drive()
         }
+        // FrontOfTheHouse.dropGivenUpOrders records this in the deadline tick; the driver reacts to
+        // the recorded give-up, not to the deadline, so a delivery landing in that tick still counts.
+        group.markDeliveryGivenUp()
         driver.arrive()
         driver.deliverRejected()
 

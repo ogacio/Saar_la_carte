@@ -102,9 +102,15 @@ class F22RegularFailureSeriesTest {
     }
 
     @Test
-    fun twoWholeGroupsLeavingWithoutFoodStopFutureVisitsEvenWhenFoodReturns() {
+    fun twoEveningsWithNothingOrderableDoNotStopFutureVisits() {
         repeat(2) { evening(food = false) }
-        assertGoneAfterTwoFailures()
+
+        // Being seated with an empty menu is not one of the three failure kinds, so the group keeps
+        // its series at zero and returns once the ingredient is back.
+        assertEquals(0, group.failedAttempts())
+        assertFalse(group.hasGivenUp())
+        evening()
+        assertTrue(registry.regularsFor(1, GlobalClock.getEvening() + 1).isNotEmpty())
     }
 
     @Test
@@ -114,7 +120,7 @@ class F22RegularFailureSeriesTest {
         evening()
         assertEquals(0, group.failedAttempts())
         evening(food = false)
-        assertEquals(1, group.failedAttempts())
+        assertEquals(0, group.failedAttempts())
         assertFalse(group.hasGivenUp())
         evening()
         assertEquals(0, group.failedAttempts())

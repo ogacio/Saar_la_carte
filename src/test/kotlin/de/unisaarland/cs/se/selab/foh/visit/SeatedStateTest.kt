@@ -11,6 +11,7 @@ import de.unisaarland.cs.se.selab.testsupport.Fixtures.recipe
 import de.unisaarland.cs.se.selab.testsupport.Fixtures.regular
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
@@ -59,13 +60,15 @@ class SeatedStateTest {
     }
 
     @Test
-    fun aGroupThatFindsNoDishCountsAsAFailedAttempt() {
+    fun aGroupThatFindsNoDishIsNotAFailedAttempt() {
         val visit = seatedVisit(regular(1, 2))
 
         visit.orderingFailed(3)
 
-        // "the whole group leaving the restaurant because no one was served food"
-        assertTrue(visit.failedAttempt)
+        // A REGULAR's three failure kinds are a failed reservation, a failure to be seated, and the
+        // whole group leaving after ordering without being served. Never ordering at all is none of
+        // them, so the series is not advanced.
+        assertFalse(visit.failedAttempt)
     }
 
     @Test

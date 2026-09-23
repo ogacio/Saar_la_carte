@@ -77,7 +77,7 @@ class DeliveryDriver(private val restaurantId: Int) {
         if (!atDestination()) return
         val current = checkNotNull(order)
         val group = current.getCustomerGroup()
-        if (group.deliveryWasGivenUp() || group.hasGivenUp()) return
+        if (group.deliveryWasGivenUp()) return
 
         for (meal in current.getMeals()) {
             meal.customer.receive(meal, GlobalClock.getTickInEvening())
@@ -98,7 +98,7 @@ class DeliveryDriver(private val restaurantId: Int) {
         if (!atDestination()) return
         val current = checkNotNull(order)
         val group = current.getCustomerGroup()
-        if (!group.deliveryWasGivenUp() && !group.hasGivenUp()) return
+        if (!group.deliveryWasGivenUp()) return
 
         Logger.Delivery.deliveryFailed(
             restaurantId,
