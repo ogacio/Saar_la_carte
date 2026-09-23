@@ -13,6 +13,7 @@ import de.unisaarland.cs.se.selab.simulation.ratings.RatingBook
 import de.unisaarland.cs.se.selab.simulation.ratings.RatingScore
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -22,6 +23,11 @@ import org.mockito.kotlin.whenever
  */
 class F25BrowsingServiceTest {
 
+    @BeforeEach
+    fun setUp() {
+        GlobalClock.advanceEvening()
+        GlobalClock.advanceTick() // tickInEvening = 1, inside the accepting window
+    }
     private fun ingredient(name: String) = Ingredient(name, UnitType.G, 1000, 5)
 
     private fun dishOf(vararg ingredients: Ingredient): Recipe {
