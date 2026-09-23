@@ -58,7 +58,7 @@ class RestaurantTickTest {
         restaurant.runRestaurantTick(emptyList(), 3)
 
         verify(foh).beginTick()
-        verify(foh).callSeatingAndOrdering(any(), any())
+        verify(foh).callSeatingAndOrdering(any(), any(), any(), any())
         verify(kitchen).cook()
         verify(foh).callServingService()
         verify(foh).callDeliveryDesk()
@@ -98,7 +98,7 @@ class RestaurantTickTest {
         verify(foh).callDiningService()
         verify(foh).callRatingService()
         verify(foh, never()).beginTick()
-        verify(foh, never()).callSeatingAndOrdering(any(), any())
+        verify(foh, never()).callSeatingAndOrdering(any(), any(), any(), any())
         verify(kitchen, never()).cook()
         verify(foh, never()).callServingService()
         verify(foh, never()).callEscortingService()
@@ -135,6 +135,6 @@ class RestaurantTickTest {
 
         restaurant.runRestaurantTick(emptyList(), 8)
 
-        verify(foh).callSeatingAndOrdering(any(), eq(false))
+        verify(foh).callSeatingAndOrdering(any(), eq(false), any(), any())
     }
 }
