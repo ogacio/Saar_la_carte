@@ -331,6 +331,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncident
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentChangesTheProcuredAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F33PackagingIncidentChangesTheProcuredPackages
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F34IngredientUnavailabilityBlocksProcurement
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.GiantIncidentOrderingStress
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08ExactPackageMultiple
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08IngredientWithoutEligibleCookIsProcured
 import de.unisaarland.cs.se.selab.systemtest.selab26.kitchen.F08PartialStockDeficit
@@ -663,6 +664,7 @@ object SystemTestRegistration {
         testSuite.registerTest(F33PackagingIncidentChangesTheProcuredPackages())
         testSuite.registerTest(F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe())
         testSuite.registerTest(F34IngredientUnavailabilityBlocksProcurement())
+        testSuite.registerTest(GiantIncidentOrderingStress())
         testSuite.registerTest(F02LogLevelDebugIncludesDebugLines())
         testSuite.registerTest(F02LogLevelImportantSuppressesDebugLines())
     }
