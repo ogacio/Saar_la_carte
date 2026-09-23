@@ -72,6 +72,29 @@ class WaiterAssignmentService(
     }
 
     /**
+     * Books an EVENT SEATING of [groupSize] customers that [assignEvent] could not cover completely.
+     *
+     * The attempt fails, but "the partial SEATING actions still happen and increase each waiter's
+     * SEATING tick load, which is not decreased if the overall EVENT seating attempt fails" (forum
+     * threads 156 and 362): every waiter with SEATING actions left seats as many customers as it can,
+     * in the manager's order. Having attempted an action, each of them receives its id
+     * (specification adjustment 22). EVENT customers never add to the current load.
+     */
+    fun bookFailedEventSeating(groupSize: Int) {
+        var left = groupSize
+        val candidates = waitstaff
+            .filter { it.remaining(ActionType.SEATING) > 0 }
+            .sortedWith(eventPriority(ActionType.SEATING, emptyMap()))
+        for (waiter in candidates) {
+            if (left == 0) break
+            val share = minOf(left, waiter.remaining(ActionType.SEATING))
+            grantId(waiter)
+            waiter.consume(ActionType.SEATING, share)
+            left -= share
+        }
+    }
+
+    /**
      * Hands the orders of an EVENT group to the waiters who seated it (forum thread 266).
      *
      * Customers are seated and order in the same fixed sequence, so every waiter owns the next block
