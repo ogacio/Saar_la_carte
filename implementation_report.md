@@ -227,7 +227,9 @@ the following tasks:
   detekt*`, `./gradlew systemtestExec`, etc.) and fixing the problems these runs surfaced.
 
 **Biborka Fancsali:**
-*(to be filled in by Biborka)*
+I used Claude (Sonnet 5) in the implementation for:
+- checking my code's correctness, and debugging it
+- writing unit, integration and system tests
 
 **Constantin Hartmann:**
 *(to be filled in by Constantin)*
