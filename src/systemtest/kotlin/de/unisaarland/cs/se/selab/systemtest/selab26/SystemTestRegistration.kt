@@ -468,6 +468,7 @@ object SystemTestRegistration {
         registerDeliveryTimingTests(testSuite)
         registerMutantHuntTests(testSuite)
         registerFrontOfHouseTests(testSuite)
+        SurvivorTestRegistration.registerConfirmed(testSuite)
         registerIncidentTests(testSuite)
         registerCoverageTests(testSuite)
         testSuite.registerTest(F08SupplierDeliversWholePackages())
