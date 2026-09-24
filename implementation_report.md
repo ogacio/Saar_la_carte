@@ -11,11 +11,11 @@ cross-checked the same way against `src/test` and `src/systemtest`.
 
 | Student | Major contributions (implementation) | Major contributions (testing) |
 |---|---|---|
-| Ognjen Stojicic (ogacio) | F01 Simulation (`Simulator`, `Main`, `ConfigParser`, `ConfigurationLoader`, `ParsedModel`), F14 Evening Table Reservation, F16 Seating, F18 Ordering, F19 Serving, F21 Escorting, P02 Event Seating, P03 Event Other Actions; owns the entire `foh/visit` state machine (`Visit`, `VisitState`, `SeatedState`, `AwaitingSeatState`, `AwaitingMealState`, `EatingUpState`, `ReadyToLeaveState`, `GoneState`) and `FrontOfTheHouse`, `GlobalClock`, `ReservationBook`, `SubUnits`; substantial co-authorship (by line count) on `WaiterAssignmentService` (F17, Teodor's feature: the EVENT waiter planning, see Adjustments) and smaller changes in `DeliveryDesk` | Tested Biborka's and Constantin's features per assignment (F04, F08-F12; F07, F13, F24, F28-F30), plus F01/F06 parsing: `F01ConfigurationLoaderTest`, `F06IncidentParsingTest`, most of the `foh/visit` unit tests, `F14CancelledReservationTest`, `F21TableResetTest`, `F22RegularFailureSeriesTest`, `F24DeliveryFlowTest`, `F30EndOfEveningTest`, plus a large share of the `src/systemtest` suite (delivery, incidents, kitchen, menu, statistics areas) |
-| Teodor Vasilev (Teodor.Vasilev) | F02 Logging (`Logger` with every log message of the specification, `LogFormat`, `LogLevel`, `LogSink`); F03 Parse Ingredients & Recipes (`FoodParser`, `FoodDtos`, `Ingredient`, `Recipe`, `RecipeIngredient`, `UnitType`); F15 Table Merging & Tables (`Table`, `TableType`, `TableAssignmentService` with the reservation/seating rules 1-6 and merging/splitting); F17 FOH Staff Management (`Waiter` with tick load and current load, `WaiterAssignmentService`: permanent waiter selection rules 1-4, EVENT orders taken by the waiters who seated those customers, partial SEATING load of a failed EVENT seating); F31-F34 Incidents (`Incident`, `Incidents`: staff, recipe, packaging and unavailability changes); P04 Customer - Events (`EventCustomerGroup`) | Tested Ognjen's (F01, F14, F16, F18-F21, P03) and Constantin's (F07, F13, F24, F28-F30) features and P05. Unit tests: `SeatingServiceTest`, `OrderingServiceTest`, `ServingServiceDeliveryAndEventTest`, `EscortingServiceTest`, `RatingServiceTest`, `FrontOfTheHouseArrivalAndLeavingTest`, `FrontOfTheHouseClosingTest`, `FrontOfTheHouseDeliveryTest`, `DeliveryDeskTest`, `DeliveryDeskStateTest`, `DeliveryDriverTest`, `DeliveryDriverLoadingTest`, `BrowsingServiceTest`, `BrowsingServiceWinnerTest`, `DeliveryServiceTest`, `DeliveryServiceOrderingTest`, `DeliveryServiceDriversTest`, `CustomerRegistryTest`, `GlobalClockTest`, `ReservationBookTest`, `RestaurantTest`, `RestaurantDeliveryOrderTest`, `SimulatorDecisionTest`, `StatisticsTest`, `MenuTest`, `RestaurantDataTest`, `RatingBookUninitializedTest`, `F01RestaurantEventPlanAndDriverStaffTest`, `F19VisitBeforeTheFirstMealTest`, `F29DeliveryDeskDriverReuseTest`, `P03EventOrderingWaiterWithoutOrdersTest`, shared `testsupport/Fixtures`. Integration tests: `FohVisitIntegrationTest`, `SimulationRunIntegrationTest`, `BrowsingRatingIntegrationTest`, `DeliveryIntegrationTest`, `MenuKitchenIntegrationTest`, `F29DriverSecondTripIntegrationTest`. System tests: the `LogSkippingSystemTest` base and the first `foh/` suites (`FrontOfHouseTests`, `BrowsingAndDeliveryTests`, `ServingAndClosingTests`, `SimulationFlowTests`), `TableAndWaiterLoadTests`, `CoverageSimulationTests`, `DeliveryDriverTimingTests`, `MutantHuntTests`, and the `survivors/` package (40 tests for the six mutants no earlier run had found) |
+| Ognjen Stojicic (ogacio) | F01 Simulation (`Simulator`, `Main`, `ConfigParser`, `ConfigurationLoader`, `ParsedModel`), F14 Evening Table Reservation, F16 Seating, F18 Ordering, F19 Serving, F21 Escorting, P02 Event Seating, P03 Event Other Actions; owns the entire `foh/visit` state machine (`Visit`, `VisitState`, `SeatedState`, `AwaitingSeatState`, `AwaitingMealState`, `EatingUpState`, `ReadyToLeaveState`, `GoneState`) and `FrontOfTheHouse`, `GlobalClock`, `ReservationBook`, `SubUnits`; substantial co-authorship (by line count) on `WaiterAssignmentService` (F17, Teodor's feature: the EVENT waiter planning, see Adjustments) and smaller changes in `DeliveryDesk` | Tested Biborka's and Constantin's features per assignment (F04, F08-F12; F07, F13, F24, F28-F30), plus F01/F06 parsing: `F01ConfigurationLoaderTest`, `F06IncidentParsingTest`, most of the `foh/visit` unit tests, `F14CancelledReservationTest`, `F21TableResetTest`, `F22RegularFailureSeriesTest`, `F24DeliveryFlowTest`, `F30EndOfEveningTest`, unit tests closing the coverage gaps in his block (`F08IngredientTest`, `F08StockEntryTest`, `F08PantryStockTest`, `F09HistoryTest`,`F11CookReleaseBatchTest`, `F11CookRoasterGuardTest`,`F24ServingHandsOverPartialOrdersTest`, `P02SeatingAndOrderingStepTest`,`P02PrepareSeatEstimateTest`, `F29DeliveryDriverEdgeTest`), plus a large share of the `src/systemtest` suite (delivery, incidents, kitchen, menu, statistics areas), of which most usefull for catching mutants are — `F14AReservedTableIsBlockedForTheWholeEvening`, `F31StaffIncidentAddsTheCookThatUnlocksTheDish`, `F32RecipeIncidentChangesTheProcuredAmount`, `F33PackagingIncidentChangesTheProcuredPackages` and `F22NothingOrderableDoesNotEndTheRegularsVisits` (RIP); and the reference-only probe system tests used to settle open specification questions — `F21ExtraPatienceAfterPartialServe` (how long a partially served group waits), `F11ACookIsBusyUntilTheTickAfterItsBatchFinishes` (a cook is free only in the tick after its batch finishes), `F31RemovingMoreCooksThanExistStopsAtZero` (a staff reduction clamps at zero) and `P05AFailedReservationRatesAtTheOpeningTick` (a failed reservation rates in the restaurant's openingTickStart, not in tick 1) |
+| Teodor Vasilev (Teodor.Vasilev) | F02 Logging (`Logger` with every log message of the specification, `LogFormat`, `LogLevel`, `LogSink`); F03 Parse Ingredients & Recipes (`FoodParser`, `FoodDtos`, `Ingredient`, `Recipe`, `RecipeIngredient`, `UnitType`); F15 Table Merging & Tables (`Table`, `TableType`, `TableAssignmentService` with the reservation/seating rules 1-6 and merging/splitting); F17 FOH Staff Management (`Waiter` with tick load and current load, `WaiterAssignmentService`: permanent waiter selection rules 1-4, EVENT orders taken by the waiters who seated those customers, partial SEATING load of a failed EVENT seating); F31-F34 Incidents (`Incident`, `Incidents`: staff, recipe, packaging and unavailability changes); P04 Customer - Events (`EventCustomerGroup`) | Tested Ognjen's (F01, F14, F16, F18-F21, P03) and Constantin's (F07, F13, F24, F28-F30) features and P05. Unit tests: `SeatingServiceTest`, `OrderingServiceTest`, `ServingServiceDeliveryAndEventTest`, `EscortingServiceTest`, `RatingServiceTest`, `FrontOfTheHouseArrivalAndLeavingTest`, `FrontOfTheHouseClosingTest`, `FrontOfTheHouseDeliveryTest`, `DeliveryDeskTest`, `DeliveryDeskStateTest`, `DeliveryDriverTest`, `DeliveryDriverLoadingTest`, `BrowsingServiceTest`, `BrowsingServiceWinnerTest`, `DeliveryServiceTest`, `DeliveryServiceOrderingTest`, `DeliveryServiceDriversTest`, `CustomerRegistryTest`, `GlobalClockTest`, `ReservationBookTest`, `RestaurantTest`, `RestaurantDeliveryOrderTest`, `SimulatorDecisionTest`, `StatisticsTest`, `MenuTest`, `RestaurantDataTest`, `RatingBookUninitializedTest`, shared `testsupport/Fixtures`. Integration tests: `FohVisitIntegrationTest`, `SimulationRunIntegrationTest`, `BrowsingRatingIntegrationTest`, `DeliveryIntegrationTest`, `MenuKitchenIntegrationTest`. System tests: the `LogSkippingSystemTest` base and the first `foh/` suites (`FrontOfHouseTests`, `BrowsingAndDeliveryTests`, `ServingAndClosingTests`, `SimulationFlowTests`), `TableAndWaiterLoadTests`, `CoverageSimulationTests`, `DeliveryDriverTimingTests`, `MutantHuntTests`, and the `survivors/` package (40 tests for the six mutants no earlier run had found) |
 | Stefan Marinkov (stma00002) | F05 Parse Customers (`ScenarioParser`, `CustomerGroupJsonDto`, `FoodPreferenceDto`, `ScenarioFileDto`, `CustomerGroupSerialiser`), F06 Parse Incidents (swapped in from Biborka: `IncidentSerialiser`, `IncidentJsonDto`), F22/F23 (`CustomerGroup`, `RegularCustomerGroup`, `CasualCustomerGroup`, `Customer`, `History`, `CustomerStatus`, `GroupType`), F25 (`CustomerRegistry.deciding`), F26 (`FoodPreference`), F27 (waiting/eating/give-up clock logic in the above), P05 (`ratingFor` in the `CustomerGroup` hierarchy); also `Validator` (cross-cutting config validation, used by all parsers) | Tested Ognjen's and Teodor's features per assignment: `OrderingServiceOrderedTest`, `ServingServiceTest`, `TableAssignmentServiceTest`, `WaiterAssignmentServiceTest`, `IncidentsTest`, all `logging/*Test` files, `SimulatorTest`, `RestaurantTickTest`, `TableLifecycleIntegrationTest`; wrote and registered a large share of `src/systemtest` (`SystemTestRegistration` itself, the single-rule `foh/F*` system tests, most `gvalidation/`, `gdelivery/`, `gkitchen/`, `f03/`, `incidents/` system tests), including the session's mutant-hunting tests; surfaced and fixed several bugs while testing (tick log format, delivery rating/eating lifecycle, ingredient packaging calculation, F27 patience-window off-by-one) |
 | Biborka Fancsali (fancsaliborka) | F04 Parse Restaurants (swapped in from Stefan: `RestaurantParser`, `RestaurantFileDto`, `RestaurantJsonDto`, `TableDto`, `RestaurantType`), F08 Supplier, F09 Pantry (`Pantry`, `StockEntry`), F10-F12 Cooking (`Cook`, `CookRoaster`, `CookType`, `Kitchen`), P01 Pantry Best-Before/Reservation; also `Meal`, `MealStatus`, `Order`, `Restaurant` | Tested Teodor's F03 (`f03/RecipeValidTests`, `f03/RecipeInvalidTests`) and Stefan's F22/F23/F25-F27, and supported F07/F13: `IncidentSerialiserTest`, `RestaurantParserTest`, `F27DeliveryDriverTest`, `F27VisitTest`, `F25RestaurantDataTest`, `F25EventCustomerGroupTest`, `FoodPreferenceTest`, `F25BrowsingServiceTest`; system tests across `f03/`, `f04/`, `foh/` (preference/regular-recurrence/table-merge scenarios), `incidents/`, and `utils/ValidationSystemTest` |
-| Constantin Hartmann (op23no5) | F07 Statistics, F13 Menu, F24/F28/F29 (`BrowsingService`, `DeliveryService`, `DeliveryDriver`, `DriverState`, `DeliveryDesk`), `RestaurantData` | Tested Biborka's features (F04, F08-F12, P01): `ConfigParsingIntegrationTest`, `F10F12ReservationAndServingTest`, `F11OverlappingBatchesTest`, `F23RatingDecisionIntegrationTest`, `F26PreferenceOrderingTest`, `F27ServingWaitingBoundaryTest`, `PantrySupplierTest`, `F10QueueBoundaryTest`, `F11StaffBoundaryTest`, `F12DurationBoundaryTest`, `F25DecisionBoundaryTest`; system tests for `f04/`, `f05/`, `f06/` scope-and-boundary areas, kitchen/supplier boundary tests |
+| Constantin Hartmann (op23no5) | F07 Statistics, F13 Menu, F24/F28/F29 (`BrowsingService`, `DeliveryService`, `DeliveryDriver`, `DriverState`, `DeliveryDesk`), `RestaurantData` | Tested Biborka's features (F04, F08-F12, P01): `ConfigParsingIntegrationTest`, `F09PlanningStockBoundaryTest`, `F09RegularHistoryPlanningTest`, `F10F12ReservationAndServingTest`, `F11OverlappingBatchesTest`, `F23RatingDecisionIntegrationTest`, `F26PreferenceOrderingTest`, `F27ServingWaitingBoundaryTest`, `PantrySupplierTest`, `F10QueueBoundaryTest`, `F11StaffBoundaryTest`, `F12DurationBoundaryTest`, `F25DecisionBoundaryTest`; system tests for `f04/`, `f05/`, `f06/` scope-and-boundary areas, kitchen/supplier boundary tests |
 
 Only major contributions are listed; routine bugfixes, merge-conflict resolutions, and detekt
 cleanups are omitted per the reporting guidelines.
@@ -60,6 +60,14 @@ cleanups are omitted per the reporting guidelines.
   (failing reference tests, uncaught mutants). Bugs found in teammates' code were handed to the
   owners as proposed patches instead of being committed by the tester, so each fix stays with its
   implementer.
+- **P05, rating logic shared with Ognjen:** P05 (customer rating) was assigned to Stefan Marinkov,
+  but he and Ognjen Stojicic split the work along a natural line in the feature: Ognjen wrote
+  `RatingService`, the FOH side that decides when a rating happens during the tick and feeds it
+  into the restaurant's statistics, while Stefan wrote `ratingFor` and the `Experience`-to-`Rating`
+  mapping in the `CustomerGroup` hierarchy (`RegularCustomerGroup`, `CasualCustomerGroup`,
+  `EventCustomerGroup`) — the customer's own side of deciding what to rate and why.
+  `feature_assignments.yaml` still lists Stefan as sole implementer since this was an informal
+  split within one feature, not a reassignment.
 
 ---
 
@@ -125,36 +133,42 @@ cleanups are omitted per the reporting guidelines.
   uncaught on `d4ef9e0`. Analysed why six mutants had survived every run and wrote 40 system
   tests for them (`survivors/`), each checked line by line against our jar and registered as
   reference-only probes first; this also exposed the missing `SeatingService` call above.
-- **2026-09-24:** Branch-coverage pass over his testing block with JaCoCo. Most remaining misses
-  were unreachable `checkNotNull` fallbacks; the reachable ones got 14 new tests: the hold-back
-  and patience rules of a visit before its first cooked meal (F19), a returning driver keeping
-  its id for the next order and `DeliveryDesk.drop` sparing other drivers (F29), an EVENT waiter
-  whose seated block all failed to order taking no order (P03, forum 266), a booked EVENT being
-  planned without history and DRIVER staff changes reaching the desk (F01), and an integration
-  test of one driver serving two orders in one evening (`F29DriverSecondTripIntegrationTest`).
-  The committed tests now cover 93% of the branches (99% of the lines) of the features he tests.
 
 ### Stefan Marinkov
 
-- **2026-09-11:** F05/F06 scenario parser; F22/F23/F26/F27 customer group logic; P04 event
-  customer group encapsulation; shared base classes/enums skeleton.
-- **2026-09-14:** F02/F03 tests; F22/F25 fixes; adapting code to teammates' interface changes.
-- **2026-09-16:** Validator additions; fixes to F05, F22/F23/F25/F26, F27.
-- **2026-09-17:** detekt and system-test fixes; unit/integration tests across F01, F15-F21,
-  F31-F34, P04 (his testing-block assignment); fixed stale constructor/field-access references
-  surfaced by those tests.
-- **2026-09-18:** Delivery-desk/cook/pantry bugfixes surfaced during testing (cooking duration,
-  ingredient packaging calculation, delivery rating/eating lifecycle, tick log format); wiring
-  the delivery service into the simulator; statistics for cooked meals.
-- **2026-09-21:** Delivery order tick-timing fix (forum-reported); unregistering tests found to
-  be invalid against the reference.
+No commits on the weekends (2026-09-12/13, 2026-09-19/20) — that work just shows up under the
+next weekday instead of being listed separately.
+
+- **2026-09-10:** Repo/environment setup, no feature code yet.
+- **2026-09-11:** F05/F06 scenario parser (`ScenarioParser`, `CustomerGroupSerialiser`,
+  `CustomerGroupJsonDto`, `ScenarioFileDto`, `FoodPreferenceDto`, `IncidentSerialiser`,
+  `IncidentJsonDto`); F22/F23 (`CustomerGroup`, `RegularCustomerGroup`, `CasualCustomerGroup`,
+  `History`); F26 (`FoodPreference`); F27 (waiting/eating/give-up clocks); P04 event customer
+  group; shared base classes/enums.
+- **2026-09-14:** Unit tests for F02 (`logging/*Test`) and F03 (`FoodParserTest`); F22/F25 fixes;
+  adapted his code to teammates' interface changes.
+- **2026-09-16:** `Validator` (config validation shared by all three parsers); fixes to F05,
+  F22/F23/F25/F26, F27; merge-conflict resolution (AI-assisted).
+- **2026-09-17:** Testing-block work on Ognjen's and Teodor's features: `SimulatorTest` (F01),
+  `TableAssignmentServiceTest` (F15), `WaiterAssignmentServiceTest` (F17),
+  `OrderingServiceOrderedTest` (F18), `ServingServiceTest` (F19), `DeliveryDriverTest` (F20),
+  `IncidentsTest` (F31-F34), `EventCustomerGroupTest` (P04), `TableLifecycleIntegrationTest`
+  (F15/F16/F17/F19/F21); fixed stale `Order`/`RestaurantData` constructor references, switched to
+  getters over direct field access, cleared the detekt fallout; more merge conflicts.
+- **2026-09-18:** Fixed cooking duration/cooked-meal return, ingredient packaging calculation,
+  delivery rating/eating lifecycle, swapped tick/evening log args; wired the delivery service
+  into the simulator; wrote cooked-meals statistics.
+- **2026-09-21:** Fixed a delivery-order tick-timing bug (forum); unregistered a few system tests
+  invalid against the reference.
 - **2026-09-22:** Added system tests killing 16 previously-uncaught mutants; fixed an F27
-  patience-window off-by-one (forum 335/340) and its fixture; additional fixture tests for
-  delivery/kitchen/validation gap areas.
-- **2026-09-23:** F04/F06 swap work continuation (incident parsing as F06 owner); further
-  mutant-targeting system tests; forum-driven fixes (event favourite validation, last-3-ticks
-  retry refusal, delivery ordering interleaving, EVENT order-taking wiring); coverage tests;
-  unregistering tests that failed against the real reference.
+  patience-window off-by-one (forum 335/340); more fixture tests for delivery/kitchen/validation
+  gaps.
+- **2026-09-23:** More mutant-hunting system tests; fixes for event favourite validation (forum
+  352), last-3-ticks retry refusal and delivery-ordering interleaving (forum 345), EVENT
+  order-taking (forum 266); coverage tests; unregistered four more reference-invalid tests; filled
+  in this implementation report and resubmitted `feature_assignments.yaml`.
+- **2026-09-24:** Coordinated with Ognjen and Teodor on the remaining uncaught mutants to avoid
+  duplicating effort; more system tests.
 
 ### Biborka Fancsali
 
@@ -182,25 +196,51 @@ cleanups are omitted per the reporting guidelines.
 
 ### Constantin Hartmann
 
-- **2026-09-10:** `BrowsingService` start and data model.
-- **2026-09-11:** `BrowsingService`/`ResData` continuation; `Statistics` and start of `Menu`.
-- **2026-09-13:** `DeliveryService` groundwork.
-- **2026-09-14:** `DeliveryDriver` and `DeliveryDesk`; closing-behaviour groundwork.
-- **2026-09-16:** `DeliveryService.choose`; getters; conflict resolution.
-- **2026-09-17:** detekt fixes.
-- **2026-09-18:** Tests for `RestaurantParser` and `CustomerGroupSerialiser`.
-- **2026-09-20:** `PantrySupplierTest` fixes; Pantry/Supplier integration tests.
-- **2026-09-21:** Driver flow additions; clock-change handling; `SupplierTest` fix
-  (`minDuration`); `ParsedModel` check; `acceptsCustomers` boolean addition.
-- **2026-09-22:** Delivery patches; system tests for F04-F06, F08, F09.
-- **2026-09-23:** Delivery-ID changes; system tests for F10-F12, F22/F23/F25-F27.
+- **2026-09-10:** Started `BrowsingService` and the restaurant-selection data model; added early
+  `RestaurantData`, restaurant/table types, `RatingBook`, and `GlobalClock` groundwork.
+- **2026-09-11:** Continued `BrowsingService` and `RestaurantData`; introduced `Statistics` and
+  `Menu`; adapted parsers, kitchen, and shared model classes during the package restructuring and
+  resolved the resulting integration conflicts.
+- **2026-09-13:** Added `DriverState` and the initial `DeliveryService`; moved `BrowsingService`
+  into the simulation package and connected the first delivery-selection flow.
+- **2026-09-14:** Implemented and iterated on `DeliveryDriver` and `DeliveryDesk`; integrated
+  delivery state with orders, customer groups, the simulator, statistics, and rating data; began
+  the restaurant-closing behaviour.
+- **2026-09-16:** Implemented `DeliveryService.choose`, added the delivery-desk accessors, and
+  adapted configuration, menu, order, customer, restaurant, and simulator code to the combined
+  delivery flow; resolved merge conflicts with the evolving FOH implementation.
+- **2026-09-17:** Fixed Detekt findings across delivery, browsing, menu, restaurant data, and
+  statistics; reconciled the delivery code with changes in restaurant parsing, reservations,
+  restaurant lifecycle, and supplier code.
+- **2026-09-18:** Added unit tests for `RestaurantParser` and `CustomerGroupSerialiser` and updated
+  delivery integration for the changed constructor/API shape.
+- **2026-09-20:** Added `IncidentSerialiserTest`, `ConfigParsingIntegrationTest`,
+  `PantrySupplierTest`, `PantryTest`, and `SupplierTest`; followed up with the required fixture and
+  argument-type corrections.
+- **2026-09-21:** Extended the driver flow and its ordering integration; aligned delivery timing
+  with `GlobalClock`; revised `DeliveryDriver`, `Kitchen`, and incident parsing; corrected the
+  `SupplierTest` duration boundary; added the `ParsedModel` uniqueness check and restaurant
+  acceptance state used by browsing.
+- **2026-09-22:** Added and registered boundary-focused system tests and fixtures for F04-F06,
+  F08, and F09. Integrated the delivery lifecycle patches across `DeliveryDesk`, `DeliveryDriver`,
+  `DriverState`, FOH serving/dining, customer state, and `DeliveryService`, including a delivery
+  regression test.
+- **2026-09-23:** Added unit, integration, and registered system tests for F10-F12 and
+  F22/F23/F25-F27, including cooking boundaries, customer failure series, rating decisions, food
+  preferences, and waiting behaviour; added the associated configurations and cleaned test names.
+  Also fixed the cross-evening delivery-driver ID collision.
+- **2026-09-24:** Focused F09 unit and integration tests for partial-stock package boundaries,
+  aggregated ingredient demand, menu changes, and procurement based on the last three recorded
+  visits; verified the complete build, Detekt checks, and JaCoCo coverage.
 
 ---
 
 ## Usage of Generative AI
 
 **Ognjen Stojicic:**
-*(to be filled in by Ognjen)*
+Ognjen used Claude Code (Anthropic, Claude Opus model) in the implementation phase, for the following tasks:
+- Writing unit, integration and system tests for his testing assignments and for uncaught mutants.
+- Debugging and code correctenss
 
 **Teodor Vasilev:**
 Teodor used Claude Code (Anthropic, Claude Opus models) in the implementation phase, for the
@@ -233,15 +273,20 @@ the following tasks:
 - Manual analysis of simulation log output to verify expected behaviour and locate bugs.
 - Automatically running project tooling (`./gradlew test`, `./gradlew build`, `./gradlew
   detekt*`, `./gradlew systemtestExec`, etc.) and fixing the problems these runs surfaced.
+- Resolving merge conflicts when pulling teammates' pushes into his own in-progress work
+  (2026-09-16, 17, 18, 21, 22 and 23), after teammates had pushed interface changes to shared
+  code (constructors, field access, customer-group shapes) that his own work touched. Every
+  resolved conflict was reviewed before committing.
 
 **Biborka Fancsali:**
-*(to be filled in by Biborka)*
+I used Claude (Sonnet 5) in the implementation for:
+- checking my code's correctness, and debugging it
+- writing unit, integration and system tests
 
 **Constantin Hartmann:**
-*(to be filled in by Constantin)*
-
-In case of option 2, add additional sentences in which you provide more details on which tools
-you used for which specific tasks and to which extent.
+ChatGPT was used for:
+- checking, debugging, and proposing code changes
+- generating unit, integration, and system tests using Codex
 
 We are aware of the potential dangers of using these tools and take full responsibility for any
 code, documents and other content produced during the group phase.
