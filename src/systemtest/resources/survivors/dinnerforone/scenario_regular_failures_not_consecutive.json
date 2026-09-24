@@ -1,0 +1,11 @@
+{
+  "customerGroups": [
+    { "id": 1, "type": "REGULAR", "size": 4, "visitingTick": 5, "foodPreferences": [],
+      "visitingStart": 4, "visitingPeriod": 1, "restaurant": 1, "tableType": "COMMON" },
+    { "id": 2, "type": "EVENT", "size": 4, "visitingTick": 3, "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"], "eventEvening": 4, "favoriteDishes": { "ASIAN": "Rice Bowl" } },
+    { "id": 3, "type": "EVENT", "size": 4, "visitingTick": 3, "foodPreferences": [],
+      "restaurantTypes": ["ASIAN"], "eventEvening": 6, "favoriteDishes": { "ASIAN": "Rice Bowl" } }
+  ],
+  "incidents": []
+}

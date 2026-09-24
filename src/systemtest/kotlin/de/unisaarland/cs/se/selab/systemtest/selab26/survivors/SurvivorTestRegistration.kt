@@ -27,6 +27,8 @@ object SurvivorTestRegistration {
         testSuite.registerTest(F16RetryJustBeforeTheLastThreeTicksIsSeated())
         testSuite.registerTest(F16RetryInTheLastThreeTicksOfAnEarlyClosingIsRefused())
         testSuite.registerTest(P05LikelihoodsAfterTwoFailedSeatingAttempts())
+        testSuite.registerTest(F25NoReconsiderationAfterTwoFailedSeatingAttempts())
+        testSuite.registerTest(F16TheSeatingRetryLimitIsTwoAttemptsNotThree())
     }
 
     private fun registerBacklash(testSuite: SELab26TestSuite) {
@@ -47,6 +49,8 @@ object SurvivorTestRegistration {
         testSuite.registerTest(F27TwoUnservedMembersLeaveTogether())
         testSuite.registerTest(P03EventMembersOrderOneByOne())
         testSuite.registerTest(F21EscortingLoadCountsCustomers())
+        testSuite.registerTest(F22NonConsecutiveFailuresDoNotStopARegular())
+        testSuite.registerTest(F22RegularWithStartOneAndPeriodThreeVisitsEveryThirdEvening())
     }
 
     private fun registerKingOfTheHill(testSuite: SELab26TestSuite) {

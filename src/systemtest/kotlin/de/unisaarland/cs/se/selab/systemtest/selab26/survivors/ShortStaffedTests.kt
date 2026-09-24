@@ -234,3 +234,63 @@ class P05LikelihoodsAfterTwoFailedSeatingAttempts : SurvivorTest() {
         )
     }
 }
+
+/**
+ * ShortStaffed: after two ticks without a free waiter the group leaves and does *not* reconsider,
+ * even when a second restaurant of the same type with four free waiters and a free table is open
+ * next door. Exactly one Restaurant Decision is logged for the group, for restaurant 1; a mutant
+ * that lets the group browse again picks restaurant 2 and produces a second decision line.
+ */
+class F25NoReconsiderationAfterTwoFailedSeatingAttempts : SurvivorTest() {
+    override val name = "F25NoReconsiderationAfterTwoFailedSeatingAttempts"
+    override val description =
+        "With a free alternative restaurant open, the unseated group still leaves without deciding again."
+    override val food = "$DIR/food_rice_only.json"
+    override val restaurants = "$DIR/restaurants_busy_and_free_alternative.json"
+    override val scenario = "$DIR/scenario_casual_two_strikes_with_alternative.json"
+    override val maxTicks = 24
+    override val group = 3
+
+    override suspend fun run() {
+        assertTrace(
+            listOf(DECISION, NO_DECISION, ARRIVAL, SEATING, NO_SEATING, RATING),
+            """
+            1/3 Restaurant Decision: Group 3 decided on restaurant 1.
+            1/3 Restaurant Arrival (R 1): Group 3 arrived at restaurant 1.
+            1/3 FOH No Seating (R 1): No free waitstaff available for group 3.
+            1/4 FOH No Seating (R 1): No free waitstaff available for group 3.
+            1/4 Rating (R 1): Group 3 rates the restaurant 1 with NEGATIVE rating, leading to 5 positive ratings and 1 negative ratings.
+            """.trimIndent().lines(),
+        )
+    }
+}
+
+/**
+ * ShortStaffed: the limit is exactly two attempts, not three. A third group of ten arrives in tick
+ * 5 and would take the waiter's whole SEATING load again, but the small group is already gone after
+ * its second failure in tick 4, so no third "No Seating" line is ever written for it. A mutant that
+ * lets the group try once more keeps it waiting into tick 5.
+ */
+class F16TheSeatingRetryLimitIsTwoAttemptsNotThree : SurvivorTest() {
+    override val name = "F16TheSeatingRetryLimitIsTwoAttemptsNotThree"
+    override val description =
+        "Blocked in ticks 3 and 4, the group leaves; the tick-5 blocker never produces a third refusal."
+    override val food = "$DIR/food_rice_only.json"
+    override val restaurants = "$DIR/restaurants_three_big_tables_one_waiter.json"
+    override val scenario = "$DIR/scenario_blocked_three_ticks_running.json"
+    override val maxTicks = 24
+    override val group = 3
+
+    override suspend fun run() {
+        assertTrace(
+            listOf(DECISION, NO_DECISION, ARRIVAL, SEATING, NO_SEATING, RATING),
+            """
+            1/3 Restaurant Decision: Group 3 decided on restaurant 1.
+            1/3 Restaurant Arrival (R 1): Group 3 arrived at restaurant 1.
+            1/3 FOH No Seating (R 1): No free waitstaff available for group 3.
+            1/4 FOH No Seating (R 1): No free waitstaff available for group 3.
+            1/4 Rating (R 1): Group 3 rates the restaurant 1 with NEGATIVE rating, leading to 0 positive ratings and 1 negative ratings.
+            """.trimIndent().lines(),
+        )
+    }
+}

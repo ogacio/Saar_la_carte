@@ -256,3 +256,85 @@ class F21EscortingLoadCountsCustomers : SurvivorTest() {
         )
     }
 }
+
+/**
+ * DinnerForOne: the churn rule counts *consecutive* failed attempts, not failures in total. The
+ * regular loses its table to an event on evenings 4 and 6, but eats on evening 5 in between, so the
+ * counter is reset by that success and the group keeps visiting on 7, 8 and 9. A mutant that counts
+ * every failure, or that never resets the count, silences the group after evening 6.
+ */
+class F22NonConsecutiveFailuresDoNotStopARegular : SurvivorTest() {
+    override val name = "F22NonConsecutiveFailuresDoNotStopARegular"
+    override val description =
+        "A regular failing on evenings 4 and 6 with a success in between still visits on 7, 8 and 9."
+    override val food = "$DIR/food_rice_only.json"
+    override val restaurants = "$DIR/restaurants_one_four_table_event.json"
+    override val scenario = "$DIR/scenario_regular_failures_not_consecutive.json"
+    override val maxTicks = 216
+    override val group = 1
+
+    override suspend fun run() {
+        assertTrace(
+            listOf(NO_RESERVING, ARRIVAL, SEATING, ORDERING, RATING),
+            """
+            3/24 FOH No Reserving (R 1): No table could be reserved for group 1.
+            4/1 Rating (R 1): Group 1 rates the restaurant 1 with NEGATIVE rating, leading to 0 positive ratings and 1 negative ratings.
+            5/5 Restaurant Arrival (R 1): Group 1 arrived at restaurant 1.
+            5/5 FOH Seating (R 1): Group 1 seated at table 1 by waitstaff 1.
+            5/5 FOH Ordering (R 1): Group 1 placed order 2 of Rice Bowl:4 with waitstaff 1.
+            5/7 Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, leading to 2 positive ratings and 1 negative ratings.
+            5/24 FOH No Reserving (R 1): No table could be reserved for group 1.
+            6/1 Rating (R 1): Group 1 rates the restaurant 1 with NEGATIVE rating, leading to 2 positive ratings and 2 negative ratings.
+            7/5 Restaurant Arrival (R 1): Group 1 arrived at restaurant 1.
+            7/5 FOH Seating (R 1): Group 1 seated at table 1 by waitstaff 1.
+            7/5 FOH Ordering (R 1): Group 1 placed order 4 of Rice Bowl:4 with waitstaff 1.
+            7/7 Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, leading to 4 positive ratings and 2 negative ratings.
+            8/5 Restaurant Arrival (R 1): Group 1 arrived at restaurant 1.
+            8/5 FOH Seating (R 1): Group 1 seated at table 1 by waitstaff 1.
+            8/5 FOH Ordering (R 1): Group 1 placed order 5 of Rice Bowl:4 with waitstaff 1.
+            8/7 Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, leading to 5 positive ratings and 2 negative ratings.
+            9/5 Restaurant Arrival (R 1): Group 1 arrived at restaurant 1.
+            9/5 FOH Seating (R 1): Group 1 seated at table 1 by waitstaff 1.
+            9/5 FOH Ordering (R 1): Group 1 placed order 6 of Rice Bowl:4 with waitstaff 1.
+            9/7 Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, leading to 6 positive ratings and 2 negative ratings.
+            """.trimIndent().lines(),
+        )
+    }
+}
+
+/**
+ * DinnerForOne, "the same procedure as every year": the recurrence is visitingStart and then every
+ * visitingPeriod evenings, so start 1 with period 3 means evenings 1, 4 and 7 over seven evenings,
+ * and nothing in between. The registered recurrence test uses start 2 / period 2, where start and
+ * period are equal; here they differ and the start is the very first evening, so an off-by-one in
+ * either the start or the period lands on a different set of evenings.
+ */
+class F22RegularWithStartOneAndPeriodThreeVisitsEveryThirdEvening : SurvivorTest() {
+    override val name = "F22RegularWithStartOneAndPeriodThreeVisitsEveryThirdEvening"
+    override val description = "A regular with start 1 / period 3 eats on evenings 1, 4 and 7 only."
+    override val food = "$DIR/food_rice_only.json"
+    override val restaurants = "$DIR/restaurants_plain_four_table.json"
+    override val scenario = "$DIR/scenario_regular_period_three_from_one.json"
+    override val maxTicks = 168
+    override val group = 1
+
+    override suspend fun run() {
+        assertTrace(
+            listOf(NO_RESERVING, ARRIVAL, SEATING, ORDERING, RATING),
+            """
+            1/3 Restaurant Arrival (R 1): Group 1 arrived at restaurant 1.
+            1/3 FOH Seating (R 1): Group 1 seated at table 1 by waitstaff 1.
+            1/3 FOH Ordering (R 1): Group 1 placed order 1 of Rice Bowl:2 with waitstaff 1.
+            1/5 Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, leading to 1 positive ratings and 0 negative ratings.
+            4/3 Restaurant Arrival (R 1): Group 1 arrived at restaurant 1.
+            4/3 FOH Seating (R 1): Group 1 seated at table 1 by waitstaff 1.
+            4/3 FOH Ordering (R 1): Group 1 placed order 2 of Rice Bowl:2 with waitstaff 1.
+            4/5 Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, leading to 2 positive ratings and 0 negative ratings.
+            7/3 Restaurant Arrival (R 1): Group 1 arrived at restaurant 1.
+            7/3 FOH Seating (R 1): Group 1 seated at table 1 by waitstaff 1.
+            7/3 FOH Ordering (R 1): Group 1 placed order 3 of Rice Bowl:2 with waitstaff 1.
+            7/5 Rating (R 1): Group 1 rates the restaurant 1 with POSITIVE rating, leading to 3 positive ratings and 0 negative ratings.
+            """.trimIndent().lines(),
+        )
+    }
+}
