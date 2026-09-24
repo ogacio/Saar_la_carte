@@ -11,6 +11,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.F34UnavailableIngr
 import de.unisaarland.cs.se.selab.systemtest.selab26.coverage.P04EventDecidesThreeEveningsAheadAndArrivesOnItsEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F20KitchenStatusForgetsMealsHandedToTheDriver
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24ADeliveredGroupEatsAndRates
+import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24AnOrderLeavesOnlyWhenEveryMealIsCooked
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F24GroupGivesUpWhileTheDriverIsOnTheRoad
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F25DeliveryBrowsingUsesTheLiveRating
 import de.unisaarland.cs.se.selab.systemtest.selab26.delivery.F25DeliveryDecidesEarlyAndSkipsTheBusyRestaurant
@@ -263,6 +264,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27TheFourthTickIsNeutr
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F27WholeGroupLeavesAtFive
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DeliveryIgnoresTableAvailability
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28DriverRemovalPersistsAcrossEvenings
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28EventSeatsAreBookedPerEvening
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28HighestRatingDifferenceWins
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TieGoesToLowestId
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.F28TypeFilterPrecedesRating
@@ -274,6 +276,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventOrdersFavourite
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P03EventSeatedByTwoWaiters
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AFailedReservationRatesAtTheOpeningTick
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AlwaysLikelihoodRatesNeutralPositive
+import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05AnEventAlwaysRatesWhereSomeStaysSilent
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05BacklashFailedEventReservationRatesNegative
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05BacklashFailedReservationRatesNegativeInTickOne
 import de.unisaarland.cs.se.selab.systemtest.selab26.foh.P05NeverLikelihoodLeavesNoRating
@@ -330,6 +333,7 @@ import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondType
 import de.unisaarland.cs.se.selab.systemtest.selab26.gvalidation.IndieSecondTypeWithoutBasicDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.ChickenAndRiceChangesStackOnThePriorAmount
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31RemovingMoreCooksThanExistStopsAtZero
+import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31RemovingMoreWaitstaffThanExistStopsAtZero
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F31StaffIncidentAddsTheCookThatUnlocksTheDish
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32OnlyThatIngredientChanges
 import de.unisaarland.cs.se.selab.systemtest.selab26.incidents.F32RecipeIncidentAdaptsOnlyItsIngredientInEveryRecipe
@@ -530,6 +534,10 @@ object SystemTestRegistration {
      * F11A targets Arbeitszeitbetrug, F31 targets ShortStaffed.
      */
     private fun registerPromotedProbes(testSuite: SELab26TestSuite) {
+        testSuite.registerTest(F31RemovingMoreWaitstaffThanExistStopsAtZero())
+        testSuite.registerTest(F24AnOrderLeavesOnlyWhenEveryMealIsCooked())
+        testSuite.registerTest(F28EventSeatsAreBookedPerEvening())
+        testSuite.registerTest(P05AnEventAlwaysRatesWhereSomeStaysSilent())
         testSuite.registerTest(F11ACookIsBusyUntilTheTickAfterItsBatchFinishes())
         testSuite.registerTest(F31RemovingMoreCooksThanExistStopsAtZero())
         testSuite.registerTest(F21ExtraPatienceAfterPartialServe())

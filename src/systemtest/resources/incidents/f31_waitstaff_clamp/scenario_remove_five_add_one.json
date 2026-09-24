@@ -1,0 +1,7 @@
+{"customerGroups":[
+{"id":1,"type":"REGULAR","size":2,"tableType":"COMMON","visitingTick":3,
+ "visitingStart":1,"visitingPeriod":2,"restaurant":1,
+ "foodPreferences":[{"size":2,"favoriteDishes":["Rice Bowl"]}]}],
+"incidents":[
+{"id":1,"type":"STAFF","evening":3,"restaurant":1,"number":-5,"staffType":"WAITSTAFF"},
+{"id":2,"type":"STAFF","evening":5,"restaurant":1,"number":1,"staffType":"WAITSTAFF"}]}

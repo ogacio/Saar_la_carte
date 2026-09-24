@@ -1,0 +1,42 @@
+{
+ "customerGroups": [
+  {
+   "id": 1,
+   "type": "CASUAL",
+   "size": 2,
+   "tableType": "COMMON",
+   "visitingTick": 3,
+   "restaurantTypes": [
+    "ASIAN"
+   ],
+   "visitingEvenings": [
+    4
+   ],
+   "ratingLikelihood": "SOME",
+   "foodPreferences": [
+    {
+     "size": 2,
+     "favoriteDishes": [
+      "Slow Braise"
+     ]
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "type": "EVENT",
+   "size": 6,
+   "tableType": "SEPARATED",
+   "visitingTick": 3,
+   "eventEvening": 4,
+   "restaurantTypes": [
+    "ASIAN"
+   ],
+   "foodPreferences": [],
+   "favoriteDishes": {
+    "ASIAN": "Rice Bowl"
+   }
+  }
+ ],
+ "incidents": []
+}

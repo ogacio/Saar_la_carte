@@ -1,0 +1,8 @@
+{"customerGroups":[
+{"id":1,"type":"EVENT","size":14,"tableType":"SEPARATED","visitingTick":5,
+ "eventEvening":4,"restaurantTypes":["ASIAN"],"foodPreferences":[],"favoriteDishes":{"ASIAN":"Rice Bowl"}},
+{"id":2,"type":"EVENT","size":10,"tableType":"SEPARATED","visitingTick":6,
+ "eventEvening":4,"restaurantTypes":["ASIAN"],"foodPreferences":[],"favoriteDishes":{"ASIAN":"Rice Bowl"}},
+{"id":3,"type":"EVENT","size":10,"tableType":"SEPARATED","visitingTick":5,
+ "eventEvening":5,"restaurantTypes":["ASIAN"],"foodPreferences":[],"favoriteDishes":{"ASIAN":"Rice Bowl"}}],
+"incidents":[]}

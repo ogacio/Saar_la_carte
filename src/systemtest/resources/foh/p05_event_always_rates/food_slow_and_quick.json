@@ -1,0 +1,4 @@
+{"ingredients":[{"name":"rice","unit":"g","packagingVolume":500,"bestBefore":9}],
+"recipes":[
+{"id":1,"dishName":"Rice Bowl","duration":10,"cookType":["EXEC"],"ingredients":[{"name":"rice","amount":1}],"basicDishFor":"ASIAN"},
+{"id":2,"dishName":"Slow Braise","duration":40,"cookType":["EXEC"],"ingredients":[{"name":"rice","amount":1}]}]}

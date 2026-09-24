@@ -1,0 +1,5 @@
+{"customerGroups":[
+{"id":1,"type":"CASUAL","size":2,"visitingTick":12,"deliveryDistance":5,
+ "restaurantTypes":["ASIAN"],"visitingEvenings":[1],"ratingLikelihood":"ALWAYS",
+ "foodPreferences":[{"size":1,"favoriteDishes":["Quick Bowl"]},{"size":1,"favoriteDishes":["Slow Braise"]}]}],
+"incidents":[]}
