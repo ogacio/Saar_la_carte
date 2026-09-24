@@ -139,67 +139,36 @@ cleanups are omitted per the reporting guidelines.
 No commits on the weekends (2026-09-12/13, 2026-09-19/20) — that work just shows up under the
 next weekday instead of being listed separately.
 
-- **2026-09-10:** Set up the repo/environment together with the rest of the team, same as
-  everyone else on day one — no feature code yet.
-- **2026-09-11:** Wrote the F05/F06 scenario parser (`ScenarioParser`, `CustomerGroupSerialiser`,
+- **2026-09-10:** Repo/environment setup, no feature code yet.
+- **2026-09-11:** F05/F06 scenario parser (`ScenarioParser`, `CustomerGroupSerialiser`,
   `CustomerGroupJsonDto`, `ScenarioFileDto`, `FoodPreferenceDto`, `IncidentSerialiser`,
-  `IncidentJsonDto`). Implemented F22/F23 (`CustomerGroup`, `RegularCustomerGroup`,
-  `CasualCustomerGroup`, `History`), F26 (`FoodPreference`) and F27 (waiting/eating/give-up
-  clocks). Encapsulated the P04 event customer group. Put together the shared base
-  classes/enums used across the customer hierarchy.
-- **2026-09-14:** Wrote unit tests for two of his testing-block features while yesterday's work
-  was still fresh: F02 (`logging/*Test`) and F03 (`FoodParserTest`/food-model tests). Fixed a
-  couple of F22/F25 issues that came up while writing those tests, and adjusted his own code to
-  interface changes teammates had pushed in the meantime.
-- **2026-09-16:** Added `Validator`, the config validation shared by all three parsers. Fixed F05,
-  F22/F23/F25/F26 and F27 against the now-integrated model from the last two days' work, and
-  resolved the merge conflicts that came with it — used AI help to get through the conflicting
-  hunks faster where the two sides clearly weren't touching the same logic.
-- **2026-09-17:** Spent the day on testing-block work (Ognjen's and Teodor's features, per the
-  no-self-testing rule): unit tests for `SimulatorTest` (F01), `TableAssignmentServiceTest` (F15),
-  `WaiterAssignmentServiceTest` (F17), `OrderingServiceOrderedTest` (F18), `ServingServiceTest`
-  (F19), `DeliveryDriverTest` (F20), `IncidentsTest` (F31-F34), `EventCustomerGroupTest` (P04),
-  and the `TableLifecycleIntegrationTest` integration test (F15/F16/F17/F19/F21). Along the way
-  fixed stale constructor/field-access references these tests turned up (`Order`/`RestaurantData`
-  had changed shape underneath them), switched to getters instead of direct field access, and
-  cleaned up the detekt/system-test fallout from that. More merge conflicts to resolve pulling in
-  `origin/main`.
-- **2026-09-18:** Fixed the bugs yesterday's tests had surfaced: cooking duration and cooked-meal
-  return in `Kitchen`/`Cook`, the ingredient packaging amount calculation, the delivery
-  rating/eating lifecycle (closing gate, experience calculation, give-up clock), and swapped
-  tick/evening arguments in the tick-started log line. Wired the delivery service into the
-  simulator on startup and wrote the cooked-meals statistics. More merge conflicts pulling
-  `testing` in from teammates.
-- **2026-09-21:** Fixed a delivery-order tick-timing bug reported on the forum (placedTick now
-  uses the global clock, same as the dine-in path). Unregistered a few system tests that turned
-  out to be wrong against the real reference so they'd stop blocking the mutant run for everyone.
-- **2026-09-22:** Started actively hunting mutants. Added system tests that killed 16 previously
-  uncaught mutants in one go. Tracked down and fixed an F27 patience-window off-by-one (forum
-  335/340) along with its test fixture. Wrote more fixture tests for the delivery/kitchen/
-  validation gaps flagged in `tests/giant`.
-- **2026-09-23:** Kept writing mutant-hunting system tests. Fixed several things found from the
-  forum while testing: event favourite validation no longer wrongly requires a basic dish of that
-  type (forum 352), fixed the last-3-ticks retry refusal and interleaved delivery ordering into
-  step 1 (forum 345), and wired EVENT order-taking into the seating blocks with delivery counting
-  (forum 266). Added coverage tests for under-tested branches and unregistered four more tests
-  that failed against the real reference and were blocking the mutant run. Filled in this
-  implementation report and resubmitted `feature_assignments.yaml`.
-- **2026-09-24:** Went after the six mutants that had survived every run so far (Arbeitszeitbetrug,
-  Backlash, DinnerForOne, FreeForAll, KingOfTheHill, ShortStaffed) using the hypotheses written up
-  in `mutants-cases.md`. Pulled first and found Teodor had already pushed 40 new tests for the
-  same six mutants, so checked those before writing anything to avoid duplicating his work. Found
-  two gaps he hadn't covered and wrote tests for them: for ShortStaffed, that a rejected group
-  never reconsiders even when a free alternative restaurant is available, and that the
-  seating-retry limit is exactly two attempts, not three; for DinnerForOne, that a success
-  between two failures resets the churn counter instead of it just counting total failures, and a
-  recurrence case (start 1, period 3) the existing test couldn't tell apart from other off-by-ones.
-  Verified all four against the real reference report before registering them. Then went through
-  the official reference results for all 44 of the survivor tests (Teodor's 40 plus these 4) one
-  by one: 41 passed and got promoted into the mutant-facing list; 3 of Teodor's failed against the
-  real reference even though they matched our own implementation's behaviour exactly, so those
-  stayed reference-only and got flagged to him — looks like a real mismatch between our
-  implementation and the reference on those three rules, not a bad test. Promoting them anyway
-  would have blocked the whole mutant category for everyone.
+  `IncidentJsonDto`); F22/F23 (`CustomerGroup`, `RegularCustomerGroup`, `CasualCustomerGroup`,
+  `History`); F26 (`FoodPreference`); F27 (waiting/eating/give-up clocks); P04 event customer
+  group; shared base classes/enums.
+- **2026-09-14:** Unit tests for F02 (`logging/*Test`) and F03 (`FoodParserTest`); F22/F25 fixes;
+  adapted his code to teammates' interface changes.
+- **2026-09-16:** `Validator` (config validation shared by all three parsers); fixes to F05,
+  F22/F23/F25/F26, F27; merge-conflict resolution (AI-assisted).
+- **2026-09-17:** Testing-block work on Ognjen's and Teodor's features: `SimulatorTest` (F01),
+  `TableAssignmentServiceTest` (F15), `WaiterAssignmentServiceTest` (F17),
+  `OrderingServiceOrderedTest` (F18), `ServingServiceTest` (F19), `DeliveryDriverTest` (F20),
+  `IncidentsTest` (F31-F34), `EventCustomerGroupTest` (P04), `TableLifecycleIntegrationTest`
+  (F15/F16/F17/F19/F21); fixed stale `Order`/`RestaurantData` constructor references, switched to
+  getters over direct field access, cleared the detekt fallout; more merge conflicts.
+- **2026-09-18:** Fixed cooking duration/cooked-meal return, ingredient packaging calculation,
+  delivery rating/eating lifecycle, swapped tick/evening log args; wired the delivery service
+  into the simulator; wrote cooked-meals statistics.
+- **2026-09-21:** Fixed a delivery-order tick-timing bug (forum); unregistered a few system tests
+  invalid against the reference.
+- **2026-09-22:** Added system tests killing 16 previously-uncaught mutants; fixed an F27
+  patience-window off-by-one (forum 335/340); more fixture tests for delivery/kitchen/validation
+  gaps.
+- **2026-09-23:** More mutant-hunting system tests; fixes for event favourite validation (forum
+  352), last-3-ticks retry refusal and delivery-ordering interleaving (forum 345), EVENT
+  order-taking (forum 266); coverage tests; unregistered four more reference-invalid tests; filled
+  in this implementation report and resubmitted `feature_assignments.yaml`.
+- **2026-09-24:** Coordinated with Ognjen and Teodor on the remaining uncaught mutants to avoid
+  duplicating effort; more system tests.
 
 ### Biborka Fancsali
 
