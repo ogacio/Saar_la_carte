@@ -306,4 +306,79 @@ class TableAssignmentServiceTest {
     fun isMergedIsFalseForAPlainTable() {
         assertFalse(Table(1, 4, TableType.COMMON).isMerged)
     }
+
+    @Test
+    fun ignoresOccupiedAndReservedTables() {
+        val occupied = Table(1, 4, TableType.COMMON).apply { status = TableStatus.OCCUPIED }
+        val reserved = Table(2, 4, TableType.COMMON).apply { status = TableStatus.RESERVED }
+        val free = Table(3, 4, TableType.COMMON)
+        val service = serviceWith(occupied, reserved, free)
+
+        val chosen = service.assign(4, TableType.COMMON, liftRule = false)
+
+        assertSame(free, chosen) // Rule 1: All occupied or reserved tables are ignored[cite: 1].
+    }
+
+    @Test
+    fun multipleExactFitsPicksLowestId() {
+        val exactHighId = Table(5, 4, TableType.COMMON)
+        val exactLowId = Table(2, 4, TableType.COMMON)
+        val service = serviceWith(exactHighId, exactLowId)
+
+        val chosen = service.assign(4, TableType.COMMON, liftRule = false)
+
+        assertSame(exactLowId, chosen) // Tie-breaker: lowest id is chosen first[cite: 1].
+    }
+
+    @Test
+    fun largerTableSelectionPrioritizesSmallestSizeThenLowestId() {
+        // Group size 5. Needs at least 5.
+        // 3/4 rule allows up to size 6 (5 >= 6 * 0.75 = 4.5).
+        val large = Table(1, 8, TableType.COMMON) // Too large (fails 3/4 rule)
+        val perfectSizeHighId = Table(4, 6, TableType.COMMON)
+        val perfectSizeLowId = Table(2, 6, TableType.COMMON)
+        val slightlyLarger = Table(3, 7, TableType.COMMON)
+
+        val service = serviceWith(large, perfectSizeHighId, perfectSizeLowId, slightlyLarger)
+
+        val chosen = service.assign(5, TableType.COMMON, liftRule = false)
+
+        // Rule: smallest size (6 over 7), then lowest ID (2 over 4)[cite: 1].
+        assertSame(perfectSizeLowId, chosen)
+    }
+
+    @Test
+    fun filtersStrictlyByRequestedTableType() {
+        val commonTable = Table(1, 4, TableType.COMMON)
+        val separatedTable = Table(2, 4, TableType.SEPARATED)
+        val service = serviceWith(commonTable, separatedTable)
+
+        val chosen = service.assign(4, TableType.SEPARATED, liftRule = false)
+
+        assertSame(separatedTable, chosen)
+    }
+
+    @Test
+    fun complexMergeIterativelyDropsSmallestTablesInAscendingIdOrder() {
+        // Group size: 7
+        val t1 = Table(1, 3, TableType.COMMON)
+        val t2 = Table(2, 3, TableType.COMMON)
+        val t3 = Table(3, 5, TableType.COMMON)
+        val service = serviceWith(t1, t2, t3)
+
+        // Algorithm:
+        // 1. Sort smallest to largest size, then ID: t1(3), t2(3), t3(5)[cite: 1].
+        // 2. Add until size >= 7: t1 + t2 + t3 = 11.
+        // 3. Size is above 7. Iteratively remove smallest in ascending ID order[cite: 1].
+        // 4. Remove t1(3) -> total is 8. Still >= 7.
+        // 5. Try removing next smallest, t2(3) -> total would be 5. 5 < 7, so stop dropping[cite: 1].
+        // Result should be t2(3) + t3(5) = size 8.
+        val chosen = service.assign(7, TableType.COMMON, liftRule = false)
+
+        assertNotNull(chosen)
+        assertEquals(8, chosen.size)
+        assertEquals(setOf(2, 3), chosen.originals().map { it.id }.toSet())
+        assertEquals(2, chosen.id) // Merged table operates on lowest id of original tables[cite: 1].
+        assertEquals(TableStatus.FREE, t1.status)
+    }
 }

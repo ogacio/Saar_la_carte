@@ -147,4 +147,66 @@ class RatingServiceTest {
 
         assertEquals(listOf("[DEBUG] Rating Status (R 1): 0 groups performed ratings this tick."), logLines(log))
     }
+
+    /** Event group rates positively when served well within the 4-tick expectation window. */
+    @Test
+    fun eventGroupRatesPositiveWhenServedPromptly() {
+        val visit = servedVisit(event(3, 4), lastServedTick = 2)
+        captureLog()
+
+        service.rate(visit, sbu)
+
+        assertEquals(1 to 0, ratings())
+    }
+
+    /** Event group rates negatively when the food arrives too late, same as a regular group would. */
+    @Test
+    fun eventGroupRatesNegativeWhenServedTooLate() {
+        val visit = servedVisit(event(3, 4), lastServedTick = 6)
+        captureLog()
+
+        service.rate(visit, sbu)
+
+        assertEquals(0 to 1, ratings())
+    }
+
+    /** logStatus counts every group that rated this tick, not just the most recent one. */
+    @Test
+    fun logStatusCountsAllGroupsThatRatedThisTick() {
+        val first = servedVisit(regular(3, 2), lastServedTick = 3)
+        val second = servedVisit(regular(5, 2), lastServedTick = 3)
+        val log = captureLog()
+
+        service.rate(first, sbu)
+        service.rate(second, sbu)
+        service.logStatus(sbu)
+
+        assertEquals(
+            "[DEBUG] Rating Status (R 1): 2 groups performed ratings this tick.",
+            logLines(log).last(),
+        )
+    }
+
+    /** A neutral experience for a NEVER-likelihood casual group still produces no rating. */
+    @Test
+    fun casualGroupWithNeverLikelihoodSkipsEvenAPositiveExperience() {
+        val visit = servedVisit(casual(3, 2, likelihood = RatingLikelihood.NEVER), lastServedTick = 2)
+        captureLog()
+
+        service.rate(visit, sbu)
+
+        assertEquals(0 to 0, ratings())
+    }
+
+    /** A failed visit for an event group counts as a failed attempt the same way it does for regulars. */
+    @Test
+    fun failedVisitCountsAsFailedAttemptForEvents() {
+        val group = event(3, 4)
+        val visit = Visit(group).also { it.failedAttempt = true }
+        captureLog()
+
+        service.rate(visit, sbu)
+
+        assertEquals(0 to 1, ratings())
+    }
 }

@@ -190,4 +190,89 @@ class EventCustomerGroupTest {
     fun groupTypeIsEvent() {
         assertEquals(GroupType.EVENT, eventGroup().groupType())
     }
+
+    /**
+     * A group looks only at restaurants where every customer finds at least one dish
+     * consisting only of ingredients they eat[cite: 1, 3].
+     */
+    @Test
+    fun acceptsAnyReturnsTrueIfAllMembersCanEatAtLeastOneDish() {
+        // Set up a dummy preference that we can mock or define behavior for
+        val pref = de.unisaarland.cs.se.selab.sharedPackage.customers.FoodPreference(
+            1,
+            excluded = setOf(
+                de.unisaarland.cs.se.selab.sharedPackage.Ingredient(
+                    "onion",
+                    de.unisaarland.cs.se.selab.sharedPackage.UnitType.X,
+                    1,
+                    1
+                )
+            ),
+            emptySet(),
+            emptyList()
+        )
+        val pickyCustomer = Customer(pref)
+
+        val group = EventCustomerGroup(
+            id = 1,
+            groupSize = 1,
+            tableType = TableType.COMMON,
+            visitingTick = 1,
+            members = listOf(pickyCustomer),
+            preferences = listOf(pref),
+            restaurantTypes = setOf(RestaurantType.EUROPEAN),
+            eventEvening = 10,
+            favouriteDishes = mapOf(RestaurantType.EUROPEAN to "safe dish")
+        )
+
+        // safeDish contains no ingredients, so it has no excluded ingredients
+        val safeDish = recipe(1)
+
+        assertTrue(group.acceptsAny(listOf(safeDish)))
+    }
+
+    /**
+     * If even one member cannot find an acceptable dish due to excluded ingredients,
+     * the entire group rejects the restaurant[cite: 1, 3].
+     */
+    @Test
+    fun acceptsAnyReturnsFalseIfAnyMemberCannotEatAnyDish() {
+        val onion = de.unisaarland.cs.se.selab.sharedPackage.Ingredient(
+            "onion",
+            de.unisaarland.cs.se.selab.sharedPackage.UnitType.X,
+            1,
+            1
+        )
+        val pref = de.unisaarland.cs.se.selab.sharedPackage.customers.FoodPreference(
+            1,
+            excluded = setOf(onion),
+            emptySet(),
+            emptyList()
+        )
+        val pickyCustomer = Customer(pref)
+
+        val group = EventCustomerGroup(
+            id = 1,
+            groupSize = 1,
+            tableType = TableType.COMMON,
+            visitingTick = 1,
+            members = listOf(pickyCustomer),
+            preferences = listOf(pref),
+            restaurantTypes = setOf(RestaurantType.EUROPEAN),
+            eventEvening = 10,
+            favouriteDishes = mapOf(RestaurantType.EUROPEAN to "onion soup")
+        )
+
+        val recipeIngredient = de.unisaarland.cs.se.selab.sharedPackage.RecipeIngredient(onion, 1)
+        val onionDish = de.unisaarland.cs.se.selab.sharedPackage.Recipe(
+            2,
+            "onion soup",
+            10,
+            emptySet(),
+            mutableListOf(recipeIngredient),
+            null
+        )
+
+        assertFalse(group.acceptsAny(listOf(onionDish)))
+    }
 }

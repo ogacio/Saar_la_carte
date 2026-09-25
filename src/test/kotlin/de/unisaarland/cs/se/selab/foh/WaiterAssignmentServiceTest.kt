@@ -345,4 +345,106 @@ class WaiterAssignmentServiceTest {
 
         assertNull(service.currentEventWaiter(ActionType.SEATING))
     }
+
+    @Test
+    fun tickCapacityLimitStrictlyFiltersBeforeCurrentLoadPoolsAreConsidered() {
+        val quietButExhausted = Waiter().also {
+            it.adjustLoad(2)
+            it.consume(ActionType.SEATING, 9) // Only 1 capacity left this tick
+        }
+        val busyButFresh = Waiter().also {
+            it.adjustLoad(15) // > 10, so it normally falls to the second candidate pool
+            // 10 capacity left
+        }
+        val service = serviceWith(quietButExhausted, busyButFresh)
+
+        // Group size is 2. quietButExhausted cannot fit them (capacity 1).
+        val chosen = service.assignPermanent(2)
+
+        // The manager strictly filters out waiters who will exceed the action limit first,
+        // so it falls back to the busy waiter who actually has the tick capacity[cite: 1].
+        assertSame(busyButFresh, chosen)
+    }
+
+    @Test
+    fun assignEventSpreadsCorrectlyWhenTopPriorityHasPartialCapacity() {
+        // Event seating prioritizes descending current load[cite: 1].
+        val highlyLoaded = Waiter().also { it.adjustLoad(15) }
+        val lightlyLoaded = Waiter().also { it.adjustLoad(2) }
+        val service = serviceWith(lightlyLoaded, highlyLoaded)
+
+        highlyLoaded.consume(ActionType.SEATING, 7) // Only 3 capacity left
+
+        // Group of 8 arrives. highlyLoaded should be picked first but can only take 3.
+        val plan = service.assignEvent(8, ActionType.SEATING)
+
+        assertEquals(mapOf(highlyLoaded to 3, lightlyLoaded to 5), plan)
+    }
+
+    @Test
+    fun assignEventSeatingTieBreaksEqualCurrentLoadWithLowestId() {
+        val first = Waiter()
+        val second = Waiter()
+        val service = serviceWith(first, second)
+
+        // Force IDs: first gets 1, second gets 2
+        first.adjustLoad(2)
+        second.adjustLoad(15)
+        service.assignPermanent(1) // first -> ID 1
+        first.adjustLoad(13)
+        second.adjustLoad(-13)
+        service.assignPermanent(1) // second -> ID 2
+
+        // Equalize loads to 10
+        first.adjustLoad(-5)
+        second.adjustLoad(8)
+
+        val plan = service.assignEvent(10, ActionType.SEATING)
+
+        // Expected: first (ID 1) takes precedence over second (ID 2)[cite: 1].
+        assertEquals(listOf(first), plan?.keys?.toList())
+    }
+
+    @Test
+    fun assignEventServingTieBreaksEqualCookedMealsWithLowestId() {
+        val first = Waiter()
+        val second = Waiter()
+        val service = serviceWith(first, second)
+
+        // Force IDs: first gets 1, second gets 2
+        first.adjustLoad(2)
+        second.adjustLoad(15)
+        service.assignPermanent(1)
+        first.adjustLoad(13)
+        second.adjustLoad(-13)
+        service.assignPermanent(1)
+
+        val cookedMeals = mapOf(first to 3, second to 3)
+        val plan = service.assignEvent(10, ActionType.SERVING, cookedMeals)
+
+        // Both have 3 cooked meals; tie broken by lowest ID[cite: 1].
+        assertEquals(listOf(first), plan?.keys?.toList())
+    }
+
+    @Test
+    fun changeStaffNegativeRemovesIdLessWaiterBeforeIdHavingWaiter() {
+        val withId = Waiter()
+        val withoutId = Waiter()
+        val service = serviceWith(withId, withoutId)
+
+        // Grant ID to 'withId' only
+        withId.adjustLoad(2)
+        withoutId.adjustLoad(15)
+        service.assignPermanent(1)
+
+        // Remove 1 staff member
+        service.changeStaff(-1)
+
+        // Validate that 'withoutId' was removed because ID-less staff should be dropped before staff with IDs.
+        // If we try to seat 11 people, it should fail because only 1 waiter (capacity 10) remains.
+        assertNull(service.assignEvent(11, ActionType.SEATING))
+
+        // The remaining waiter should be 'withId'
+        assertSame(withId, service.nextServingWaiter())
+    }
 }
