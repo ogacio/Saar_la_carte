@@ -75,23 +75,36 @@ cleanups are omitted per the reporting guidelines.
 
 ### Ognjen Stojicic
 
-- **2026-09-10:** `ConfigParser`/`ConfigurationLoader`, `GlobalClock` and ratings v1, `Simulator`
-  skeleton and package, `main` + `ParsedModel` v1.
-- **2026-09-11:** FOH and Visit skeleton v1.
-- **2026-09-14:** Visit and visit states implemented, entire serving phase.
-- **2026-09-15:** Import fixes.
-- **2026-09-16:** Customer-done-eating handling, detekt fixes, parser fixes, services v3,
-  simulator wiring.
-- **2026-09-17:** First green build; getters/detekt cleanup; basic services/visit tests.
-- **2026-09-18:** Black-box testing of other members' features, delivery service fixes,
-  `FohFlowTest`, more self-authored unit/integration tests.
-- **2026-09-19:** Forum-driven adjustments.
-- **2026-09-20:** Large batch of new system tests registered; own-test fixes.
-- **2026-09-21:** System tests for FOH and incidents; mutant-targeting test improvements.
-- **2026-09-22:** Delivery eating-clock fix; further mutant-targeting tests and fixes.
+- **2026-09-10:** First version of the simulation skeleton: `ConfigParser` and
+  `ConfigurationLoader` as the configuration entry point, `ParsedModel`, `GlobalClock`, the
+  `Simulator` loop, and the first version of the ratings model (`RatingBook`, `RatingScore`,
+  `Rating`, `Experience`).
+- **2026-09-11:** First version of `FrontOfTheHouse` and of the visit state machine (`Visit`,
+  `VisitState`).
+- **2026-09-14:** `Visit` and all of its states finished — `AwaitingSeatState`, `SeatedState`,
+  `AwaitingMealState`, `EatingUpState`, `ReadyToLeaveState`, `GoneState` — together with the
+  whole serving phase and `ReservationBook` for the evening table reservations.
+- **2026-09-15:** Structure and import cleanup across the packages added so far.
+- **2026-09-16:** Eating and done-eating handling in `DiningService`, parser corrections, the
+  third version of the front-of-house services (`SeatingService`, `OrderingService`,
+  `ServingService`, `EscortingService`, `RatingService` behind `FohServices`), and their wiring
+  into the simulator through `SubUnits`.
+- **2026-09-17:** First green build. Cleanup for detekt, and the first unit tests for the
+  services and the visit state machine.
+- **2026-09-18:** Started on the testing block agreed in the implementation plan, testing
+  Biborka's and Constantin's features. Fixed the delivery-service bugs that testing surfaced and
+  added further unit and integration tests.
+- **2026-09-19:** Worked through the forum clarifications and adjusted the features affected by
+  them.
+- **2026-09-20:** Registered a large batch of new system tests and repaired the ones the first
+  server runs rejected.
+- **2026-09-21:** System tests for the front of house and for incidents, and the first tests
+  written specifically to catch mutants.
+- **2026-09-22:** Fixed the delivery eating clock, which made delivery groups finish eating
+  instantly from the second evening on, and continued with mutant-targeted tests.
 - **2026-09-23:** Serving fixes; system tests targeting multiple mutants and previously
   failing tests.
-- **2026-09-24** Targetig last couple of mutants and writing some unit tests for coverage.
+- **2026-09-24** Targeting last couple of mutants and writing some unit tests for the coverage.
 
 ### Teodor Vasilev
 
